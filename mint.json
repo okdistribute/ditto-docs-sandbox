@@ -25,10 +25,20 @@
     "name": "Dashboard",
     "url": "https://dashboard.mintlify.com"
   },
+  "primaryTab": {
+    "name": "Welcome"
+  },
   "tabs": [
     {
-      "name": "API Reference",
+      "name": "Ditto Concepts",
       "url": "api-reference"
+    },
+    {
+      "name": "SDK",
+      "url": "sdk"
+    },
+    { "name": "Cloud Platform",
+      "url": "cloud-platform"
     }
   ],
   "anchors": [
@@ -80,6 +90,18 @@
         "api-reference/endpoint/get",
         "api-reference/endpoint/create",
         "api-reference/endpoint/delete"
+      ]
+    },
+    {
+      "group": "SDK",
+      "pages": [
+        "sdk/introduction"
+      ]
+    },
+    {
+      "group": "Cloud Platform",
+      "pages": [
+        "cloud-platform/introduction"
       ]
     }
   ],
