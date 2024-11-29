@@ -70,14 +70,22 @@
   ],
   "navigation": [
     {
-      "group": "Getting Started",
-      "pages": ["introduction"]
+      "group": "Ditto Concepts",
+      "pages": [
+        "ditto-concepts/documentation"
+      ]
     },
     {
       "group": "SDK",
       "pages": [
         "sdk/about",
-        "sdk/data-types"
+        "sdk/data-types",
+        {
+          "group": "Authentication and Authorization",
+          "pages": [
+            "sdk/authentication-authorization/cloud-authentication"
+          ]
+        }
       ]
     },
     {
