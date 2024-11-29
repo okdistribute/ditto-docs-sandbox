@@ -30,14 +30,15 @@
   },
   "tabs": [
     {
-      "name": "Ditto Concepts",
+      "name": "API Reference",
       "url": "api-reference"
     },
     {
       "name": "SDK",
       "url": "sdk"
     },
-    { "name": "Cloud Platform",
+    {
+      "name": "Cloud Platform",
       "url": "cloud-platform"
     }
   ],
@@ -56,9 +57,19 @@
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://mintlify.com/blog"
+    },
+    {
+      "name": "API Reference",
+      "icon": "code",
+      "openapi": "/cloud-platform/openapi.json",
+      "url": "cloud-platform"
     }
   ],
   "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": ["introduction"]
+    },
     {
       "group": "SDK",
       "pages": [
@@ -69,7 +80,17 @@
     {
       "group": "Cloud Platform",
       "pages": [
-        "cloud-platform/introduction"
+        "cloud-platform/cloud-platform-overview",
+        {
+          "group": "Backend Architecture",
+          "icon": "folder",
+          "pages": [
+            "cloud-platform/backend-architecture/backend-architecture",
+            "cloud-platform/backend-architecture/causally-consistent-transactions",
+            "cloud-platform/backend-architecture/cloud-optional-design",
+            "cloud-platform/backend-architecture/failure-handling"
+          ]
+        }
       ]
     }
   ],
