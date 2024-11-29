@@ -1,0 +1,28 @@
+---
+title: 3. Data Modeling and Sync Logic
+slug: XpQr-data-modeling-and-sync-logic
+createdAt: Tue Sep 10 2024 16:26:12 GMT+0000 (Coordinated Universal Time)
+updatedAt: Thu Oct 03 2024 13:48:09 GMT+0000 (Coordinated Universal Time)
+---
+
+This section focuses on designing your app’s data model to support Ditto’s peer-to-peer sync across devices. Properly structuring your data is crucial to ensure efficient and reliable sync behavior, especially in decentralized environments. We’ll explore how to model data for local persistence and eventual consistency in a distributed network.
+
+[Batch Write Transactions](<../Best Practices/Batch Write Transactions.md>)&#x20;
+
+Learn how to use write transactions to combine multiple database operations into a single atomic action, ensuring consistency. This guide covers cross-collection operations and offers tips for implementing asynchronous global transactions to prevent main thread blocking and improve performance.
+
+[Selecting the right pattern](<../Best Practices/Selecting the right pattern.md>)&#x20;
+
+When managing complex data structures, using flat models instead of deeply embedded objects improves sync performance and reduces replication time. This guide covers best practices for choosing between embedded and flat data models, optimizing document size, and handling large datasets to enhance efficiency in distributed environments.
+
+[Timestamps](<../Best Practices/Timestamps.md>)&#x20;
+
+In distributed environments like Ditto mesh, time discrepancies across devices can cause inconsistent timestamps. This guide covers best practices for handling timestamp differences, using ISO-8601 formatting, and leveraging protocols like NTP to ensure accurate timing and reliable event tracking across peers.
+
+[Time-Based Replication](<../Best Practices/Time-Based Replication.md>)&#x20;
+
+Implement a Time-to-Live (TTL) eviction strategy to optimize performance and memory management in time-sensitive environments. Set document retention logic to ensure only recent data persists locally, with options for Big Peer or Small Peer management of TTL-based evictions.
+
+[Schema Versioning](<../Best Practices/Schema Versioning.md>)&#x20;
+
+In a distributed environment, maintaining data consistency during schema changes is crucial. This guide offers strategies for implementing schema versioning patterns, ensuring backward and forward compatibility, and handling asynchronous updates to prevent data conflicts across peers.
