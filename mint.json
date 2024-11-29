@@ -40,6 +40,9 @@
     {
       "name": "Cloud Platform",
       "url": "cloud-platform"
+    },
+    { "name": "Best Practices",
+      "url": "best-practices"
     }
   ],
   "anchors": [
@@ -91,6 +94,20 @@
             "cloud-platform/backend-architecture/failure-handling"
           ]
         }
+      ]
+    },
+    {
+      "group": "Best Practices",
+      "pages": [
+        "best-practices/01-planning-and-architecture-design",
+        "best-practices/02-setup-and-sdk-configuration",
+        "best-practices/03-data-modeling-and-sync-logic",
+        "best-practices/04-security-access-control-and-privacy",
+        "best-practices/05-testing-and-optimization",
+        "best-practices/06-deployment",
+        "best-practices/07-performance-optimization-and-troubleshooting",
+        "best-practices/08-monitoring-and-maintenance",
+        "best-practices/09-industry-best-practices"
       ]
     }
   ],
