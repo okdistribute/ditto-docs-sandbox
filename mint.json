@@ -26,7 +26,7 @@
     "url": "https://dashboard.mintlify.com"
   },
   "primaryTab": {
-    "name": "Welcome"
+    "name": "Ditto Concepts"
   },
   "tabs": [
     {
@@ -60,42 +60,10 @@
   ],
   "navigation": [
     {
-      "group": "Get Started",
-      "pages": [
-        "introduction",
-        "quickstart",
-        "development"
-      ]
-    },
-    {
-      "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
-    },
-    {
-      "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction"
-      ]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
-      ]
-    },
-    {
       "group": "SDK",
       "pages": [
-        "sdk/introduction"
+        "sdk/about",
+        "sdk/data-types"
       ]
     },
     {
@@ -109,5 +77,6 @@
     "x": "https://x.com/mintlify",
     "github": "https://github.com/mintlify",
     "linkedin": "https://linkedin.com/company/mintlify"
-  }
+  },
+  "versions": ["v4.9", "v4.8", "v4.7", "v4.6", "v4.5", "v4.4"]
 }
