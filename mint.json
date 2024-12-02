@@ -76,6 +76,12 @@
       ]
     },
     {
+      "group": "Getting Start with the SDK",
+      "pages": [
+        "sdk/introduction"
+      ]
+    },
+    {
       "group": "SDK",
       "version": "v4.8",
       "pages": [
@@ -139,5 +145,11 @@
     "github": "https://github.com/mintlify",
     "linkedin": "https://linkedin.com/company/mintlify"
   },
-  "versions": ["v4.9", "v4.8", "v4.7", "v4.6", "v4.5", "v4.4"]
+  "redirects": [
+    {
+      "source": "/sdk/latest/:slug*",
+      "destination": "/sdk/v4.9/:slug*"
+    }
+  ],
+  "versions": ["v4.9","v4.8", "v4.7", "v4.6", "v4.5", "v4.4"]
 }
