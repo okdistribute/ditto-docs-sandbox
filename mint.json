@@ -77,13 +77,28 @@
     },
     {
       "group": "SDK",
+      "version": "v4.8",
       "pages": [
-        "sdk/about",
-        "sdk/data-types",
+        "sdk/v4.8/about",
+        "sdk/v4.8/data-types",
         {
           "group": "Authentication and Authorization",
           "pages": [
-            "sdk/authentication-authorization/cloud-authentication"
+            "sdk/v4.8/authentication-authorization/cloud-authentication"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "SDK",
+      "version": "v4.9",
+      "pages": [
+        "sdk/v4.9/about",
+        "sdk/v4.9/data-types",
+        {
+          "group": "Authentication and Authorization",
+          "pages": [
+            "sdk/v4.9/authentication-authorization/cloud-authentication"
           ]
         }
       ]
