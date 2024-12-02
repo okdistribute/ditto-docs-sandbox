@@ -2,28 +2,28 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Starter Kit",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/ditto_logo_dark.png",
+    "light": "/logo/ditto_logo_light.png"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#0066ff",
+    "light": "#0066ff",
+    "dark": "#0066ff",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#0066ff",
+      "to": "#0066ff"
     }
   },
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:support@ditto.live"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "Get Started",
+    "url": "https://portal.ditto.live"
   },
   "primaryTab": {
     "name": "Ditto Concepts"
