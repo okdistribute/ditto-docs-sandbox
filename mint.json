@@ -78,7 +78,8 @@
     {
       "group": "Getting Start with the SDK",
       "pages": [
-        "sdk/introduction"
+        "sdk/introduction",
+        "sdk/release-notes"
       ]
     },
     {

@@ -1,0 +1,48 @@
+## v4.9 (Latest)
+
+<Update description="2024-09-25" label="v4.9.0">
+
+    ###  Logging Clarity Improvements
+
+    This release comes with a number of logging clarity improvements. The goal of these changes are to make Ditto logs more consumable and actionable for end users. While there are wide ranging changes one of the principal goals of this work is to make our INFO level logs contain the right information to understand the state and health of the Ditto SDK.
+
+    - More information is included when physical connections start and end (such as the type of connection and the remote peer’s key)
+    -Devices that try to connect to themselves now say “device has connected to itself” instead of an error about the remote site ID being the same as the local peer
+    - Authentication client logs have been made more human readable. In particular:
+      - Recoverable errors are logged together with information about the recovery actions that are being undertaken
+      - Several abbreviations have been replaced with human-readable descriptions
+      - Errors are printed using their descriptions rather than by dumping debug representations
+
+
+    - Abbreviated jargon has been replaced with clearer wording in various log lines
+      - “phy ended” has become “physical connection ended”
+      - “error getting char” has become “required Ditto BLE characteristic not found”
+      - “error getting radio state” has become “error getting Windows Bluetooth radio state”
+      - Peer events that represent a transport starting or stopping are now logged with the message “transport started”/”transport ended” rather than as a raw peer_event=... log
+
+
+    - Reduced the noisiness of “starting” log lines around Ditto initialization time
+    - Noise from long peer keys in logs has been reduced in some places by replacing them with their truncated form
+    - Noise from duplicated peer ID/peer key information in replication logs has been reduced by consolidating the information
+    - “starting compression and export” is now followed by a “completed export” log at the same level
+    - Successful SQLite WAL recovery logs were further lowered from INFO to DEBUG
+
+
+
+</Update>
+
+
+## v4.8
+
+<Update description="2024-09-25" label="v4.8.2">
+    * 🛠️ __Fixed:__ Setting the minimum log level to WARN or ERROR will now correctly filter out very early logger initialization messages. (#14451)
+    * 🛠️ __Fixed:__ A bug that could prevent an attachment created with the same data on multiple peers from syncing. (#14481)
+</Update>
+<Update description="2024-09-05" label="v4.8.1">
+    - 🛠️ __Fixed:__ An issue where iOS devices may fail to sync on LAN when the app goes in the backgrounded then back to the foregrounded. (#14150)
+    - 🛠️ __Fixed:__ An issue with AWDL where Ditto would create invalid connection advertisements when app is backgrounded and foregrounded, affecting mesh connectivity (#14151)
+</Update>
+<Update description="2024-08-15" label="v4.8.0">
+    - ➕ __Added:__ Mac Catalyst platform support (#13051)
+    - ➕ __Added:__ tvOS platform support (#13049)
+</Update>
