@@ -13,20 +13,75 @@ Here's some sample code:
 
 <CodeGroup>
 
-    ```javascript helloWorld.js
-    console.log("Hello World!");
+    ```swift Swift
+    ditto.sync.registerSubscription("""
+        SELECT *
+        FROM cars
+        WHERE color = :color
+        """,
+        [ "color": "blue" ])
     ```
 
-    ```python hello_world.py
-    print('Hello World!')
+    ```kotlin Kotlin
+        ditto.sync.registerSubscription("""
+        SELECT *
+        FROM cars
+        WHERE color = :color
+        """,
+        mapOf("color" to "blue"))
     ```
 
-    ```java HelloWorld.java
-    class HelloWorld {
-    public static void main(String[] args) {
-    System.out.println("Hello, World!");
-}
-}
+    ```javascript JS
+    ditto.sync.registerSubscription(`
+        SELECT *
+        FROM cars
+        WHERE color = :color`,
+        { color: 'blue' })
+    ```
+
+    ```java Java
+    ditto.sync.registerSubscription(
+        "SELECT * FROM cars WHERE color = :color",
+        Collections.singletonMap("color", "blue"))
+    ```
+
+    ```cs C#
+    var queryArguments = new Dictionary<string, object>(){{"color", "blue" }};
+
+    ditto.Sync.RegisterSubscription(
+        "SELECT * FROM cars WHERE color = 'blue'",
+        queryArguments);
+    ```
+
+
+    ```cpp C++
+    ditto.sync().register_subscription(
+        "SELECT * FROM cars WHERE color = :color",
+        {{"color", "blue"}});
+    ```
+
+    ```rust Rust
+    struct Args {
+        color: String,
+    }
+
+    // ...
+
+    let args = Args {
+        color: "blue".to_string(),
+    };
+    ditto.sync().register_subscription(
+        "SELECT * FROM cars WHERE color = :color",
+        args);
+    ```
+
+    ```dart Dart
+    await ditto.sync.registerSubscription("""
+        SELECT *
+        FROM cars
+        WHERE color = :color""",
+        arguments: {"color": "blue"},
+        );
     ```
 
 </CodeGroup>
@@ -36,15 +91,15 @@ And some more code:
 
 <CodeGroup>
 
-    ```javascript helloAgain.js
+    ```javascript Javascript
     console.log("Hello Again!");
     ```
 
-    ```python hello_again.py
+    ```python Python
     print('Hello Again!')
     ```
 
-    ```java HelloAgain.java
+    ```java Java
     class HelloWorld {
     public static void main(String[] args) {
     System.out.println("Hello, Again!");
