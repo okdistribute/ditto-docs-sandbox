@@ -2,43 +2,47 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Starter Kit",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/ditto_logo_dark.png",
+    "light": "/logo/ditto_logo_light.png"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#0066ff",
+    "light": "#0066ff",
+    "dark": "#0066ff",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#0066ff",
+      "to": "#0066ff"
     }
   },
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:support@ditto.live"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "Get Started",
+    "url": "https://portal.ditto.live"
   },
   "primaryTab": {
-    "name": "Welcome"
+    "name": "Ditto Concepts"
   },
   "tabs": [
     {
-      "name": "Ditto Concepts",
+      "name": "API Reference",
       "url": "api-reference"
     },
     {
       "name": "SDK",
       "url": "sdk"
     },
-    { "name": "Cloud Platform",
+    {
+      "name": "Cloud Platform",
       "url": "cloud-platform"
+    },
+    { "name": "Best Practices",
+      "url": "best-practices"
     }
   ],
   "anchors": [
@@ -56,52 +60,84 @@
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://mintlify.com/blog"
+    },
+    {
+      "name": "API Reference",
+      "icon": "code",
+      "openapi": "/cloud-platform/openapi.json",
+      "url": "cloud-platform"
     }
   ],
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "Ditto Concepts",
       "pages": [
-        "introduction",
-        "quickstart",
-        "development"
+        "ditto-concepts/documentation"
       ]
     },
     {
-      "group": "Essentials",
+      "group": "Getting Start with the SDK",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
-    },
-    {
-      "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction"
-      ]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "sdk/introduction",
+        "sdk/release-notes"
       ]
     },
     {
       "group": "SDK",
+      "version": "v4.8",
       "pages": [
-        "sdk/introduction"
+        "sdk/v4.8/about",
+        "sdk/v4.8/data-types",
+        {
+          "group": "Authentication and Authorization",
+          "pages": [
+            "sdk/v4.8/authentication-authorization/cloud-authentication"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "SDK",
+      "version": "v4.9",
+      "pages": [
+        "sdk/v4.9/about",
+        "sdk/v4.9/data-types",
+        {
+          "group": "Authentication and Authorization",
+          "pages": [
+            "sdk/v4.9/authentication-authorization/cloud-authentication"
+          ]
+        }
       ]
     },
     {
       "group": "Cloud Platform",
       "pages": [
-        "cloud-platform/introduction"
+        "cloud-platform/cloud-platform-overview",
+        {
+          "group": "Backend Architecture",
+          "icon": "folder",
+          "pages": [
+            "cloud-platform/backend-architecture/backend-architecture",
+            "cloud-platform/backend-architecture/causally-consistent-transactions",
+            "cloud-platform/backend-architecture/cloud-optional-design",
+            "cloud-platform/backend-architecture/failure-handling"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Best Practices",
+      "pages": [
+        "best-practices/01-planning-and-architecture-design",
+        "best-practices/02-setup-and-sdk-configuration",
+        "best-practices/03-data-modeling-and-sync-logic",
+        "best-practices/04-security-access-control-and-privacy",
+        "best-practices/05-testing-and-optimization",
+        "best-practices/06-deployment",
+        "best-practices/07-performance-optimization-and-troubleshooting",
+        "best-practices/08-monitoring-and-maintenance",
+        "best-practices/09-industry-best-practices"
       ]
     }
   ],
@@ -109,5 +145,12 @@
     "x": "https://x.com/mintlify",
     "github": "https://github.com/mintlify",
     "linkedin": "https://linkedin.com/company/mintlify"
-  }
+  },
+  "redirects": [
+    {
+      "source": "/sdk/latest/:slug*",
+      "destination": "/sdk/v4.9/:slug*"
+    }
+  ],
+  "versions": ["v4.9","v4.8", "v4.7", "v4.6", "v4.5", "v4.4"]
 }
