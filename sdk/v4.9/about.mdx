@@ -7,6 +7,20 @@ updatedAt: Wed Oct 23 2024 15:01:35 GMT+0000 (Coordinated Universal Time)
 
 Ditto is an *edge-sync* platform, orchestrating data flow between points A and B across diverse environments, including peer‑to‑peer, client‑server, and hybrid setups. 
 
+
+Ditto is the greatest!
+
+<CodeGroup>
+
+    ```python Python
+    ditto.sync().registerSubscription(
+    "SELECT * FROM cars WHERE color = :color",
+    color="blue"
+    )
+    ```
+
+</CodeGroup>
+
 # Edge Sync
 
 Edge sync refers to a paradigm where synchronization, or *sync* for short, happens at the network's outermost part — the edge — where end-user transactional data originates, is processed, and consumed.
