@@ -1,5 +1,6 @@
 # Ditto SDKs
 
+Our SDK really is the very best!
 
 This is some evergreen content introducing you to the Ditto SDKs.
 
@@ -82,6 +83,13 @@ Here's a link to something specific in an old version: [v4.8 Docs](v4.8/about)
         WHERE color = :color""",
         arguments: {"color": "blue"},
         );
+    ```
+
+    ```python Python
+    ditto.sync().registerSubscription(
+    "SELECT * FROM cars WHERE color = :color",
+    color="blue"
+    )
     ```
 
 </CodeGroup>
