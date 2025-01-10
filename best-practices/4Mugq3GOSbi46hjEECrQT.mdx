@@ -1,0 +1,8 @@
+---
+title: Large Binary Files
+description: "If you have a large amount of binary data, or perhaps just a large file, that you want to sync between devices then instead of inserting this into a document as bytes you should make use of the attachments feature."
+mode: wide
+---
+Attachments do not get synced between devices by default, even if they are part of a document that is being synced between devices. This is because they could be very large files that a given device doesn't need. Instead an attachment must be explicitly fetched using an attachment token that will be present in the document that the attachment is linked to.
+
+For more information, see [ATTACHMENT](/best-practices/4Mugq3GOSbi46hjEECrQT#eGiCr0EVnAIJBuDBQSKAy).

@@ -1,0 +1,92 @@
+---
+title: Prebuilt Task App
+description: To get started right away without having to build an app from scratch, explore with the Ditto ready-to-use demo task app.
+---
+
+## Prerequisites
+
+Before you can install Ditto, you must have the following:
+
+- Ditto access credentials
+- <a href="https://nodejs.org/en/" target="_blank">Node.js</a> active long-term support (LTS) version 18.x or 20.x
+- Linux, macOS version 11 (or later), or Windows version 10 (or later)
+- <a href="https://git-scm.com/downloads" target="_blank">Git</a>
+- Integrated developer environment (IDE)
+
+
+<Info>
+* To get your access credentials, complete the [Get Started]().
+* You can use any IDE you prefer; however, for optimal compatibility with the platform, Ditto recommends using <a href="https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>.
+</Info>
+
+## Installing the Demo Task App
+
+To install Ditto in your environment, install and set up Ditto, and authenticate your client identity with the Big Peer:
+
+<Steps>
+    <Step>
+Clone the <a href="https://github.com/getditto/template-app-nodejs-todo/" target="_blank">getditto > template-app-nodejs-todo</a> repository from GitHub:
+
+
+```bash Bash
+git clone https://github.com/getditto/template-app-nodejs-todo/
+```
+    </Step>
+    <Step>
+Install the required dependencies:
+
+```bash Bash
+npm install
+```
+    </Step>
+    <Step>
+Open the project in your IDE, and then open the `index.ts` file. For example, if using Visual Studio Code:
+
+```bash Bash
+code .
+```
+    </Step>
+    <Step>
+In line 14 of the `index.ts` file, replace `'YOUR_APP_ID'` and `'YOUR_TOKEN'` with your app ID and playground token. (*Ditto Basics *> [Getting Your Access Credentials](/best-practices/how-to/js))
+
+```typescript
+// replace YOUR_APP_ID and YOUR_TOKEN with p
+ditto = new Ditto({ type: 'onlinePlayground', appID: 'YOUR_APP_ID', token: 'YOUR_TOKEN' })
+```
+    </Step>
+    <Step>
+Build the demo task app:
+
+```bash Bash
+npm run build
+```
+    </Step>
+    <Step>
+Interact with the demo task app and simulate real-time peer-to-peer replication by running the demo task app in two or more separate terminals (one for each virtual peer):
+
+
+```bash Bash
+node index.js
+```
+    </Step>
+    <Step>
+Using the commands that automatically appear in each of your terminals, add, remove, and modify documents as desired.
+
+    </Step>
+    <Step>
+If you want to observe your changes sync with the cloud-optional deployment, the [Big Peer](/best-practices/how-to/js/), open the data browser in the <a href="https://portal.ditto.live/" target="_blank">Ditto portal</a>.
+    </Step>
+</Steps>
+
+
+
+
+
+
+
+
+
+
+
+
+

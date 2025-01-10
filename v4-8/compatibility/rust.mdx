@@ -1,0 +1,100 @@
+---
+title: "Rust"
+icon: rust
+iconType: solid
+---
+
+<Frame>
+  <img src="/images/v4.8/release-7.webp"/>
+</Frame>
+
+## Compatibility Points
+
+When talking about compatibility for the Ditto Rust SDK, there are a few properties that we need to check in order to ensure that we can deploy a Ditto-powered app to a device. These properties are:
+
+- The **Target triple** of the device where the app will be deployed,
+- The **Ditto SDK version** the app depends on, and
+- The **Rust toolchain version** used to compile the app
+
+## Supported Targets
+
+Compilers use terms known as “**target triples**” to describe the architecture, operating system, and additional details about a system to compile programs for. The following targets are officially supported by the Ditto Rust SDK:
+
+| Architecture | Operating System | Target Triples |
+| --- | --- | --- |
+| Intel Core (x86\_64) | macOS (11+) | x86\_64-apple-darwin |
+|  | Linux | x86\_64-unknown-linux-gnu |
+| ARM 64-bit (aarch64) | macOS | aarch64-apple-darwin |
+|  | Linux | aarch64-unknown-linux-gnu |
+| Raspberry Pi (ARM) | Raspbian (Linux) | armv7-unknown-linux-gnueabihf |
+
+### Checking the target triple
+
+Before getting started with development, it’s nice to check for certain that the device you’re working with actually has the target triple you think it should. Fortunately, Rust provides an easy way to check what the exact target triple for a device is. This easy method requires [installing Rust on the target machine](https://rustup.rs/ "installing Rust on the target machine") (the one where the app will be deployed), then running the command rustc -vV to check the compiler version information. For example, from an M1 Macbook Pro, we see an output like this:
+
+```bash shell
+❯ rustc -vV
+rustc 1.74.1 (a28077b28 2023-12-04)
+binary: rustc
+commit-hash: a28077b28a02b92985b3a3faecf92813155f1ea1
+commit-date: 2023-12-04
+host: aarch64-apple-darwin
+release: 1.74.1
+LLVM version: 17.0.4
+```
+
+<Info>
+Here, the field labeled "host" describes the target triple of the machine where we ran this command, in this case our target triple is **aarch64-apple-darwin**.
+</Info>
+
+## Matching the SDK and Rust Toolchain versions
+
+The Ditto Rust SDK is slightly different from most Rust libraries because it has strict requirements on the Rust toolchain version that must be used to compile it. We’re working to relax this requirement, but for now what you need to know is that when you import a given Ditto SDK version, you must use the exact matching Rust toolchain version as shown below:
+
+| Ditto SDK version | Rust Toolchain version |
+| --- | --- |
+| "=4.7.x" | 1.74.1 |
+| "=4.6.x" | 1.74.1 |
+| "=4.0.x" - "=4.5.x" | 1.66.1 |
+| "=3.x.y" | 1.64.0 |
+
+Here, we recommend using the "=x.y.z" notation for semantic versions of the SDK so that cargo doesn’t try to automatically upgrade your minor version. Since each version of the SDK must be matched exactly to the toolchain it was compiled with, auto-upgrades of minor versions could actually break your build. Additionally, we recommend specifying the versions of both the dittolive-ditto and dittolive-ditto-sys packages, like this:
+
+```bash Cargo.toml
+[dependencies]
+dittolive-ditto = "=4.7.1"
+dittolive-ditto-sys = "=4.7.1"
+```
+
+### Selecting a Toolchain for your project
+
+The easiest way to choose a specific toolchain version for a project is to create a file called rust-toolchain in your project directory (next to the Cargo.toml). For example, when using the 4.7.1 SDK, set the 1.74.1 toolchain like this:
+
+```bash ./rust-toolchain
+1.74.1
+```
+
+You can confirm that this works by running rustup show in your project directory, which should show details about your active toolchain, like this:
+
+```bash shell
+❯ rustup show
+
+# ...
+
+active toolchain
+----------------
+
+1.74.1-aarch64-apple-darwin (overridden by '/path/to/your/project/rust-toolchain')
+rustc 1.74.1 (a28077b28 2023-12-04)
+```
+
+## Transports
+
+Some platforms do not support all of the types of transports that Ditto provides in general. Here is a table of which platforms support which transports, which you can use to help plan out your application.
+
+| **Platform** | **BLE 5.0+** | **AWDL** | **Wi-Fi Aware** | **LAN** | **WebSockets** |
+| --- | --- | --- | --- | --- | --- |
+| Linux (x64) | <Icon icon="check" iconType="solid" /> | \-- | \-- | <Icon icon="check" iconType="solid" /> | <Icon icon="check" iconType="solid" /> |
+| Linux (AArch64) | <Icon icon="check" iconType="solid" /> | \-- | \-- | <Icon icon="check" iconType="solid" /> | <Icon icon="check" iconType="solid" /> |
+| macOS | <Icon icon="check" iconType="solid" /> | \-- | \-- | <Icon icon="check" iconType="solid" /> | <Icon icon="check" iconType="solid" /> |
+| Windows | \-- | \-- | \-- | <Icon icon="check" iconType="solid" /> | <Icon icon="check" iconType="solid" /> |

@@ -1,0 +1,61 @@
+---
+title: "408 Timeout Responses (Legacy)"
+description: "If your queries target large collections and match thousands of documents, you may recieve a `408 Request Timeout` response status code."
+icon: clock
+iconType: solid
+---
+
+For more information, see the official Mozilla Developer Network (MDN) Web Docs > "<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408" target="_blank">408 Request Timeout</a>" topic.
+
+<Info>
+To manage performance and prevent potential performance issues that may occur as a result to attempting to retrieve a large number of documents in a single query, by default, sets of matching documents is limited to a count of 1000.
+</Info>
+
+
+To resolve this error, break down one large query into several selective queries.
+
+For example, the following cURL request:
+
+- Retrieves documents within the `people` collection with the field property of `name` set to the value of `John`.
+- Limits the number of results returned to `2`.
+- Instructs to `sort` results by `_id` in ascending (`asc`) order.
+- Indicates that the response is to include not only the values but also information (`latestValuesAndTypes`) about their types.
+
+```bash cURL
+curl -X POST 'https://{app_id}.cloud.ditto.live/api/v4/store/find' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer $API_KEY' \
+  --data-raw '{
+    "collection": "people",
+    "query": "name==\'John\'",
+    "limit": 2,
+    "sort": [
+      {"property": "_id", "direction": "asc"}
+    ],
+    "serializedAs": "latestValuesAndTypes"
+}'
+```
+
+
+Once invoked, you'd receive the following response:
+
+```json JSON
+{
+  "value": {
+    "_id": "123abc",
+    "fields": {
+      "name": {
+          "register": { "value": "John" },
+      },
+      "friends": {
+          "register": { "value": ["Susan"] },
+      },
+      "orderCount": {
+          "counter": { "value": 5 }
+      },
+    }
+  }
+}
+```
+
+

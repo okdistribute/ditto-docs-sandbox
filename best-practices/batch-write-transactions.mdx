@@ -1,0 +1,39 @@
+---
+title: Batch Write Transactions
+description: Use a write transaction when you want to combine multiple database operations into a single atomic transaction.
+---
+
+## Cross-Collection Operations
+
+The legacy query API methods support atomic operations across collections. For more information, see `ditto.store.write` in your language's API reference.
+
+<Warning>
+Cross-collection atomic write transactions are currently unsupported by Ditto Query Language (DQL); development is actively in progress.
+</Warning>
+
+## Implementing Global Async Transactions
+
+
+
+For example, in Swift, use `DispatchQueue.global`, as follows:
+
+```swift Swift
+DispatchQueue.global(qos: .default).async {
+
+    ditto.store.write { transaction in
+
+        let scope = transaction.scoped(toCollectionNamed: "passengers-\(thisFlight)")
+
+       // Loop inside the transaction to avoid writing to database too frequently
+        self.passengers.forEach {
+            scope.upsert($0.dict)
+        }
+    }
+}
+```
+
+### Log Message: Transaction Remains Blocked
+
+
+
+If you see this message in your Ditto logs, read the [Troubleshooting]() guide for more information about how to debug blocked database transactions.

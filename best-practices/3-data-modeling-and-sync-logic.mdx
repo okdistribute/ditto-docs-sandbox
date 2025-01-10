@@ -1,0 +1,25 @@
+---
+title: "3. Data Modeling and Sync Logic"
+description: "This section focuses on designing your app’s data model to support Ditto’s peer-to-peer sync across devices. Properly structuring your data is crucial to ensure efficient and reliable sync behavior, especially in decentralized environments. We’ll explore how to model data for local persistence and eventual consistency in a distributed network."
+mode: wide
+sidebarTitle: Overview
+---
+<CardGroup>
+  <Card title="Batch Write Transactions" icon="database" iconType="solid" href="/best-practices/batch-write-transactions">
+  Learn how to use write transactions to combine multiple database operations into a single atomic action, ensuring consistency. This guide covers cross-collection operations and offers tips for implementing asynchronous global transactions to prevent main thread blocking and improve performance.
+
+  </Card>
+  <Card title="Selecting the Right Pattern" icon="sitemap" iconType="solid" href="/best-practices/9lD49ZtExskKuBX-Kq8Jn">
+  When managing complex data structures, using flat models instead of deeply embedded objects improves sync performance and reduces replication time. This guide covers best practices for choosing between embedded and flat data models, optimizing document size, and handling large datasets to enhance efficiency in distributed environments.
+
+  </Card>
+  <Card title="Timestamps" icon="clock" iconType="solid" href="/best-practices/WWnxvj7dPgfnXDIhtlEEb">
+    In distributed environments like Ditto mesh, time discrepancies across devices can cause inconsistent timestamps. This guide covers best practices for handling timestamp differences, using ISO-8601 formatting, and leveraging protocols like NTP to ensure accurate timing and reliable event tracking across peers.
+  </Card>
+  <Card title="Time-Based Replication" icon="hourglass-half" iconType="solid" href="/best-practices/time-based-replication">
+    Implement a Time-to-Live (TTL) eviction strategy to optimize performance and memory management in time-sensitive environments. Set document retention logic to ensure only recent data persists locally, with options for Big Peer or Small Peer management of TTL-based evictions.
+  </Card>
+  <Card title="Schema Versioning" icon="code-branch" iconType="solid" href="/best-practices/b42k_4oU7uo5xhwADd2k3">
+    In a distributed environment, maintaining data consistency during schema changes is crucial. This guide offers strategies for implementing schema versioning patterns, ensuring backward and forward compatibility, and handling asynchronous updates to prevent data conflicts across peers.
+  </Card>
+</CardGroup>

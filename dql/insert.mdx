@@ -1,0 +1,731 @@
+---
+title: INSERT
+---
+
+When using DQL's INSERT command, you can add new documents using JSON objects:
+
+```sql DQL
+INSERT INTO your_collection_name
+DOCUMENTS ([document1]),([document2]), ([document3]), ...
+[ON ID CONFLICT [FAIL | DO NOTHING | DO UPDATE]]
+```
+
+- INSERT INTO is the name of the collection from which you want to retrieve the data.
+- `DOCUMENTS ([document1]), ([document2]), ([document3]), ...` represent the documents being inserted.
+- `[ ON ID CONFLICT [DO FAIL | DO NOTHING | DO UPDATE ([policy])]]` is an optional clause that allows for defining a policy if the ID already exists in the local data store. The default is to throw an error (`FAIL`).
+
+
+<Info>
+In Ditto, excluding fields from your payload doesn't remove the existing data from the system.&##x20;
+
+To remove a specific field from a document, use an explicit UPDATE statement and `tombstone` that field. (See [UPDATE](/dql/update))
+
+</Info>
+
+## **INSERT Document**
+<Tabs>
+  <Tab title="Swift">
+```swift
+await ditto.store.execute(
+  query: "INSERT INTO cars DOCUMENTS (:newCar)",
+  arguments: ["newCar": ["color": "blue"]]);
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  mapOf("newCar" to mapOf("color" to "blue")))
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+await ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  { newCar: { color: "blue" } }
+);
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+DittoQueryResult result = (DittoQueryResult) ditto.store.execute(
+    "INSERT INTO cars DOCUMENTS (:newCar)",
+    Collections.singletonMap("newCar", Collections.singletonMap("color", "blue")),
+);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+var args = new Dictionary<string, object>();
+args.Add("newCar", new { color = "blue" });
+
+await ditto.Store.ExecuteAsync(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  args);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+std::map<std::string, std::map<std::string, std::string>> args;
+args["newCar"] = {{"color", "blue"}};
+
+ditto.get_store().execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  args);
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let query_result = ditto
+    .store()
+    .execute(
+        "INSERT INTO cars DOCUMENTS (:newCar)",
+        Some(serde_json::json!({
+            "newCar": {
+                "color": "blue"
+            }
+        }).into()),
+    ).await?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+await ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  arguments: {"newCar": {"color": "blue"}},
+);
+```
+  </Tab>
+</Tabs>
+
+## INSERT with Multiple Documents
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+await ditto.store.execute(
+  query: "INSERT INTO cars DOCUMENTS (:car1), (:car2)",
+  arguments: [
+    "car1": ["color": "blue"],
+    "car2": ["color": "red"]
+  ]);
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:car1),(:car2)",
+  mapOf(
+    "car1" to mapOf("color" to "blue"),
+    "car2" to mapOf("color" to "red")
+  ))
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+await ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:car1),(:car2)",
+  {
+    car1: { color: 'blue' },
+    car2: { color: 'red' }
+  });
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+Map<String, Map<String, String>> args = new HashMap<>();
+args.put("car1", Collections.singletonMap("color", "blue"));
+args.put("car2", Collections.singletonMap("color", "red"));
+
+DittoQueryResult result = (DittoQueryResult) ditto.store.execute(
+    "INSERT INTO cars DOCUMENTS (:car1),(:car2)",
+    args,
+    new Continuation<>() {
+        @NonNull
+        @Override
+        public CoroutineContext getContext() {
+            return EmptyCoroutineContext.INSTANCE;
+        }
+
+        @Override
+        public void resumeWith(@NonNull Object o) {
+            if (o instanceof Result.Failure) {
+                // Handle failure
+            }
+        }
+    }
+);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+var args = new Dictionary<string, object>();
+args.Add("car1", new { color = "blue" });
+args.Add("car2", new { color = "red" });
+
+await ditto.Store.ExecuteAsync(
+  "INSERT INTO cars DOCUMENTS (:car1),(:car2)",
+  args);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+std::map<std::string, std::map<std::string, std::string>> args;
+args["car1"] = {{"color", "blue"}};
+args["car2"] = {{"color", "red"}};
+
+auto result = ditto.get_store().execute(
+    "INSERT INTO cars DOCUMENTS (:car1),(:car2)",
+    args).get();
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let query_result = ditto
+    .store()
+    .execute(
+        "INSERT INTO cars DOCUMENTS (:car1), (:car2)",
+        Some(serde_json::json!({
+            "car1": {
+                "color": "blue"
+            },
+            "car2": {
+                "color": "red"
+            }
+        }).into()),
+    ).await?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+await ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:car1),(:car2)",
+  arguments: {
+    "car1": { "color": "blue" },
+    "car2": { "color": "red" },
+  },
+);
+```
+  </Tab>
+</Tabs>
+
+## INSERT Document with MAP Type
+
+For full `MAP` syntax, see [MAP](/dql/insert#insert-document-with-map-type).
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+let arguments: [String: Any] = [
+  "newCar": [
+    "_id": "123",
+    "properties": [
+      "color": "blue",
+      "mileage": 3000
+    ]
+  }
+];
+
+await ditto.store.execute(
+  query: "INSERT INTO COLLECTION cars (properties MAP) DOCUMENTS (:newCar)",
+  arguments: arguments);
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+val arguments = mapOf(
+  "newCar" to mapOf(
+    "_id" to "123",
+    "properties" to mapOf(
+      "color" to "blue",
+      "mileage" to 3000
+      )
+    )
+  )
+)
+
+ditto.store.execute("""
+  INSERT INTO COLLECTION cars (properties MAP)
+  DOCUMENTS (:newCar)
+  """,
+  arguments)
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+const newCar = {
+  _id: "123",
+  properties: {
+    color: 'blue',
+    mileage: 3000
+  }
+}
+
+await ditto.store.execute(`
+  INSERT INTO COLLECTION cars (properties MAP)
+  DOCUMENTS (:newCar)`,
+  { newCar });
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+Map<String, Object> properties = new HashMap<>();
+properties.put("color", "blue");
+properties.put("mileage", 3000);
+
+Map<String, Object> newCar = new HashMap<>();
+newCar.put("_id", "123");
+newCar.put("properties", properties);
+
+DittoQueryResult result = (DittoQueryResult) ditto.store.execute(
+    "INSERT INTO COLLECTION cars (properties MAP) DOCUMENTS (:newCar)",
+    Collections.singletonMap("newCar", newCar),
+    new Continuation<>() {
+        @NonNull
+        @Override
+        public CoroutineContext getContext() {
+            return EmptyCoroutineContext.INSTANCE;
+        }
+
+        @Override
+        public void resumeWith(@NonNull Object o) {
+            if (o instanceof Result.Failure) {
+                // Handle failure
+            }
+        }
+    }
+);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+var subMap = new {
+  color = "blue",
+  mileage = 3000
+};
+var insertArgs = new Dictionary<string, object>();
+insertArgs.Add("newCar", new { _id = newId, properties = subMap })
+
+var result = await ditto.Store.ExecuteAsync(
+  "INSERT INTO COLLECTION cars (properties MAP) DOCUMENTS (:newCar)",
+  insertArgs);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+struct Properties {
+  std::string color;
+  int mileage;
+};
+struct Car {
+  std::string _id;
+  Properties properties;
+};
+
+// ...
+
+std::map<std::string, Car> args;
+args["newCar"] = {"123", {"blue", 3000}};
+
+ditto.get_store().execute(
+  "INSERT INTO COLLECTION your_collection_name (properties MAP)"
++ " DOCUMENTS (:newCar)",
+  args).get();
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let query_result = ditto
+    .store()
+    .execute(
+        "INSERT INTO COLLECTION cars (properties MAP) DOCUMENTS (:newCar)",
+        Some(serde_json::json!({
+            "newCar": {
+                "_id": "123",
+                "properties": {
+                    "color": "blue",
+                    "mileage": 3000
+                }
+            }
+        }).into()),
+    ).await?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+final newCar = {
+  "_id": "123",
+  "properties": {
+    "color": 'blue',
+    "mileage": 3000,
+  },
+};
+
+await ditto.store.execute("""
+  INSERT INTO COLLECTION cars (properties MAP)
+  DOCUMENTS (:newCar)""",
+  arguments: {"newCar": newCar},
+);
+```
+  </Tab>
+</Tabs>
+
+## INSERT JSON-serialized Document
+
+From SDK 4.8, you can insert JSON-serialized Documents into Ditto directly using the `deserialize_json()` function.
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+await ditto.store.execute(
+  query: """
+    INSERT INTO cars
+    DOCUMENTS (deserialize_json(:jsonData))
+    ON ID CONFLICT DO UPDATE
+    """,
+  arguments: [ "jsonData": "{\"_id\": \"123\",\"color\": \"blue\"}" ])
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.store.execute("""
+  INSERT INTO cars
+  DOCUMENTS (deserialize_json(:jsonData))
+  """,
+  mapOf("jsonData", "{\"_id\": \"123\",\"color\": \"blue\"}"))
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+await ditto.store.execute(`
+  INSERT INTO cars
+  DOCUMENTS (deserialize_json(:jsonData))`,
+  { jsonData: "{\"_id\": \"123\",\"color\": \"blue\"}" });
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+await ditto.store.execute(`
+  INSERT INTO cars
+  DOCUMENTS (deserialize_json(:jsonData))`,
+  { jsonData: "{\"_id\": \"123\",\"color\": \"blue\"}" });
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+var args = new Dictionary<string, string>();
+args.Add("jsonData", "{\"_id\": \"123\",\"color\": \"blue\"}")
+
+var result = await ditto.Store.ExecuteAsync(
+  "INSERT INTO cars"
++ " DOCUMENTS (deserialize_json(:jsonData))",
+  args);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+std::map<std::string, string> args;
+args["jsonData"] = "{\"_id\": \"123\",\"color\": \"blue\"}";
+
+auto result = ditto.get_store().execute(
+  "INSERT INTO cars DOCUMENTS (deserialize_json(:jsonData))",
+  args).get();
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let json_string = r#"{"_id": "123", "color": "blue"}"#.to_string();
+
+let query_result = ditto
+    .store()
+    .execute(
+        "INSERT INTO cars DOCUMENTS (deserialize_json(:jsonData))",
+        Some(serde_json::json!({
+            "jsonData": "{\"_id\": \"123\",\"color\": \"blue\"}"
+        }).into()),
+    ).await;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+final newCar = '{"_id": "123", "color": "blue"}';
+
+await ditto.execute("""
+  INSERT INTO cars
+  DOCUMENTS (deserialize_json(:jsonData))""",
+  queryArgs: {"jsonData": "{\"_id\": \"123\",\"color\": \"blue\"}"},
+);
+```
+  </Tab>
+</Tabs>
+
+## INSERT with ID Conflict Handling
+
+By default, the INSERT operation throws an error if an existing document with the same ID exists in the local Ditto store.  &##x20;
+
+However, Ditto allows some flexibility by allowing you to choose between ignoring the conflict (`DO NOTHING`) or updating existing documents (`DO UPDATE`) when a conflict occurs during an INSERT operation:
+
+
+```sql DQL
+ON ID CONFLICT [DO FAIL | DO NOTHING | DO UPDATE]
+```
+
+
+In this syntax:
+
+- `DO FAIL` (default) will cause an error to be thrown if a document with the same `_id` currently exists in the local data store.
+- `DO NOTHING` will make the statement succeed with no action taken
+- `DO UPDATE` will perform a value update on every field in the provided document, even if the value is the same. (This will result in all fields provided being replicated).
+
+For example, inserting or updating a car — if there is a conflict (ON ID CONFLICT), execute the  DO UPDATE conflict resolution policy:
+
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+let newCar = [
+  "_id": "123",
+  "color": "blue"
+]
+
+await ditto.store.execute(
+  query: """
+    INSERT INTO cars
+    DOCUMENTS (:newCar)
+    ON ID CONFLICT DO UPDATE
+    """,
+  arguments: [ "newCar": newCar ])
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+var newCar = mapOf(
+  "_id" to "123",
+  "color" to "blue"
+)
+
+ditto.store.execute("""
+  INSERT INTO cars
+  DOCUMENTS (:newCar)
+  ON ID CONFLICT DO UPDATE
+  """,
+  mapOf("newCar", newCar))
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+const newCar = {
+  _id: "123",
+  color: "blue",
+};
+
+await ditto.store.execute(`
+  INSERT INTO cars
+  DOCUMENTS (:newCar)
+  ON ID CONFLICT DO UPDATE`,
+  { newCar });
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+DittoQueryResult result = (DittoQueryResult) ditto.store.execute(
+    "INSERT INTO cars DOCUMENTS (:newCar) ON ID CONFLICT DO UPDATE",
+    Collections.singletonMap("newCar", Collections.singletonMap("color", "blue")),
+);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+var args = new Dictionary<string, object>();
+args.Add("newCar", new { _id = "123", color = "blue" })
+
+var result = await ditto.Store.ExecuteAsync(
+  "INSERT INTO cars"
++ " DOCUMENTS (:newCar) ON ID CONFLICT DO UPDATE",
+  args);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+struct Car {
+  std::string _id;
+  std::string color;
+};
+
+// ...
+
+std::map<std::string, Car> args;
+args["newCar"] = {"123", "blue"};
+
+auto result = ditto.get_store().execute(
+  "INSERT INTO cars DOCUMENTS (:newCar) ON ID CONFLICT DO UPDATE",
+  args).get();
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let query_result = ditto
+    .store()
+    .execute(
+        "INSERT INTO cars DOCUMENTS (:newCar) \
+        ON ID CONFLICT DO UPDATE",
+        Some(serde_json::json!({
+            "newCar": {
+                "_id": "123",
+                "color": "blue"
+            }
+        }).into()),
+    ).await?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+final newCar = {
+  "_id": "123",
+  "color": "blue",
+};
+
+await ditto.execute("""
+  INSERT INTO cars
+  DOCUMENTS (:newCar)
+  ON ID CONFLICT DO UPDATE""",
+  queryArgs: {"newCar": newCar},
+);
+```
+  </Tab>
+</Tabs>
+
+## INSERT with INITIAL DOCUMENTS
+
+INSERT allows you to set specific documents as default data using the INITIAL DOCUMENTS action.&##x20;
+
+*Initial documents* are the documents inserted at the beginning of time and are viewed by all peers as the same INSERT operation. This allows multiple peers to independently initialize the same default data *safely*, so regardless of the individual peer's starting point.
+
+
+<Info>
+  When inserting, the initial documents DO NOTHING if the document ID already exists in the local Ditto store. The ON ID CONFLICT policy cannot change this behavior.
+</Info>
+
+```sql DQL
+INSERT INTO your_collection_name
+INITIAL DOCUMENTS ([document])
+```
+
+
+In this syntax:
+
+- `your_collection_name` is the name of the collection from which you want to retrieve the data.
+- `[document]` represents the document.
+
+For example, setting up default data by inserting the given car details as an initial document:
+
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+let newCar = [
+  "_id": "123",
+  "color": "blue"
+]
+
+await ditto.store.execute(
+  query: """
+    INSERT INTO cars
+    INITIAL DOCUMENTS (:newCar)
+    """,
+  arguments: [ "newCar": newCar ])
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+var newCar = mapOf(
+  "_id" to "123",
+  "color" to "blue"
+)
+
+ditto.store.execute("""
+  INSERT INTO cars
+  INITIAL DOCUMENTS (:newCar)
+  """,
+  mapOf("newCar", newCar))
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+const newCar = {
+  _id: "123"
+  color: "blue",
+};
+
+await ditto.store.execute(`
+  INSERT INTO cars
+  INITIAL DOCUMENTS (:newCar)`,
+  { newCar });
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+DittoQueryResult result = (DittoQueryResult) ditto.store.execute(
+    "INSERT INTO cars INITIAL DOCUMENTS (:newCar)",
+    Collections.singletonMap("newCar", Collections.singletonMap("color", "blue")),
+);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+var args = new Dictionary<string, object>();
+args.Add("newCar", new { _id = "123", field1 = 0 })
+
+await ditto.Store.ExecuteAsync(
+  "INSERT INTO cars INITIAL DOCUMENTS (:newCar)",
+  args);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+struct Car {
+  std::string _id;
+  std::string color;
+};
+
+// ...
+
+std::map<std::string, Car> args;
+args["newCar"] = {"123", "blue"};
+
+auto result = ditto.get_store().execute(
+  "INSERT INTO cars INITIAL DOCUMENTS (:newCar)",
+  args).get();
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let query_result = ditto
+    .store()
+    .execute(
+        "INSERT INTO cars INITIAL DOCUMENTS (:newCar)",
+        Some(serde_json::json!({
+            "newCar": {
+                "_id": "123",
+                "color": "blue"
+            }
+        }).into())
+    ).await?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+const newCar = {
+  "_id": "123"
+  "color": "blue",
+};
+
+await ditto.execute("""
+  INSERT INTO cars
+  INITIAL DOCUMENTS (:newCar)""",
+  {"newCar": newCar},
+);
+```
+  </Tab>
+</Tabs>
+

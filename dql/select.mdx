@@ -1,0 +1,221 @@
+---
+title: SELECT
+description: "The `SELECT` operation, once executed, retrieves documents from a collection and uses clauses like `WHERE` to specify conditions for filtering the documents to return."
+---
+
+
+<Info>
+DQL currently only supports the `SELECT *` operation for document retrieval. With `SELECT *`, all responses result in full documents.
+
+Expect more advanced `SELECT` capabilities in upcoming DQL releases. For more information, see [DQL Roadmap Functionality](/dql/roadmap).
+</Info>
+
+
+## SELECT \* Statements
+
+The following syntax outlines the basic structure and optional clauses you can use within your `SELECT` statements to specify your conditions for retrieval:
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+[WHERE condition]
+[ORDER BY orderby_expression_1, orderby_expression_2, ... [ASC|DESC]]
+[LIMIT limit_value]
+[OFFSET number_of_documents_to_skip]
+```
+
+
+For instance, retrieve all documents in the `cars` collection `WHERE` the `color` property is set to the value 'blue' :
+
+```sql DQL
+SELECT * FROM cars WHERE color = 'blue'
+```
+
+
+To perform a `SELECT` and receive *all* document fields, including an embedded `MAP`:
+
+
+
+## Clauses for Filtering
+
+The following table provides an overview of the different clauses you can use to define specific conditions and calculations within your DQL `SELECT` statements to provide more granular control over your queries:
+
+| **Clause** | **Description** |
+| --- | --- |
+| FROM | The required clause specifying the collection containing the documents for retrieval. (See [FROM](/dql/select#from)) |
+| WHERE | Applies filtering conditions to restrict the documents included in the result set. (See [WHERE](/dql/select#where)) |
+| ORDER BY | Specifies the sorting order of the result set based on one or more expressions. (See [ORDER BY](/dql/select#order-by)) |
+| LIMIT | Restricts the number of documents included in the result set. (See [LIMIT](/dql/select#limit)) |
+| OFFSET | Skips a specific number of documents before returning the result set. (See [OFFSET](/dql/select#offset)) |
+
+### FROM
+
+Required in each `SELECT` statement you write in DQL, the `FROM` element identifies the collection for document retrieval.
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+```
+
+
+For example, a `SELECT` statement querying documents from the `cars` collection:
+
+```sql DQL
+SELECT * FROM cars
+```
+
+
+### WHERE
+
+The `WHERE` clause filters data based on either an expression or a set of conditions that narrow the result set returned to you:
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+WHERE [condition]
+```
+
+
+For example, here is a basic `SELECT` statement querying documents from the `cars` collection based on a given address:
+
+```sql DQL
+SELECT * FROM cars
+WHERE location.address = '123 Main St, San Francisco, CA 98105'
+```
+
+
+To demonstrate a more complex query, here is a `SELECT` statement that queries using multiple expressions and logical operators to further refine the criteria for document retrieval:
+
+```sql DQL
+
+SELECT * FROM cars
+WHERE color = 'blue' AND features.trim = 'Standard' OR features.mileage > 10000
+```
+
+
+### ORDER BY
+
+With the `ORDER BY` clause, if you'd like, you can integrate calculations or expressions in your `SELECT` statement. Then sort the resulting documents to return in either ascending (`ASC`) or descending (`DESC`) alphabetical order:
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+ORDER BY expression_1, expression_2, ... [ASC|DESC]
+```
+
+
+For example, here is a simple `SELECT` statement that uses the `ORDER BY` clause to query and sort documents from the `cars` collection in descending (`DESC`) alphabetical order based on the field value set for the `color` property:
+
+```sql DQL
+SELECT *
+FROM cars ORDER BY color DESC
+```
+
+
+In this syntax:
+
+- `your_collection_name` is the name of the collection from which you want to retrieve the data.
+- `expression_1, expression_2, ...` are the expressions evaluated to sort the result. Expressions are resolved in order.
+- `[ASC|DESC]` is an optional parameter that specifies the sort order. If omitted, the default sort order is ascending (`ASC`). To sort in descending order, you can specify `DESC`.
+
+**Example**
+
+In this example, the result set from the query will be sorted in descending order based on the values in the field:
+
+
+```sql DQL
+-- Sort by a given field_name
+SELECT *
+FROM your_collection_name
+ORDER BY field_name DESC
+```
+
+
+For instance, here `"blue"` cars return first and other cars sort by the natural order in the collection:
+
+```sql DQL
+SELECT *
+FROM cars
+ORDER BY color = 'blue'
+```
+
+
+#### **Sort Order by Object Type**
+
+In DQL, the hierarchy for comparing and sorting objects varies based on the following criteria:
+
+- If ascending (`ASC`) order operations:
+  - `boolean`
+  - `number`
+  - `binary`
+  - `string`
+  - `array`
+  - `object`
+  - `null`
+  - `missing`
+- If descending (`DESC`) order operations, sorting order is reversed:
+  - `missing`
+  - `null`
+  - `object`
+  - `array`
+  - `string`
+  - `binary`
+  - `number`
+  - `boolean`
+- If evaluating values, `true` results are prioritized and ordered first followed by `false` results.
+
+#### Expressing Sort Order
+
+Unless explicitly defined as `DESC` in your query, Ditto defaults to sorting in ascending (`ASC`). So, if you want to sort in ascending order, you do *not* have to express that in your query.
+
+### LIMIT
+
+The `LIMIT` clause is used to restrict the number of documents returned by a query, allowing you to specify a maximum limit on the number of documents to be included in the result set:
+
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+LIMIT limit_value
+```
+
+
+In this syntax:
+
+- `your_collection_name` is the name of the collection from which you want to retrieve the data.
+- `limit_value` is the maximum number of documents you want to include in the result set.
+
+For example, only return the first 10 documents from the `your_collection_name` collection:
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+LIMIT 10
+```
+
+### OFFSET
+
+The `OFFSET` clause is used to specify the number of records to skip before starting to return documents from the query result:
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+OFFSET number_of_items_to_skip
+```
+
+
+In this syntax:
+
+- `your_collection_name` is the name of the collection from which you want to retrieve the data.
+- `number_of_items_to_skip` is the number of items before returning the result set.
+
+Using `OFFSET` with `LIMIT` is a common way to utilize `OFFSET`; for example:
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+LIMIT 10
+OFFSET 10
+```
+
+

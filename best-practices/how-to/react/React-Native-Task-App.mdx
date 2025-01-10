@@ -1,0 +1,123 @@
+---
+title: React Native Task App
+description: This quickstart guide offers a detailed, step-by-step walkthrough for integrating the Ditto SDK in a prebuilt template of a basic to-do task app developed using React Native for iOS and Android targets.
+---
+<Info>
+  You'll learn how to integrate Ditto in an app built with React Native, query data using the Ditto Query Language (DQL), and implement offline sync functionalities through `create`, `read`, `update`, and `delete` (CRUD) operations.
+</Info>
+Before you start the build process using the Ditto SDK, ensure you have a stable internet connection and sufficient storage on your machine. Otherwise, there is potential for the necessary dependencies to fail to download automatically, potentially compromising the functionality of the software.
+
+
+## Prerequisites
+
+Before you get started, make sure your environment is ready:
+
+- [Ditto Access Credentials]()
+- <a href="https://nodejs.org/en/" target="_blank">Node.js version 12 LTS or later</a>
+- <a href="https://git-scm.com/downloads" target="_blank">Git</a>
+- <a href="https://code.visualstudio.com/download" target="_blank">Visual Studio Code</a>¹
+- <a href="https://apps.apple.com/us/app/xcode/id497799835" target="_blank">Xcode</a> 15 (or later)
+- <a href="https://developer.android.com/studio/releases" target="_blank">Android Studio Hedgehog</a>
+- <a href="https://reactnative.dev/docs/environment-setup?package-manager=yarn&platform=android&os=macos" target="_blank">React Native CLI</a>
+
+
+<Info>
+  ¹For optimal compatibility with the platform, Ditto recommends Visual Studio Code; however, you may use any IDE you prefer.
+</Info>
+
+### Getting Started
+
+Once you've confirmed that your environment is set up and you meet the prerequisites, clone Ditto's prebuilt task app project to your local machine and install the necessary dependencies:
+
+<Steps>
+    <Step>
+    For instructions on setting up your environment for React Native, see <a href="https://reactnative.dev/docs/environment-setup" target="_blank">Setting up the development environment</a> in the official documentation.
+
+    </Step>
+    <Step>
+    From the directory you want to clone the project to and change into the \<todo> root directory:
+
+    ```bash codeblocktabs
+    git clone https://github.com.git
+    cd example
+    ```
+    </Step>
+</Steps>
+
+
+From the root directory of your project, install the project's dependencies based on the `package.json` file:
+
+<Tabs>
+  <Tab title="npm">
+  If using npm as your package manager:
+
+  ```none codeblocktabs
+  npm install
+  ```
+  </Tab>
+  <Tab title="Yarn">
+If using Yarn as your package manager:
+
+```bash codeblocktabs
+yarn install
+```
+  </Tab>
+</Tabs>
+
+## Verifying Setup
+
+Make sure that you have set up your development environment correctly by running the React Native CLI doctor:
+
+
+For more information about the doctor, see React Native's blog post: <a href="https://reactnative.dev/blog/2019/11/18/react-native-doctor" target="_blank">*Meet Doctor, a new React Native command*</a>.
+
+<Steps>
+    <Step>
+    If needed, install the doctor:
+    <Tabs>
+      <Tab title="npm">
+      If using npm as your package manager:
+
+      ```bash codeblocktabs
+      npm install @react-native-community/cli-doctor
+      ```
+      </Tab>
+      <Tab title="Yarn">
+        If using Yarn as your package manager:
+        ```bash codeblocktabs
+        yarn add @react-native-community/cli-doctor
+        ```
+      </Tab>
+    </Tabs>
+    </Step>
+    <Step>
+    From the root directory, run the doctor:
+
+    ```bash codeblocktabs
+    npx @react-native-community/cli doctor
+    ```
+    </Step>
+    <Step>
+    If the doctor detects any vulnerabilities in your project, follow the fix advice that appears. For example, create or connect an emulator and set the Android SDK to version 33.0.0 in Android Studio:
+
+    <Frame>
+      ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/CNXwSYLmGk5JodKbeAntL_image.png)
+    </Frame>
+    </Step>
+    <Step>
+    From the root directory, confirm that the task app builds successfully for your target platform:
+
+    ```bash codeblocktabs
+    npx react-native start
+    ```
+    </Step>
+</Steps>
+
+
+## Installing Ditto
+
+Now that you're environment is all set up, install the Ditto SDK package into your project:
+
+```bash codeblocktabs
+npm install --save @dittolive/ditto
+```

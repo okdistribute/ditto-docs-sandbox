@@ -1,0 +1,30 @@
+---
+title: Wi-Fi Interference and Client Load
+---
+
+## Managing Wi-Fi Interference and Client Load
+
+When implementing Ditto in mesh networks, especially in environments where stable and efficient performance is crucial, it's important to address potential challenges like Wi-Fi interference and client load. Here are some best practices to help optimize your mesh network performance using Ditto.
+
+### 1. Mitigating Wi-Fi Interference
+
+Wi-Fi interference can degrade network performance, leading to slower data syncs and unreliable connections. To address this:
+
+- **Leverage Multiple Connection Types**: Ditto supports various connection types including Wi-Fi, Bluetooth Low Energy (BLE), and LAN. By enabling these multiple transports, Ditto can dynamically switch to the best-performing connection available, reducing the impact of interference.
+- **Environmental Considerations**: Be aware of physical obstructions and radio frequency congestion, which can affect Wi-Fi performance. Strategically place network devices to minimize these issues and ensure stronger signal strength.
+
+### 2. Managing Client Load and Network Congestion
+
+In larger mesh networks, managing client load is crucial to maintaining efficient performance. Ditto provides several strategies to handle this:
+
+- **Enable IP Multicasting**: For LAN environments, enabling IP multicasting can improve peer discovery and reduce the load on individual devices by allowing more efficient data distribution across the network.
+- **Manage Data Size and Query Complexity**: Large document syncs and verbose logging can slow down the network. It's important to manage the size of the data being synced and optimize queries to limit the amount of data processed at any given time. This can be done by evicting irrelevant data periodically and ensuring that only necessary data is queried. For more information, see Device Storage Management
+
+### 3. Optimizing for High-Load Environments
+
+In environments with a high density of devices and data traffic, additional optimizations may be necessary:
+
+- **Limit Active Connections**: While it's important to maintain a dense enough mesh to prevent islanding, too many connections can lead to congestion. Strategically limit the number of active connections to balance the load effectively.
+- **Avoid Verbose Logging**: Verbose logging, especially with large datasets, can significantly slow down the synchronization process. Ensure that logging is kept to a necessary minimum during high-load times to prevent this.
+
+For additional information, see [Troubleshooting](/support/troubleshooting) and [Transports](/v4-7/sync/transports-overview)

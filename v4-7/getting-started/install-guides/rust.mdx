@@ -1,0 +1,318 @@
+---
+title: Rust
+description: "This article provides step-by-step instructions on how to set up a new Rust project, integrate the Ditto SDK, cross-compile for any target platform, and more:"
+icon: rust
+iconType: solid
+---
+
+- [Prerequisites](/install-guides/rust#STCAQ)
+- [Creating a New Project](/install-guides/rust#1JwfY)
+- [Including Ditto Dependencies](/install-guides/rust#PjmtY)
+- [Verifying Project Setup](/install-guides/rust#tH0Ah)
+- [Organizing Filesystem Structure](/install-guides/rust#EYyu6)
+- [Cross-Compiling with the Ditto SDK](/install-guides/rust#GCpmi)
+- [Troubleshooting](/install-guides/rust#5enEt)
+
+
+<Info>
+For a complete overview of the platforms, transports, and devices, see the [Rust Compatibility Map](<./../../Compatibility Maps/Rust.md>).
+</Info>
+
+<Info>
+For the SDK API reference for Rust, see <a href="https://software.ditto.live/rust/Ditto/4.7.1/x86_64-unknown-linux-gnu/docs/dittolive_ditto/index.html" target="_blank">Crate dittolive\_ditto version 4.7.1</a>.
+</Info>
+
+## Prerequisites
+
+Before attempting to install Ditto, ensure you have Rust installed via `rustup`:
+
+<Steps>
+<Step>
+If you don't have the `rustup` command, <a href="https://rustup.rs/" target="_blank">install it via the official Install Rust documentation</a>.
+</Step>
+
+<Step>
+If you already have `rustup`, ensure it's updated to the latest version:
+
+<Tabs>
+<Tab title="bash">
+
+```powershell
+rustup self update
+```
+</Tab>
+</Tabs>
+</Step>
+
+<Step>
+Now, verify you have both `rustc` and `cargo` available in your shell:
+
+<Tabs>
+<Tab title="bash">
+
+```powershell
+rustc --version
+cargo --version
+```
+</Tab>
+</Tabs>
+</Step>
+</Steps>
+
+## Creating a New Project
+
+Using Cargo, create a new binary project:
+
+<Tabs>
+<Tab title="bash">
+
+```powershell
+cargo new --bin my_project_name
+```
+</Tab>
+</Tabs>
+
+<Info>
+Make sure to replace `my_project_name` with your desired project name.
+</Info>
+
+## Adding the Ditto Dependency
+
+Add the Ditto SDK to your Rust project:
+
+<Steps>
+<Step>
+Visit <a href="https://docs.rs/dittolive-ditto" target="_blank">docs.rs/dittolive-ditto</a> to find the latest version of the Rust SDK, or the version you would like to use. For this example, let's choose SDK version `4.8.0`.
+</Step>
+
+<Step>
+From the `Cargo.toml` file located in the root of your project, add a dependency on `dittolive-ditto` at the version chosen, in this case `"=4.8.0"`. We recommend using the `"=x.y.z"` semver syntax to prevent implicit upgrades.
+
+<Tabs>
+<Tab title="Cargo.toml">
+
+```rust
+[dependencies]
+dittolive-ditto = "=4.8.0"
+```
+</Tab>
+</Tabs>
+</Step>
+
+<Step>
+Visit the <a href="https://docs.ditto.live/compatibility/rust" target="_blank">Rust Compatibility Map page</a> to find the Rust Toolchain version you need based on the SDK version you chose. For SDK version 4.8.0, you should use Rust `1.74.1`.
+</Step>
+
+<Step>
+Create a `rust-toolchain` file next to your `Cargo.toml`and paste the Rust toolchain version you looked up from the compatibiltiy map:
+
+<Tabs>
+<Tab title="./rust-toolchain">
+
+```none
+1.74.1
+```
+</Tab>
+</Tabs>
+</Step>
+
+<Step>
+Save the `Cargo.toml` and `rust-toolchain` files, then check that you can build and run the executable with `cargo run`:
+
+<Tabs>
+<Tab title="bash">
+
+```none
+$ cargo run
+info: syncing channel updates for '1.74.1-aarch64-apple-darwin'
+...
+    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
+     Running `target/debug/my_project_name`
+Hello, world!
+
+```
+</Tab>
+</Tabs>
+
+<Info>
+The first time running `cargo build` or `cargo run` after updating the `rust-toolchain` file, you should see the "info: syncing channel updates" message. This is `rustup` magically installing the toolchain you specified in `rust-toolchain` behind the scenes.
+</Info>
+</Step>
+</Steps>
+
+## Organizing Filesystem Structure
+
+When organizing the end-user device storage directory, adhere to a filesystem structure that is clean, consistent, and easily maintained.
+
+For guidelines to keep organized, see [Components and Organization Best Practices]().
+
+
+### Components and Organization Best Practices
+The following table provides an overview of the components that make up your app's filesystem structure and best practices for organizing the files on the filesystem of the end user's device:
+
+| **Component** | **Best Practice** |
+| --- | --- |
+| AppRoot/AppExecutable | The executable file for your app that, unless explicitly specified, the Ditto SDK is statically linked to:  - All other files and directories should be relative to this location. - Maintain a clear separation between this executable file and other libraries. - If desired, use the Ditto SDK as a separate shared library. (See [Optional Dynamic Linking](/v4.7/install-guides/rust#eszFD)﻿) |
+| AppRoot/libdittoffi.dll | The Ditto SDK binary library file linking your Cargo for Rust project with Ditto.¹  By default, the Ditto SDK is statically linked to your executable.  However, if desired, you can configure your build for dynamic linking by specifying the shared library version of the Ditto SDK. (See [Optional Dynamic Linking](/v4.7/install-guides/rust#_5OsT)﻿) |
+| AppRoot/ditto\_data/ | The base directory designated for Ditto-backed app data stored locally on the end-user device:  - Organize all app data within this directory rather than across the entire filesystem for your project. - Maintain a clear and consistent directory structure for your project. |
+
+¹The path and format of the Ditto SDK binary library file vary by app target. For example, `.dylib` for macOS and `.dll` for Windows. (See [Binary Library Path Formats]())
+
+#### Setting Up Optional Dynamic Linking
+
+If using the Ditto SDK as a separate library from your app's executable, ensure that, during the build process, the linker can locate the Ditto SDK shared library and link it with your app:
+
+<Steps>
+<Step>
+From the linker configuration for your project, specify the path to the Ditto SDK shared binary library.
+
+<Info>
+For an overview of file paths and file extensions by target platform, see [Binary Library Path Formats]().
+</Info>
+
+For example, to configure for the macOS target, configure the linker flag to locate the Ditto SDK shared binary library (`libdittoffi.dylib`) for compilation, use  `@executable_path` to specify a relative path from the executable to the library:
+
+<Tabs>
+<Tab title="bash">
+
+```none
+@executable_path/../libdittoffi.dylib
+```
+</Tab>
+</Tabs>
+</Step>
+
+<Step>
+Before distributing your app, ensure the Ditto SDK shared binary library is included and accessible at the specified location and configured for your linker:
+
+<Tabs>
+<Tab title="bash">
+
+```none
+target/<profile>/build/dittolive-ditto-sys<hash>/out
+```
+</Tab>
+</Tabs>
+</Step>
+</Steps>
+
+#### Binary Library Path Formats
+
+The following table provides an overview of the different file extensions for the binary Ditto library by target platform:
+
+| **Target** | **Format** | **Description**            |
+| ---------- | ---------- | -------------------------- |
+| Linux      | `.so`      | Shared object (SO)         |
+| macOS      | `.dylib`   | Dynamic library (DL)       |
+| Windows    | `.dll`     | Dynamic link library (DLL) |
+
+## Cross-Compiling with the Ditto SDK
+
+The Rust compiler, `rustc`, comes with native cross-compilation support for a wide range of targets, so you can write once and run on any platform without needing to alternate between development environments or libraries.
+
+To cross-compile, specify your targets and other configuration settings as appropriate:
+
+<Steps>
+<Step>
+Open the `.cargo/config.toml` file located in your project root.
+</Step>
+
+<Step>
+Specify targets, their root directories, and other configuration settings, such as `POSIX C` library, header files, `Binutils`, and a `linker`.
+
+For example, the following snippet shows separate configurations for Linux and Windows targets:
+
+<Tabs>
+<Tab title=".cargo/config.toml">
+
+```rust
+[target.'cfg(target_os = "linux")']
+linker = "arm-linux-gnueabihf-gcc"
+ar = "arm-linux-gnueabihf-ar"
+rustflags = [
+    "-C", "link-arg=-march=armv7-a",
+    "-C", "link-arg=-mfpu=neon",
+    "-C", "link-arg=-mfloat-abi=hard",
+]
+
+[target.'cfg(target_os = "windows")']
+linker = "x86_64-w64-mingw32-gcc"
+ar = "x86_64-w64-mingw32-ar"
+
+```
+</Tab>
+</Tabs>
+</Step>
+</Steps>
+
+## Troubleshooting
+
+During the build process, you may encounter the following error message indicating the Ditto SDK `build.rs` script failed to locate and download the native static library (`dittoffi`) containing the Ditto binary appropriate for your target:
+
+<Tabs>
+<Tab title="">
+
+```none
+"error: could not find native static library dittoffi, perhaps an -L flag is missing". What should I do?
+```
+</Tab>
+</Tabs>
+
+### Diagnosing build.rs Failures
+
+The  `build.rs` script that executes at build is responsible for setting up your build environment and ensuring necessary dependencies, including the Ditto SDK, are correctly configured and accessible for compilation.
+
+However, several factors, such as connectivity issues and misconfigured settings, can cause this script to fail.
+
+To diagnose this issue, check the following logs for errors:
+
+<Tabs>
+<Tab title="">
+
+```none
+ target/<profile>/build/dittolive-ditto-sys-<hash>/stderr
+```
+</Tab>
+</Tabs>
+
+### Resolving build.rs Failures
+
+To resolve this issue, perform the following troubleshooting steps:
+
+<Steps>
+<Step>
+Ensure your internet connection is live and the Ditto SDK version number is correct.
+</Step>
+
+<Step>
+Using a command-line tool like `file`, `otool`, and `readelf`, as follows, inspect the downloaded library located in the build cache to determine if its properties meet the requirements for integration into your Rust project:
+
+<Tabs>
+<Tab title="file">
+
+```none
+file libdittoffi.dylib
+```
+</Tab>
+
+<Tab title="otool">
+
+```none
+otool -L libdittoffi.dylib
+```
+</Tab>
+
+<Tab title="readelf">
+
+```none
+readelf -a libdittoffi.so
+```
+</Tab>
+</Tabs>
+</Step>
+
+<Step>
+Verify the issue is resolved by re-running `cargo build` and ensuring it executes successfully.
+</Step>
+</Steps>
+

@@ -1,0 +1,424 @@
+---
+title: Legacy-to-DQL Reference
+description: "This article covers example mappings from Legacy Query APIs to DQL for basic CRUD operations as well as syncing data with the SDK."
+---
+
+## Creating Documents
+
+<Info>
+  In DQL syntax, enclose `string` literals within single quotes (`''`); for example `'blue'` .
+</Info>
+
+<Warning>
+  Use single quotes in DQL queries to ensure accuracy. Incorrectly using double quotes (`""`); for example `"blue"`, may prevent document matching. Currently, Ditto does not throw a warning for this issue.
+</Warning>
+
+### Inserting a Single Document
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+const newCar = {
+  _id: '123',
+  color: 'blue',
+}
+
+await ditto.store
+.collection('cars')
+.upsert(newCar)
+```
+
+  </Card>
+  <Card title="DQL">
+```javascript JS
+const newCar = {
+  _id: '123',
+  color: 'blue',
+}
+
+await ditto.store.execute(`
+  INSERT INTO cars
+  DOCUMENTS (:newCar)`,
+  { newCar })
+```
+
+  </Card>
+</CardGroup>
+
+### Inserting Multiple Documents
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+// Not Supported
+```
+
+  </Card>
+  <Card title="DQL">
+
+```javascript JS
+const car1 = {
+  _id: '123',
+  color: 'blue',
+}
+const car2 = {
+  _id: '456',
+  color: 'red',
+}
+
+await ditto.store.execute(`
+  INSERT INTO cars
+  DOCUMENTS (:car1),(:car2)`,
+  { car1, car2 })
+```
+  </Card>
+</CardGroup>
+
+### Inserting Initial/Default Documents
+
+This is the ability to insert documents at time 0. For more information see [INSERT with INITIAL DOCUMENTS]().
+
+<CardGroup>
+  <Card title="Legacy">
+
+```javascript JS
+const newCar = {
+  _id: '123',
+  color: 'blue',
+}
+
+await ditto.store
+.collection('cars')
+.upsert(newCar, { writeStrategy: "insertDefaultIfAbsent" })
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+const newCar = {
+  _id: '123',
+  color: 'blue',
+}
+
+await ditto.store.execute(`
+  INSERT INTO cars
+  INITIAL DOCUMENTS (:newCar)`,
+  { newCar })
+```
+  </Card>
+</CardGroup>
+
+### Upserting Documents
+
+Legacy supports upserting by default where DQL requires the policy to be explicitly set.
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+const newCar = {
+  _id: '123',
+  color: 'blue',
+}
+
+await ditto.store
+.collection('cars')
+.upsert(newCar)
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+const newCar = {
+  _id: '123',
+  color: 'blue',
+}
+
+await ditto.store.execute(`
+  INSERT INTO cars
+  DOCUMENTS (:newCar)
+  ON ID CONFLICT DO UPDATE`,
+  { newCar })
+```
+  </Card>
+</CardGroup>
+
+## Reading Data
+
+### Querying Data
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.find('color == "blue"')
+```
+
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  SELECT *
+  FROM cars
+  WHERE color = 'blue'
+  `)
+```
+  </Card>
+</CardGroup>
+
+### Querying Data by ID
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.findById('123')
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  SELECT *
+  FROM cars
+  WHERE _id = '123'
+  `)
+```
+  </Card>
+</CardGroup>
+
+### Querying Data with Limits
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.find('color == "blue"')
+.limit(10)
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  SELECT *
+  FROM cars
+  WHERE color = 'blue'
+  LIMIT 10
+  `)
+```
+  </Card>
+</CardGroup>
+
+### Querying for Null Values
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.find('color == null')
+```
+
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  SELECT *
+  FROM cars
+  WHERE color IS NULL
+  `)
+```
+  </Card>
+</CardGroup>
+
+### Querying with Arguments
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.find(
+  'color == $args.color',
+  { color: 'blue' })
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  SELECT *
+  FROM cars
+  WHERE color = :color`,
+  { color: 'blue' })
+```
+  </Card>
+</CardGroup>
+
+## Observing Data Changes
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+const observer = ditto.store
+.collection('cars')
+.find('color = "blue"')
+.observeLocal((result, event) => {
+    // do something
+  })
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+ditto.store.registerObserver(`
+  SELECT *
+  FROM cars
+  WHERE color = 'blue'`,
+  (result) => {
+    // handle change
+  })
+```
+  </Card>
+</CardGroup>
+
+## Updating Documents
+
+### Updating a Single Document
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.findByID('123')
+.update((mutableDoc) => {
+  mutableDoc.at('color').set('red')
+})
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  UPDATE cars
+  SET color = 'red'
+  WHERE _id = '123'
+  `)
+```
+  </Card>
+</CardGroup>
+
+### Updating Multiple Documents
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+  .collection('cars')
+  .find('color == "blue"')
+  .update((documents) => {
+    for (const document of documents) {
+      document.color = 'red'
+    }
+  })
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  UPDATE cars
+  SET color = 'red'
+  WHERE color = 'blue'
+  `)
+```
+  </Card>
+</CardGroup>
+
+### Updating Multiple Fields
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.findByID('123')
+.update((mutableDoc) => {
+  mutableDoc.at('color').set('red')
+  mutableDoc.at('mileage').set(3001)
+})
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  UPDATE cars
+  SET
+    color = 'red',
+    mileage = 3001
+  WHERE _id = '123'
+  `)
+```
+  </Card>
+</CardGroup>
+
+## Deleting Documents
+
+### Evicting Documents
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.find('color == "blue"')
+.evict()
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+await ditto.store.execute(`
+  EVICT FROM cars
+  WHERE color = 'blue'
+  `)
+```
+  </Card>
+</CardGroup>
+
+
+### Deleting Documents
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+await ditto.store
+.collection('cars')
+.find('color == "blue"')
+.remove()
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+// Not Supported (use EVICT)
+```
+  </Card>
+</CardGroup>
+
+
+## Syncing Data From Other Peers
+
+<CardGroup>
+  <Card title="Legacy">
+```javascript JS
+ditto.store
+.collection('cars')
+.find('color == "blue"')
+.subscribe()
+```
+  </Card>
+  <Card title="DQL">
+```javascript JS
+ditto.sync.registerSubscription(`
+  SELECT *
+  FROM cars
+  WHERE color = 'blue'
+  `)
+```
+  </Card>
+</CardGroup>

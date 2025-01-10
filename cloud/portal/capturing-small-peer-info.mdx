@@ -1,0 +1,380 @@
+---
+title: Using the Device Dashboard
+description: "The Portal Device Dashboard provides insights into devices that have been deployed with an application embedded with the Ditto SDK.  With the Device Dashboard, you can gather and store peer-to-peer sync and network details automatically rather than needing to continuously query Ditto for this data."
+icon: gauge
+iconType: solid
+---
+
+
+The Device Dashboard is powered by the Small Peer Info (`smallPeerInfo`) Ditto system collection and avaiable for Ditto SDK version 4.4.0 and later.
+
+Once enabled, you can access the following details for each device using the portal:
+
+- Mesh network connection status
+- Timestamp when last seen by the Big Peer cloud deployment
+- Names and unique identifiers
+- Operating System (OS)
+- Address peer key
+- Latest device logs
+- Custom user metadata
+
+
+
+## Viewing devices with Ditto SDK 4.8.0 and later
+
+The Device Dashboard will automatically be populated with  `smallPeerInfo` in the Ditto SDK 4.8.0 and later.
+
+
+
+To opt out of having device data written and transmitted to the Portal, you must disable `smallPeerInfo`
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+ditto.smallPeerInfo.isEnabled = false
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.smallPeerInfo.isEnabled = false
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+ditto.smallPeerInfo.isEnabled = false
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+ditto.smallPeerInfo.isEnabled = false
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+ditto.SmallPeerInfo.IsEnabled = false;
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+ditto.get_small_peer_info().set_enabled(false)
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+ditto.small_peer_info().set_enabled(false)
+```
+  </Tab>
+  <Tab title="Dart(beta)">
+```Dart
+// Coming Soon
+```
+  </Tab>
+</Tabs>
+
+
+## Viewing devices with Ditto SDK 4.4.0 - 4.7.x
+
+In earlier versions of the Ditto SDK, the `smallPeerInfo` feature needs to be manually enabled to collect data. Enable `smallPeerInfo` before calling `startSync()` using the following steps:
+
+<Steps>
+    <Step>
+Set `smallPeerInfo.isEnabled` set to `true` :
+<Tabs>
+  <Tab title="Swift">
+```swift
+ditto.smallPeerInfo.isEnabled = true
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.smallPeerInfo.isEnabled = true
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+ditto.smallPeerInfo.isEnabled = true
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+ditto.smallPeerInfo.isEnabled = true
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+ditto.SmallPeerInfo.IsEnabled = true;
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+ditto.get_small_peer_info().set_enabled(true)
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+ditto.small_peer_info().set_enabled(true)
+```
+  </Tab>
+  <Tab title="Dart(beta)">
+```Dart
+// Coming Soon
+```
+  </Tab>
+</Tabs>
+    </Step>
+    <Step>
+Set the sync scope to BigPeer Only which indicates that the data should be synced to the Cloud (BigPeer). Default is that the data is only captured locally.
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+ditto.smallPeerInfo.syncScope = .bigPeerOnly
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.smallPeerInfo.syncScope = DittoSmallPeerInfoSyncScope.BigPeerOnly
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+await ditto.smallPeerInfo.setSyncScope("BigPeerOnly")
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+ditto.smallPeerInfo.syncScope = DittoSmallPeerInfoSyncScope.BigPeerOnly
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+ditto.SmallPeerInfo.SyncScope  = DittoSmallPeerInfoSyncScope.BigPeerOnly
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+ditto.get_small_peer_info().sync_scope(), SyncScope::BigPeerOnly
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+ditto.small_peer_info()..set_sync_scope(DittoSmallPeerInfoSyncScope::BigPeerOnly);
+```
+  </Tab>
+  <Tab title="Dart(beta)">
+```Dart
+// Coming Soon
+```
+  </Tab>
+</Tabs>
+    </Step>
+</Steps>
+
+
+## Viewing devices with Ditto SDK 4.3.x and Earlier
+
+The devices dashboard is only supported on devices with SDK version 4.4.0 and later. You must upgrate your application to a support version to take advantage of this feature capability.
+
+
+
+## Custom User Defined Device Name
+
+For cross-platform development or when targeting iOS, if you want the ability to uniquely identify devices within Ditto, call the `deviceName` property on the `ditto` namespace and specify the desired name.
+
+<Info>
+This must be set before calling `startSync()` to take effect.
+</Info>
+
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+ditto.deviceName = "your device name"
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.deviceName = "your device name"
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+ditto.deviceName = "your device name"
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+ditto.deviceName = "your device name"
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+ditto.DeviceName = "your device name";
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+ditto.device_name = "your device name";
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+ditto.set_device_name("your device name");
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+// Coming Soon
+```
+  </Tab>
+</Tabs>
+
+## Custom User Metadata
+
+You can add custom device information into the device dashboard by setting the Small Peer Info `metadata` property on a device.
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+var metadata: [String: String] = [
+    "app_version": "1.0.0",
+    "device_id": "abc123"
+]
+
+// Set the object directly
+ditto.smallPeerInfo.setMetadata(metadata)
+
+// or
+
+// Convert dictionary to JSON string
+if let jsonData = try? JSONSerialization.data(withJSONObject: metadata, options: []),
+    let jsonString = String(data: jsonData, encoding: .utf8) {
+
+    // Set with a JSON serialized payload
+    ditto.smallPeerInfo.setMetadataJSONString(jsonString)
+}
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+val metadata = mutableMapOf<String, String>(
+    "app_version" to "1.0.0",
+    "device_id" to "abc123"
+)
+
+// Set the object directly
+ditto.smallPeerInfo.metadata = metadata
+
+// or
+
+val jsonMetadata = JSONObject(metadata)
+val jsonString = jsonMetadata.toString()
+
+// Set with a JSON serialized payload
+ditto.smallPeerInfo.metadataJsonString = jsonString
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+const metadata = {
+  app_version: "1.0.0",
+  device_id: "abc123"
+}
+
+// Set the object directly
+ditto.smallPeerInfo.metadata = metadata
+
+// or
+
+const jsonString = JSON.stringify(metadata)
+
+// Set with a JSON serialized payload
+ditto.smallPeerInfo.metadataJSONString = jsonString
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+Map<String, String> metadata = new HashMap<>();
+metadata.put("app_version", "1.0.0");
+metadata.put("device_id", "abc123");
+
+// Set the object directly
+ditto.smallPeerInfo.setMetadata(metadata);
+
+// or
+
+JSONObject jsonMetadata = new JSONObject(metadata);
+String jsonString = jsonMetadata.toString();
+
+// Set with a JSON serialized payload
+ditto.smallPeerInfo.setMetadataJsonString(jsonString);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+Dictionary<string, string> metadata = new Dictionary<string, string>
+{
+    { "app_version", "1.0.0" },
+    { "device_id", "abc123" }
+};
+
+// Set the object directly
+ditto.SmallPeerInfo.Metadata = metadata;
+
+// or
+
+string jsonString = JsonConvert.SerializeObject(metadata);
+
+// Set with a JSON serialized payload
+ditto.SmallPeerInfo.MetadataJsonString = jsonString;
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+std::map<std::string, std::string> metadata;
+metadata["app_version"] = "1.0.0";
+metadata["device_id"] = "abc123";
+
+// Set the object directly
+ditto.get_small_peer_info().set_metadata(metadata);
+
+// or
+
+nlohmann::json json_metadata(metadata);
+std::string json_string = json_metadata.dump();
+
+// Set with a json serilalized payload
+ditto.get_small_peer_info().set_metadata_json_string(json_string)
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+use std::collections::HashMap;
+use serde_json::json;
+
+let mut metadata = HashMap::new();
+metadata.insert("app_version".to_string(), "1.0.0".to_string());
+metadata.insert("device_id".to_string(), "abc123".to_string());
+
+// Set the object directly
+ditto.get_small_peer_info().set_metadata(metadata.clone());
+
+// or
+
+let json_metadata = json!(metadata);
+let json_string = json_metadata.to_string();
+
+// Set with a JSON serialized payload
+ditto.get_small_peer_info().set_metadata_json_string(json_string);
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+// Coming Soon
+```
+  </Tab>
+</Tabs>
+
+
+
+

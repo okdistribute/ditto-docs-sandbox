@@ -1,0 +1,371 @@
+---
+title: Migration Guide for Atlas Device Sync
+description: "This guide provides a comprehensive roadmap for migrating from MongoDB Atlas Device Sync to **Ditto**."
+icon: arrow-right-arrow-left
+iconType: solid
+---
+
+## Introduction
+
+ By making this transition, you’ll benefit from resilient data synchronization, offline-first capabilities, and efficient data management for a consistent user experience in any environment.
+
+**Why Ditto?**
+
+Ditto offers a decentralized solution for faster, more efficient data synchronization at the edge. Unlike traditional cloud-based systems, Ditto provides an **offline-first architecture** that ensures your app continues to operate smoothly even when internet connectivity is limited or unavailable. We take offline functionality one step further by utilizing **peer-to-peer synchronization** and **mesh networking**. These core capabilities enable your applications to not just operate smoothly in any network environment but sync in real-time without reliance on WiFi, servers, or the cloud.
+
+With just your existing mobile and edge devices, Ditto unlocks,
+
+- **Self-organizing mesh networking** that automatically and securely discovers nearby devices to form wireless networks.
+- **Real-time peer-to-peer data sync** within the mesh via Bluetooth Low Energy, Peer-to-Peer Wi-Fi, and Local Area Network, plus opportunistically with the cloud.
+- **Offline-first capabilities**, enabling uninterrupted functionality without reliance on network hardware or cloud services.
+- **Efficient conflict resolution** optimized to sync only the deltas, ensuring low-bandwidth usage and enabling concurrent edits.
+- **Improved latency and performance** by cutting out round-trips to the cloud and enabling direct device-to-device communication.
+
+Please review this guide thoroughly to understand the necessary requirements and changes. By following the outlined steps, your team can successfully migrate to a more robust solution with minimal disruptions.
+
+If you need further assistance at any point, feel free to [reach out to our support team.](https://docs.ditto.live/support/contact-us)
+
+
+## Explore our Compatibility Guides
+
+Ditto works across a wide range of platforms, programming languages, and device types, allowing for flexible real-time syncing in many environments. Whether you’re building for iOS, Android, or desktop environments, or integrating across devices using different transport methods like Bluetooth or Wi-Fi, Ditto supports it.
+
+Before migrating, it’s important to review the :comment **Compatibility Guide** to ensure you’re familiar with all the platforms and languages we support. This will help you understand the various options available for your project and ensure your app can take full advantage of Ditto’s peer-to-peer capabilities.
+
+<CardGroup>
+    <Card
+        title="Explore our Compatibility Guides"
+        icon="arrow-right"
+        href="/compatibility"
+        horizontal
+    />
+</CardGroup>
+
+
+## Connecting to MongoDB
+
+Ditto lets your apps sync directly between :comment **clients** (Small Peers)** and a  **Big Peer (**<a href="https://docs.ditto.live/cloud" target="_blank">**Cloud Platform**</a>**)** for real-time data sharing, with an offline-first design. This setup reduces the need for constant cloud access and improves performance.
+
+This guide will help you replace **Realm** on the client side to start using Ditto’s peer-to-peer syncing right away. The integration between Ditto's Big Peer and MongoDB is enabled by the [MongoDB connector](), which synchronizes data bi-directionally between Ditto and MongoDB.
+
+Unlike other data synchronization systems for MongoDB, Ditto's advanced conflict resolution (based on CRDTs) avoids the need to deploy extra backend services to handle writes and conflicts, just deploy a Big Peer and you have everything you need to integrate with MongoDB.
+
+You can sign up for the [MongoDB Connector](https://ditto.live/platform/mongodb-connector) waitlist to request access to the preview!
+
+## Migration Steps
+
+### 1. Get Started: Sign Up and Create Your Ditto App
+
+To get started with Ditto, sign up for an account and create a new project in the Ditto dashboard. You’ll need to grab your API keys to integrate Ditto with your app for real-time syncing.
+
+- **Sign Up for Ditto**: Create an account on [Ditto.live](https://ditto.live)
+- **Create an App**: Obtain your app ID and playground token, in the <a href="https://portal.ditto.live" target="_blank">**Ditto portal**</a>**.**
+
+### 2. Remove Realm
+
+Before adding Ditto, we advise you remove MongoDB Realm from your project. This includes uninstalling the Realm SDK and clearing out any Realm-related code and dependencies. Removing Realm at this stage will let you identify all parts of your codebase touching Realm that will need to be migrated to Ditto with the compiler.
+
+:comment[It is also possible to postpone this until later in the process, and effectively run Realm and Ditto in parallel, if desired]
+
+### 3. Install Ditto
+
+Now that Realm is removed, it’s time to install Ditto. Follow our installation guides to add Ditto to your project. Be sure to configure the right permissions for your app, like background mode and local network access.
+
+- Visit our [Directory of Install Guides](https://docs.ditto.live/install-guides) for instructions specific to your platform.
+- <a href="https://docs.ditto.live/install-guides/swift#kX-Je" target="_blank">Configure Permissions</a>
+
+### 4. Initialize Ditto
+
+Next, you’ll set up Ditto in your app by initializing the Ditto service with your API keys. This will allow your app to start syncing data between devices using Ditto’s real-time peer-to-peer capabilities.
+
+<Tabs>
+    <Tab title="Swift">
+```swift
+let ditto = Ditto(identity: .onlinePlayground(appID: "YOUR_DITTO_APP_ID", token: "YOUR_PLAYGROUND_TOKEN"))
+ditto.startSync()
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+private val ditto: Ditto? by lazy {
+      try {
+          val androidDependencies = DefaultAndroidDittoDependencies(context)
+          val identity = DittoIdentity.OnlinePlayground(
+              androidDependencies,
+              appId = "REPLACE_WITH_YOUR_DITTO_APP_ID",
+              token = "REPLACE_WITH_YOUR_DITTO_TOKEN"
+          )
+          Ditto(androidDependencies, identity).apply {
+              startSync()
+          }
+      } catch (e: Exception) {
+          Log.e(TAG, e.message.orEmpty())
+          null
+      }
+  }
+```
+    </Tab>
+</Tabs>
+
+Ditto is distributed by default, meaning it will automatically connect to, and sync data across your nearby devices. In order to solely rely on device-to-cloud sync, you can <a href="https://docs.ditto.live/sync/customizing-transport-configurations#OyUOQ" target="_blank">disable local sync</a> by turning off LAN, peer-to-peer Wi-Fi, and Bluetooth transports.
+
+### 5. Update Your Data Models
+
+With Realm your models are tightly coupled to Realm’s classes. This is not required with Ditto.
+
+Make sure to review your data types, relationships, and primary keys, and update them where necessary to work seamlessly with Ditto’s peer-to-peer sync architecture.
+
+Before (Realm model):
+
+<Tabs>
+    <Tab title="Swift">
+```swift
+final class Todo: Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var title = ""
+    @Persisted var completed = false
+}
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+class Todo() : RealmObject {
+    @PrimaryKey
+    var _id: ObjectId = ObjectId()
+    var title: String = ""
+    var completed: Boolean = false
+}
+```
+    </Tab>
+</Tabs>
+
+After (Ditto model):
+<Tabs>
+    <Tab title="Swift">
+```swift
+final class Todo: Codable {
+	var _id = UUID()
+    var title = ""
+    var isCompleted = false
+	var isDeleted = false
+}
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+data class Todo(
+    val _id: String,
+    val title: String,
+    val isCompleted: Boolean = false,
+    val isDeleted: Boolean = false
+)
+```
+    </Tab>
+</Tabs>
+
+
+
+There are a few conventions with Ditto data models worth considering:
+
+- Document ID keys are called `_id` and are usually UUIDs.
+- Timestamps are strings in ISO 8601 format.
+- Ditto will either return items as `Map<String, Any>` or as a JSON string, which you may consider deserializing as native data types.
+
+We also recommend you make yourself familiar with [REGISTER](https://docs.ditto.live/data-types/register), [MAP](https://docs.ditto.live/data-types/map), and [ATTACHMENT](https://docs.ditto.live/data-types/attachment) data types. Read more about best practices for data modelling with Ditto in [this guide](https://docs.ditto.live/best-practices/3-data-modeling-and-sync-logic).
+
+### 6. Set Up Subscriptions
+
+You can replace Realm's sync logic with Ditto subscriptions to keep data in sync between your devices in real-time.
+
+<Tabs>
+    <Tab title="Swift">
+```swift
+let query = "SELECT * FROM todos"
+var subscription = try ditto.sync.registerSubscription(query: query)
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+val todosSubscription = ditto.sync.registerSubscription(
+    query = "SELECT * FROM COLLECTION todos"
+)
+```
+    </Tab>
+</Tabs>
+
+
+- In order for Ditto to sync data between client devices and Big Peer you will need to register a subscription for each collection you would like to sync.
+- Start your subscription as early in the application lifecycle as possible.
+- Keep a reference to the created subscription, so you can manage it and it doesn’t get garbage collected.
+
+### 7. Migrate Your Data Operations
+
+Now, update the create, read, update, and delete (CRUD) operations in your app. Replace Realm’s methods with Ditto’s, ensuring all your data interactions are using Ditto’s sync logic.
+
+#### **Create**
+
+When adding new items, use the execute method on the `ditto.store` object to insert your data. This ensures new records are synced efficiently across peers in real-time.
+<Tabs>
+    <Tab title="Swift">
+```swift
+func addTodo(title: String) {
+    let newTodo = Todo(title: title)
+    ditto.store.execute(query: "INSERT INTO todos DOCUMENTS (:todo)",
+		    			arguments: ["todo": newTodo])
+}
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+suspend fun addTodo(title: String) {
+    val newTodo = Todo(
+        _id = UUID.randomUUID().toString(),
+        title = title
+    )
+    ditto.store.execute(
+            query = "INSERT INTO todos DOCUMENTS (:new)",
+            arguments = mapOf(
+			    "new" to newTodo.asMap() // here you would have some code to serialize your class as a Map<String, Any>
+            )
+        )
+}
+```
+    </Tab>
+</Tabs>
+
+
+
+
+
+#### **Read**
+
+Refactor how you retrieve data by leveraging Ditto’s powerful observation capabilities.
+
+When reading data in Ditto, the primary method is to set up an <a href="https://docs.ditto.live/crud/observing-data-changes" target="_blank">**observer**</a> that listens for changes and updates in real-time. This ensures your app automatically reflects the latest data from other peers.
+
+**Real-Time Observing**
+
+This allows your app to respond to data changes in real-time by syncing updates across all connected devices.
+
+<Tabs>
+    <Tab title="Swift">
+```swift
+private func observeTodos() {
+    return ditto.store.registerObserver(
+        query: "SELECT * FROM todos WHERE isDeleted = :isDeleted",
+		arguments: ["isDeleted": false]) { results in
+	// Decode the results
+	}
+}
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+suspend fun observeTodos(): Flow<List<Todo>> {
+	return ditto.store.registerObserverAsFlow(
+			query = "SELECT * FROM todos WHERE isDeleted = :isDeleted",
+			arguments = mapOf(
+				 "isDeleted" to false
+			 )
+		  )
+}
+```
+    </Tab>
+</Tabs>
+
+
+
+**One-Off Reads**
+
+In addition to real-time observations, Ditto allows for **one-time reads**. These are useful when you need to fetch data at a specific point in time without continuously listening for updates. You can do this by using the `execute` method on the `ditto.store` using the same query (for example: `“SELECT * FROM todos WHERE isDeleted = false”`)
+
+#### **Update**
+
+When updating data, use UPDATE on the `ditto.store` object. Ditto lets you sync the minimum data needed, ensuring that all peers converge on the same version of the data across the network.
+
+<Tabs>
+    <Tab title="Swift">
+```swift
+func update(_ todo: Todo) {
+    ditto.store.execute(
+        query: "UPDATE todos SET isCompleted = :isCompleted WHERE _id = :_id",
+        arguments: ["_id": todo._id, "isCompleted": !todo.isCompleted]
+    )
+}
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+suspend fun toggleIsComplete(todo: Todo) {
+    dittoStoreManager.executeQuery(
+        dittoQuery = "UPDATE todos SET completed = :isCompleted WHERE _id = :_id",
+        arguments = mapOf(
+            "isCompleted" to !todo.completed,
+            "_id" to todo._id
+        )
+    )
+}
+```
+    </Tab>
+</Tabs>
+
+#### **Delete**
+
+In a distributed data system like Ditto, deletion follows a “<a href="https://docs.ditto.live/crud/delete#bPsqW" target="_blank">soft delete</a>” pattern. This means that when you mark an item as deleted, it’s not immediately removed from the collection or local storage. Instead, the item is flagged as deleted to ensure that other devices in the network remain in sync. To fully remove the item and free up space, you’ll need to evict these “soft deleted” items. For more details, see the section on <a href="https://docs.ditto.live/crud/delete#-BLNB" target="_blank">Evictions</a>.
+
+<Tabs>
+    <Tab title="Swift">
+```swift
+func delete(_ todo: Todo) {
+    ditto.store.execute(
+        query: "UPDATE todos SET isDeleted = :isDeleted WHERE _id = :_id",
+        arguments: [String: Any] = ["_id": todo.id, "isDeleted": true]
+    )
+}
+```
+    </Tab>
+    <Tab title="Kotlin">
+```kotlin
+suspend fun deleteTodo(todo: Todo) {
+      ditto.store.execute(
+          dittoQuery = """UPDATE todos
+						  SET isDeleted = :isDeleted
+						  WHERE _id = :_id"""
+          arguments = mapOf(
+              "isDeleted" to true,
+              "_id" to todo.id
+          )
+      )
+  }
+```
+    </Tab>
+</Tabs>
+
+
+### 8. Ensure your Views Respond to Updates
+
+Your app needs to react to changes in real-time data. Set up <a href="https://docs.ditto.live/crud/observing-data-changes" target="_blank">observers</a> to make sure your UI updates when the data synced through Ditto changes.
+
+### 9. Evictions
+
+In distributed systems, it’s important to manage storage efficiently, especially when dealing with large datasets or limited device space. **Evictions** allow you to remove data that is no longer needed, freeing up space in a controlled way while maintaining the integrity of your app’s data.
+
+To manage storage, Ditto allows you to configure **eviction policies**. This lets you free up space by removing data that is no longer needed or marked as deleted (as described in the **soft delete** section).
+
+For more on evictions and deletion, refer to Ditto’s documentation: [Evictions and Delete](https://docs.ditto.live/crud/delete).
+
+### 10. Authentication and Authorization
+
+A production application must have robust auth system in place. Ditto lets you rebuild your Atlas Device Sync authentication and authorization flow in this document: [Migrating Authentication and Authorization from Atlas Device Sync to Ditto](<./Migrating Authentication and Authorization from Atlas Device Sync to Ditto.md>)
+
+
+## Additional Resources
+
+- Need assistance? <a href="https://docs.ditto.live/support/contact-us" target="_blank">Reach out to us</a>!
+- Check out our <a href="https://docs.ditto.live/best-practices" target="_blank">Best Practices</a>
+- Learn more about our <a href="https://ditto.live/platform/mongodb-connector" target="_blank">MongoDB Connector</a> coming soon.
+
+
+
+
+

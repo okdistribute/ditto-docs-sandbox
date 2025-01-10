@@ -1,0 +1,28 @@
+---
+title: Cloud Platform Overview
+description: "The *Big Peer* refers to the trusted cloud deployment of the Ditto sync engine and its associated services that facilitate advanced platform capabilities."
+sidebarTitle: Overview
+icon: server
+iconType: solid
+---
+As data demands grow, you can scale your app resources both horizontally and vertically by splitting them across multiple virtual or physical nodes and more.
+
+This guide provides a comprehensive overview of the Big Peer; the system component that, although functionally equivalent to a traditional cloud database, operates as a trusted peer in the distributed peer-to-peer network.
+
+## Key Services
+
+As illustrated in the following graphic, the Big Peer cloud deployment seamlessly integrates with Small Peer end-user environments, providing critical authentication services and serving as a conduit for mesh-generated data by way of the HTTP data API.
+
+Additionally, it supports third-party data analytics tools by offering Apache Kafka change data capture (CDC).
+<Frame>
+  <img src="/images/key-services.png"/>
+</Frame>
+
+The following table provides an overview of the critical services that the Big Peer provides to the Ditto cluster:
+
+| **Service**               | **Description**                                                                                                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sync engine and resources | A powerful and feature-rich system capable of storing and orchestrating very large amounts of data. ([Backend Architecture](/cloud/backend-architecture))                                                                    |
+| Authentication service    | Enables connected Small Peers to obtain valid certificates to participate in the mesh and replicate data they have permissions for. ([Authentication](/v4-6/security/authentication))                                                                     |
+| HTTP Data API             | A stateless API you can use to perform various one-time operations on the Big Peer for programmatic data ingress, reading, and manipulation. ([HTTP API - Getting Started](/cloud/http-api/getting-started)) |
+| Apache Kafka              | A premium option for Big Peer streaming between Ditto and any Kafka-backed external systems and services you choose.([Change Data Capture](/cloud/cdc))                                                      |

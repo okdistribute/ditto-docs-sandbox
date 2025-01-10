@@ -1,0 +1,72 @@
+---
+title: Timestamps
+description: "In a typical single-server setup, timestamps remain consistent; however, in a Ditto mesh where there are multiple Small Peer devices distributed across the network, each device may operate on its own time. This can lead to discrepancies where a document's timestamp may seem ahead or documents created simultaneously have different timestamps."
+---
+
+To anticipate and manage these time differences and prevent unexpected situations, consider storing timestamps within documents, such as a timestamp indicating when a message was sent.
+
+With timestamps, you do any of the following and more:
+
+- Track how much time has elapsed since a document was created
+- Pinpoint when an event, like a message sent, occurred
+- Construct a query that syncs documents within a certain time range
+- Fetch documents within a specific time frame
+
+## ISO-8601 Formatted Timestamps
+
+When inserting a timestamp field in a collection or constructing specific time-based queries, use ISO-8601 formatted date strings.
+
+ISO-8601 is an international standard for representing dates, times, and durations. The format follows a specific pattern, such as "YYYY-MM-DD" for dates and "HH\:mm\:ss" for times, and it also allows for more precise representations with additional components. For more information about ISO 8601, see the official documentation > [ISO 8601 Date and time format](https://www.iso.org/iso-8601-date-and-time-format.html). 
+
+## Timing Accuracy Considerations
+
+When working with document timestamps in a distributed environment like the Ditto mesh, each Small Peer device inserts documents with timestamps set by their individual system clocks. This can cause discrepancies, such as future timestamps or seconds-apart timestamps for documents created simultaneously.
+
+
+<Warning>
+  Even if a Small Peer device enables clock sync, it may not guarantee precise accuracy. iOS clocks are usually within 100 ms of accuracy, while Android devices can deviate by several seconds, either running faster or slower.
+</Warning>
+
+
+If you rely on document timestamps, you must anticipate time discrepancies that can create seemingly impossible situations and handle them accordingly. For instance, if precise time information is critical to your use case, consider querying an internet time server to calculate and maintain a corrective measure.
+
+### Network Time Protocol
+
+If your app demands highly accurate timing, use the Network Time Protocol (NTP) or similar protocols to query an internet time server and sync time across the mesh, proactively resolving potential for seemingly impossible scenarios caused by time skew.
+
+
+<Info>
+  NTP client libraries are available across various platforms and offer different functionalities, APIs, and tools to integrate NTP capabilities into your app.
+</Info>
+
+## Inserting with Timestamp Field
+
+The following snippet demonstrates how to include a timestamp field in your `INSERT` operation, in which the ISO-8601 timestamp is generated using `new` `Date().toISOString()`, and then the `lastUpdatedAt` field is included in the `newCar` object that gets inserted into the `cars` collection:
+
+<Info>
+  For a Swift example of creating a static instance of `ISO8601DateFormatter` as an extension on `DateFormatter` — a common approach to extend the functionality of the `DateFormatter` class — to handle ISO8601 dates, see the GitHub Gist > <a href="https://gist.github.com/magicwave/070c5c65ed05fea744cf604a33d6a6c4" target="_blank">DateFormatter+docDictionary.swift</a>.
+</Info>
+
+```javascript JS
+const timestamp = new Date().toISOString();
+
+await ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  { newCar: { color: "blue", lastUpdatedAt: timestamp } }
+);
+
+const result = await ditto.store.execute(
+  "SELECT * FROM cars WHERE lastUpdatedAt >= '2023-12-01T00:00:00Z'"
+);
+```
+
+## Querying with ISO Strings
+
+Use ISO-8601 formatting when constructing specific time-based queries within your app. For example, here is a snippet showing how to query the `cars` collection where the `timestamp` field value is greater than or equal to December 1, 2023, at midnight UTC:
+
+```javascript JS
+const result = await ditto.store.execute(
+  "SELECT * FROM cars WHERE timestamp >= '2023-12-01T00:00:00Z'"
+);
+```
+

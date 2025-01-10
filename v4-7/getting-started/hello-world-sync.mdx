@@ -1,0 +1,436 @@
+---
+title: "'Hello, World!' Sync"
+description: "Once you've set up your environment, try on Ditto and perform your first peer‑to‑peer sync."
+---
+
+
+
+Intended to get you oriented, this article provides a streamlined process for integrating sync functionality within your app.
+
+<Info>
+If you prefer building and exploring through a task app, chat app, and so on, see [Example Projects Overview]().
+</Info>
+
+## Integrating Sync Functionality
+
+Before you can begin syncing data offline, set up authentication and then start the sync process:
+
+<Steps>
+  <Step>
+<Tabs>
+  <Tab title="Swift">
+```swift
+DittoLogger.minimumLogLevel = .debug
+let ditto = Ditto(identity: .onlinePlayground(
+    appID: "YOUR_APP_ID",
+    token: "YOUR_PLAYGROUND_TOKEN"
+))
+do {
+  try ditto.startSync()
+} catch (let err) {
+  print(err.localizedDescription)
+}
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+try {
+    val androidDependencies = DefaultAndroidDittoDependencies(context)
+    val identity = DittoIdentity.OnlinePlayground(
+        androidDependencies,
+        appId = "YOUR_APP_ID",
+        token = "YOUR_PLAYGROUND_TOKEN"
+    )
+    DittoLogger.minimumLogLevel = DittoLogLevel.DEBUG
+    ditto = Ditto(androidDependencies, identity)
+    ditto.startSync()
+} catch (e: DittoError) {
+    Log.e("Ditto error", e.message!!)
+}
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+import { Ditto } from "@dittolive/ditto"
+
+const identity = {
+  type: 'onlinePlayground',
+  appID: 'YOUR_APP_ID',
+  token: 'YOUR_PLAYGROUND_TOKEN'
+}
+
+const ditto = new Ditto(identity)
+await ditto.startSync()
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+DittoDependencies androidDependencies = new DefaultAndroidDittoDependencies(this.context);
+DittoLogger.setMinimumLogLevel(DittoLogLevel.DEBUG);
+DittoIdentity identity = new DittoIdentity.OnlinePlayground(androidDependencies, "YOUR_APP_ID", "YOUR_PLAYGROUND_TOKEN");
+Ditto ditto = new Ditto(androidDependencies, identity);
+
+try {
+    ditto.startSync();
+} catch(DittoError e) {
+    //handle error
+}
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+try
+{
+    DittoLogger.SetMinimumLogLevel(DittoLogLevel.Debug);
+    var ditto = new Ditto(DittoIdentity.OnlinePlayground("YOUR_APP_ID", "YOUR_PLAYGROUND_TOKEN", true), path);
+    ditto.StartSync();
+}
+catch (DittoException ex)
+{
+    Console.WriteLine($"Ditto Error {ex.Message}");
+}
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+auto identity =
+    Identity::OnlinePlayground("YOUR_APP_ID",
+                               "YOUR_PLAYGROUND_TOKEN", true);
+try {
+  Ditto ditto = Ditto(identity, dir);
+  ditto.set_minimum_log_level(LogLevel::debug);
+  ditto.start_sync();
+} catch (const DittoError &err) {
+}
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+// App ID and Playground Token are read from ENV variables
+let your_app_id = AppId::from_env("DITTO_APP_ID")?;
+let your_playground_token = std::env::var("DITTO_PLAYGROUND_TOKEN")?;
+let ditto = Ditto::builder()
+    // Store peer data in a directory next to the executable
+    .with_root(Arc::new(PersistentRoot::from_current_exe()?))
+    .with_minimum_log_level(LogLevel::Debug)
+    .with_identity(move |ditto_root| {
+        let enable_cloud_sync = true;
+        let custom_auth_url = None;
+        OnlinePlayground::new(
+            ditto_root,
+            your_app_id,
+            your_playground_token,
+            enable_cloud_sync,
+            custom_auth_url,
+        )
+    })?
+    .build()?;
+
+ditto.start_sync()?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+import 'package:ditto_live/ditto_live.dart';
+
+final dataDir = await getApplicationDocumentsDirectory();
+final persistenceDirectory = Directory("${dataDir.path}/ditto");
+await persistenceDirectory.create(recursive: true);
+
+final ditto = await Ditto.open(
+  identity: identity,
+  persistenceDirectory: persistenceDirectory,
+);
+
+await ditto.startSync();
+```
+  </Tab>
+</Tabs>
+  </Step>
+  <Step>
+Replace `YOUR_APP_ID` and `YOUR_PLAYGROUND_TOKEN` with your access credentials available from the <a href="https://portal.ditto.live/?_gl=1*gbyc26*_ga*MjAxODM3ODUyMi4xNzE4NjUzNzYz*_ga_D8PMW3CCL2*MTcxODcyNjU1MS41LjEuMTcxODcyNjkzMi42MC4wLjA." target="_blank">portal</a>. (See [Sync Credentials](<./Sync Credentials.md>))
+  </Step>
+</Steps>
+From the top-most scope of your app's codebase, add the following to set up authentication and start syncing offline.
+
+
+## Inserting Documents
+
+Insert a document in your local Ditto store by calling the Execute API method on the `store` namespace with a local `INSERT INTO` query, specifying the document to insert.
+
+For example, inserting a new document with a single field `"color"` set to `"blue"`:
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+await ditto.store.execute(
+  query: "INSERT INTO cars DOCUMENTS (:newCar)",
+  arguments: ["newCar": ["color": "blue"]]);
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  mapOf("newCar" to mapOf("color" to "blue")))
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+await ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  { newCar: { color: "blue" } }
+);
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+DittoQueryResult result = (DittoQueryResult) ditto.store.execute(
+    "INSERT INTO cars DOCUMENTS (:newCar)",
+    Collections.singletonMap("newCar", Collections.singletonMap("color", "blue")),
+);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+var args = new Dictionary<string, object>();
+args.Add("newCar", new { color = "blue" });
+
+await ditto.Store.ExecuteAsync(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  args);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+std::map<std::string, std::map<std::string, std::string>> args;
+args["newCar"] = {{"color", "blue"}};
+
+ditto.get_store().execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  args);
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let query_result = ditto
+    .store()
+    .execute(
+        "INSERT INTO cars DOCUMENTS (:newCar)",
+        Some(serde_json::json!({
+            "newCar": {
+                "color": "blue"
+            }
+        }).into()),
+    ).await?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+await ditto.store.execute(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  arguments: {"newCar": {"color": "blue"}},
+);
+```
+  </Tab>
+</Tabs>
+
+## Setting Up Store Observers
+
+Establish a local listener, known as a *store observer*, for realtime monitoring and response to updates in your local Ditto store.
+
+For example, you can set up a store observer to asynchronously display profile updates to end users when they modify their profiles.
+
+To set up a store observer:
+
+1. Call the Register Observer API method on the `store` namespace.
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+observer = ditto.store.registerObserver(
+  query: "SELECT * FROM cars"){ result in /* handle change */ };
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+observer = ditto.store.registerObserver("SELECT * FROM cars") { result ->
+  /* handle change */ };
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+ditto.store.registerObserver(
+  "SELECT * FROM cars",
+  (result) => {
+    // handle change
+});
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+observer = ditto.store.registerObserver(
+    "SELECT * FROM cars",
+    result -> {
+        // handle change
+    }
+);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+// Without Arguments
+result = await ditto.Store.RegisterObserver(
+  "SELECT * FROM cars",
+  (result) => {
+    // handle change
+  });
+
+// With Arguments
+result = ditto.Store.RegisterObserver(
+  "SELECT * FROM cars",
+  (result) => {
+    // handle change
+  });
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+observer = ditto.get_store().register_observer(
+  "SELECT * FROM cars",
+  [&](QueryResult result) { /* handle change */ });
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+observer = ditto
+    .store()
+    .register_observer(
+        "SELECT * from cars",
+        None,
+        move |result: QueryResult| {
+            // handle change
+        })?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+final observer = await ditto.store.registerObserver("SELECT * FROM cars");
+
+observer.changes.listen((result) {
+  // handle change
+});
+```
+  </Tab>
+</Tabs>
+
+2. Include a local `SELECT` query specifying the document collection you want to watch and define a callback function to handle changes.
+
+
+<Warning>
+Please note that the observer must be kept in scope (i.e. as a property in a class) for as long as you wish to have your event handler be called when there is an update to a document matching the query you provide.
+</Warning>
+
+
+## Creating Subscriptions
+
+Register a remote listener, known as a *sync subscription*, by calling the Register Subscription API method on the `sync` namespace.
+
+For example, creating a subscription to sync updates made to documents in the `cars` collection with `color` set to `blue`:
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+observer = ditto.store.registerObserver(
+  query: "SELECT * FROM cars"){ result in /* handle change */ };
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+ditto.sync.registerSubscription("SELECT * FROM cars WHERE color = 'blue'")
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+ditto.sync.registerSubscription("SELECT * FROM cars WHERE color = 'blue'")
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+ditto.sync.registerSubscription("SELECT * FROM cars WHERE color = 'blue'")
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+ditto.Sync.RegisterSubscription("SELECT * FROM cars WHERE color = 'blue'");
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+auto subscription =
+  ditto.sync().register_subscription("SELECT * FROM cars WHERE color = 'blue'");
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let subscription = ditto
+    .sync()
+    .register_subscription(
+        "SELECT * FROM cars WHERE color = 'blue'",
+        None,
+    )?;
+```
+  </Tab>
+  <Tab title="Dart">
+```Dart
+ditto.sync.registerSubscription("SELECT * FROM cars WHERE color = 'blue'");
+```
+  </Tab>
+</Tabs>
+
+## Takeaway
+
+In Ditto, there is a clear distinction between traditional `CREATE`, `READ`, `UPDATE`, and `DELETE` (CRUD) database operations and data sync:
+
+- To perform CRUD, you execute local data operations against `store` namespace.
+- To perform sync, you execute remote data operations against the `sync` namespace.
+
+To complete your understanding, the following graphic illustrates how sync subscriptions and store observers work together in practice:
+
+
+1. Before you can sync offline, you must integrate sync functionality in your codebase. (See [Integrating Sync Functionality]())
+
+2. Once integrated, you initiate a sync subscription request from your local Ditto store to remote peers. (See [Creating Subscriptions]())
+
+The associated query specifying the data you want to watch then propagates to each end-user device connected within the mesh network:
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/B6un7DS5lflzYqDal7w-L_data-flow-sync-query.png"/>
+</Frame>
+
+When the data you've subscribed to changes on a remote peer — whether through insertions, updates, or deletions — the remote peer automatically syncs these delta changes to your local Ditto store over the mesh network:
+
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/NWdlCq9SOTHs-qsz1uE-x_data-flow-sync-query3.png"/>
+</Frame>
+
+Combining store observers with your sync subscriptions ensures that you receive updates from remote stores, enabling you to quickly respond in your app. (See [Seetting Up Store Observers]())
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/gLL2rTiuac9pOV7ApCyFW_data-flow-sync-observer2.png"/>
+</Frame>
+
+<Info>
+
+For more information, see any of the following:
+
+- [Data Handling Essentials]()
+- [Mesh Networking 101](<./../Basic Concepts/Mesh Networking 101.md>)
+- [Install Guides](<./Install Guides.md>)
+- [CREATE](<./../CRUD Operations/CREATE.md>), [READ](<./../CRUD Operations/READ.md>), [UPDATE](<./../Ditto Query Language/UPDATE.md>), [DELETE](<./../CRUD Operations/DELETE.md>)
+- [Starting and Stopping Sync](<./../Data Sync/Starting and Stopping Sync.md>)
+- [Managing Sync Subscriptions](<./../Data Sync/Managing Sync Subscriptions.md>)
+- [DQL Quick Reference]()
+
+</Info>

@@ -1,0 +1,65 @@
+*This is work in progress, please don't publish yet.*
+
+Webpack's Hot Module Replacement (HMR) lets you make changes to a web app while it is running in your browser in development mode, without the app having to do a full page reload in order to incorporate your changes. When using HMR in a web app built using Ditto, you need to take extra steps to make sure that Webpack exchanging modules while they are running doesn't cause conflicts in the Ditto instance.
+
+# Controlled shutdown
+
+When Ditto is not shut down while using HMR you are going to see an error message when Ditto is unable to acquire a lock on the persistence location:
+
+```javascript
+DittoError: File already locked, working dir = ditto.ddb, retried 50 times.
+Multiple Ditto instances cannot run at the same time within the same working directory. Either use unique working directories for each instance, or consider managing your Ditto instance as a singleton instead.
+    at throwOnErrorResult (/Users/pv/code/ditto/js/dist/node/ditto.cjs.js:1:21475)
+    at dittoTryNewBlocking (/Users/pv/code/ditto/js/dist/node/ditto.cjs.js:1:41791)
+    at /Users/pv/code/ditto/js/dist/node/ditto.cjs.js:1:199108
+    at mapFFIErrors (/Users/pv/code/ditto/js/dist/node/ditto.cjs.js:1:63678)
+    at new Ditto (/Users/pv/code/ditto/js/dist/node/ditto.cjs.js:1:199090)
+```
+
+Here, the instance of Ditto that was running before HMR refreshed the page is still alive. It is claiming the same persistence location that the new Ditto, started after the refresh, also wants to use and hasn't had time to wind down on its own.
+
+The solution is to use the `Ditto.close()` method to shut down the old Ditto instance whenever HMR wants to refresh modules that initialize Ditto. After refreshing, there is no conflict when the new Ditto instance reuses the location.
+
+## Using the `webpackHot` API to orchestrate reloading Ditto
+
+Webpack offers an API for modules to interact with the HMR lifecycle. Among other things, it lets us register a callback that will be invoked when disposing of a loaded module ahead of a refresh. We will use this to initiate the shutdown process:
+
+```javascript
+// In the module that owns the ditto instance.
+
+if (import.meta.webpackHot) {
+  // Accept Hot Module Replacement for this module.
+  import.meta.webpackHot.accept();
+
+  // When this module is about to be replaced, save a promise that
+  // resolves when Ditto is closed.
+  import.meta.webpackHot.dispose((data) => {
+    if (ditto != null) {
+      data.dittoClose = ditto.close();
+    }
+  });
+}
+
+```
+
+Let's go over what this snippet does. It is wrapped in a check that verifies HMR is active at all in the current context by probing `import.meta.webpackHot`. Depending on your project setup, this and all further APIs used here may alternatively be available on `module.hot` instead. If we are indeed running with HMR enabled, we then let it know that the current module is prepared for HMR by calling `import.meta.webpackHot.accept()`.
+
+Finally, the `dispose` API is called by passing a closure to the `import.meta.webpackHot.dispose` function. This closure will be called when HMR disposes the currently loaded module and in it, the `close()` function is called on the Ditto instance to begin the shutdown process. As `dispose` doesn't support async closures, the return value of `close()`, a `Promise`, is stored on the `data` parameter. This value will be made available to the module following the refresh, where we can await the closing of Ditto to completion:
+
+```javascript
+// If HMR is enabled and a promise for closing Ditto was saved
+// in the previous version of this module, wait for it to resolve.
+if (import.meta.webpackHot?.data?.dittoClose) {
+  await import.meta.webpackHot.data.dittoClose;
+}
+
+// Begin initiating Ditto once closing has completed.
+const ditto = new Ditto(/** your config **/);
+```
+
+This snippet is the final piece of the puzzle and its code must run before initializing a new Ditto instance. It again checks whether we are running with HMR enabled and whether any value has already been stored on `data.dittoClose`. If so, this must be the return value from `Ditto.close()`, which we can finally `await`.
+
+## Alternatives
+
+An alternative to configuring HMR yourself is using Ditto's `react-ditto` library for React, which now supports HMR out of the box.
+

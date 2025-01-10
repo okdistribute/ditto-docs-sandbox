@@ -1,0 +1,22 @@
+---
+title: "7. Performance Optimization and Troubleshooting"
+description: "After the basic functionality is confirmed, performance tuning ensures that your app runs efficiently under various conditions, including those involving large datasets or resource-constrained devices. This section focuses on optimizing sync performance and troubleshooting issues that arise in production environments."
+mode: wide
+sidebarTitle: Overview
+---
+
+
+<CardGroup>
+
+<Card title="Sync Performance with redundant BLE Connections" icon="bluetooth" iconType="solid" href="/best-practices/sync-performance-with-redundant-ble-connections">
+ Enhance sync performance and reliability for point-of-sale (POS) and kitchen display systems (KDS) using Bluetooth Low Energy (BLE). This article covers prioritizing critical connections, optimizing BLE parameters, leveraging redundant connections, and monitoring real-time sync performance to ensure robust operations in dense environments.
+</Card>
+<Card title="Wi-Fi Interference and Client Load" icon="wifi" iconType="solid" href="/best-practices/wi-fi-interference-and-client-load">
+Optimize Ditto mesh network performance by managing Wi-Fi interference and client load. Leverage multiple connection types, enable dynamic switching, and balance client connections to reduce congestion and maintain reliable sync in high-load environments.
+</Card>
+<Card title="Device Storage Management" icon="hard-drive" iconType="solid" href="/best-practices/pCZgBpKcap9tMliT8K4p_"> Optimize data storage by using a soft-delete pattern and the EVICT API to free up disk space. Implement Time-to-Live (TTL) strategies to manage document retention, balancing performance and resource usage while ensuring relevant data persists.</Card>
+
+<Card title="Large Binary Files" icon="file-binary" iconType="solid" href="/best-practices/4Mugq3GOSbi46hjEECrQT">
+ For syncing large binary data or files, use Ditto's attachments feature instead of embedding them as bytes in documents. Attachments are not synced by default and must be explicitly fetched using an attachment token linked to the document.
+ </Card>
+</CardGroup>

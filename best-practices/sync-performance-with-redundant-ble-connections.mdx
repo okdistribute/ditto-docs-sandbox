@@ -1,0 +1,20 @@
+---
+title: Sync Performance with redundant BLE Connections
+description: "When dealing with point-of-sale (POS) devices or kitchen display systems (KDS) that rely on Bluetooth Low Energy (BLE) connections, particularly in environments with redundant or multiple connections, Ditto offers several tools and best practices to enhance sync performance and reliability."
+---
+
+
+### Best Practices for Sync Performance with Redundant BLE Connections:
+
+1. **Prioritize Critical Connections:**
+   - Ditto allows you to specify connection priorities, which is essential in ensuring that critical devices like POS readers or KDS screens maintain stable connections even when other devices are connected simultaneously. This can be managed through Ditto's [customizable transport configurations]()  and connection prioritization features.
+2. **Optimize Connection Intervals:**
+   - Adjusting BLE connection parameters, such as intervals and latency, can help balance the performance needs of real-time systems like KDS with power consumption concerns in POS devices. Ditto’s SDK offers fine-grained control over these parameters, allowing developers to optimize for different use cases.
+3. **Utilize Redundant Connections Strategically:**
+   - Ditto’s multihop capability is particularly valuable in maintaining sync performance in dense environments. This feature allows data to be passed through intermediate devices, ensuring that sync operations continue even if direct connections fail.
+4. **Monitor and Log Connection Performance:**
+   - Ditto provides tools to monitor connection stability and data transfer rates in real time. Developers can use Ditto’s presence and sync status monitoring features to log and diagnose connection performance, making it easier to troubleshoot and optimize the system.
+5. **Test Under Real-World Conditions:**
+   - It’s crucial to test BLE connections in realistic scenarios, such as a busy restaurant, to ensure robust sync performance.
+
+For additional information [POS](https://ditto.live/solutions/point-of-sale), [Bluetooth File Sync](https://ditto.live/blog/getting-started-with-bluetooth-file-sync), [Bluetooth FAQ](/support#-Yu9k)

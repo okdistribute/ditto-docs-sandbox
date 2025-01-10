@@ -1,0 +1,195 @@
+---
+title: Operator expressions
+description:  Operators perform a specific operation on the input values or expressions.
+---
+
+## Arithmetic Operators
+
+Arithmetic operators are used to perform operations on numeric values.
+
+| **Operator** | **Purpose**                                    | **Example**                   |
+| :----------- | :--------------------------------------------- | :---------------------------- |
+| -            | A unary operator that denotes a negative value | `WHERE field_name = -1`       |
+| +, -         | As binary operators, they add or subtract      | `WHERE field_name + 1 > 2`    |
+| \*           | Multiply                                       | `WHERE field_name * 2 > 2`    |
+| /            | Divide                                         | `WHERE field_name / 2 > 1`    |
+| %            | Modulo                                         | `WHERE field_name % 2 > 1`    |
+| abs(x)       | Absolute value                                 | `WHERE abs(field_name) = 1`   |
+| ceil(x)      | Next whole number                              | `WHERE ceil(field_name) > 1`  |
+| floor(x)     | Previous whole number                          | `WHERE floor(field_name) > 1` |
+
+
+## String Operators
+
+Performs various operations on `string` scalar types:
+
+| **Operator**                             | **Purpose**                                                                                                         | **Example**                                         |
+| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------- |
+| \|\|                                     | String concatenation                                                                                                | `WHERE field_name \|\| 'world' = 'hello world'`     |
+| concat(str, ...)                         | String concatenation                                                                                                | `WHERE concat(field_name, 'world') = 'hello world'` |
+| contains(str, substr)                    | Returns true if `substr` is contained in `str`, otherwise returns false                                             | `WHERE contains(field_name, 'hello')`               |
+| starts\_with(str, substr)                | Returns true if `str` starts with `substr`, otherwise returns false                                                 | `WHERE starts_with(field_name, 'hello')`            |
+| ends\_with(str, substr)                  | Returns true if `str` ends with `substr`, otherwise returns false                                                   | `WHERE ends_with(field_name, 'world')`              |
+| byte\_length(str)                        | Returns the length of `str` in bytes. Strings in Ditto are encoded in UTF-8, so a character can take up to 4 bytes. | `WHERE byte_length(field_name) > 4`                 |
+| char\_length(str) character\_length(str) | Returns the number of characters in `str`.                                                                          | `WHERE char_length(field_name) > 4`                 |
+
+
+## Scalar Type Operators
+
+Indicates which scalar type to interact with:
+
+| **Operator**   | **Purpose**                                 | **Example**                         |
+| :------------- | :------------------------------------------ | :---------------------------------- |
+| is\_boolean(x) | Boolean type test                           | `WHERE is_boolean(field_name)`      |
+| is\_number(x)  | Float, Int, or UInt type test               | `WHERE is_number(field_name)`       |
+| is\_string(x)  | String type test                            | `WHERE is_string(field_name)`       |
+| type(x)        | Returns a string name representing the type | `WHERE type(field_name) = 'string'` |
+
+Following is the mapping between data types and scalar types; all of which are case-sensitive:
+
+| `REGISTER`                                                                 | `MAP`    | `ATTACHMENT` |
+| -------------------------------------------------------------------------- | -------- | ------------ |
+| * `null`<br/>* `boolean`<br/>* `number`<br/>* `binary`<br/>* `string`<br/>* `array`<br/>* `object` | `object` | `object`     |
+
+
+## Conversion Operators
+
+Converts between different value types.
+
+| **Operator**           | **Purpose**                                           | **Example**                                                 |
+| :--------------------- | :---------------------------------------------------- | :---------------------------------------------------------- |
+| deserialize\_json(str) | Returns the JSON string deserialized into an `object` | `WHERE deserialize_json('{"field_name": "blue"}') = 'blue'` |
+
+## Array Operators
+
+The following table provides an overview of interactions with `array`. Arrays can be either scalar values in a `REGISTER` or an input via an argument.
+
+| **Operator**                  | **Purpose**                                                                  | **Example**                                                                               |
+| :---------------------------- | :--------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------- |
+| array\_contains(array, value) | Returns true if the `array` contains the `value`, otherwise returns false    | `WHERE array_contains(field_name, 'blue')``WHERE array_contains(:your_array, field_name)` |
+| array\_contains\_null(array)  | Returns true if the `array` contains a `NULL` value, otherwise returns false | `WHERE array_contains_null(field_name)`                                                   |
+| array\_length(array)          | Returns the length of the array.                                             | `WHERE array_length(field_name) > 0`                                                      |
+
+## Object Operators
+
+The following table provides an overview of interactions with `object`. Objects can be either scalar values in a `REGISTER`, `MAP`, `Attachment`, or an input via an argument.
+
+| **Operator**           | **Purpose**                                                          | **Example**                           |
+| :--------------------- | :------------------------------------------------------------------- | :------------------------------------ |
+| object\_length(object) | Returns the number of key-value pairs in the top-level of the object | `WHERE object_length(field_name) > 0` |
+
+## Collection Operators
+
+The following table provides the collection operators for comparing if a given value is equal to any of the values in a list:
+
+| **Operator**       | **Purpose**         | **Example**                               |
+| :----------------- | :------------------ | :---------------------------------------- |
+| IN (x, y, ...)     | Membership test     | `WHERE department IN ('HR', 'Sales')`     |
+| NOT IN (x, y, ...) | Non-membership test | `WHERE department NOT IN ('HR', 'Sales')` |
+
+## Array and Object Literals
+
+Since version 4.8 of the Ditto SDK, Array and object literals are supported and can be used inline.
+
+```sql SQL
+SELECT * FROM your_collection_name WHERE field1 = [0, 1]
+```
+
+If using a version prior to 4.8, use arguments to pass in your array or object instead.
+
+```sql SQL
+SELECT * FROM your_collection_name WHERE field1 = :your_array
+```
+
+## Comparison Operators
+
+The comparison operators fall into one of two sub-categories:
+
+- Missing value comparisons
+- Regular value comparisons
+
+DQL has two ways of representing missing information in an object:
+
+- The presence of the field with a `NULL` for its value (as in SQL)
+- The absence of the field (which JSON permits)
+
+
+
+The following table provides operators for comparing if a given value is equal to any of the values in a list:
+
+
+`NULL` and `UNKNOWN` are synonym keywords and provide the same behavior.
+
+
+| **Operator**   | **Purpose**                                                                           | **Example**                       |
+| :------------- | :------------------------------------------------------------------------------------ | :-------------------------------- |
+| IS NULL        | Returns true if the value is NULL, otherwise returns false                            | `WHERE field_name IS NULL`        |
+| IS NOT NULL    | Returns true if the value is not NULL, otherwise returns false                        | `WHERE field_name IS NOT NULL`    |
+| IS MISSING     | Returns true if the field is missing in a given document, otherwise returns false     | `WHERE field_name IS MISSING`     |
+| IS NOT MISSING | Returns true if the field is not missing in a given document, otherwise returns false | `WHERE field_name IS NOT MISSING` |
+| IS UNKNOWN     | Returns true if the value is NULL, otherwise returns false                            | `WHERE field_name IS UNKNOWN`     |
+| IS NOT UNKNOWN | Returns true if the value is not NULL, otherwise returns false                        | `WHERE field_name IS NOT UNKNOWN` |
+| =              | Equality test                                                                         | `WHERE field_name = 100`          |
+| ==             | Equality test                                                                         | `WHERE field_name == 100`         |
+| !=             | Inequality test                                                                       | `WHERE field_name != 100`         |
+| \<>            | Inequality test                                                                       | `WHERE field_name <> 100`         |
+| \<             | Less than                                                                             | `WHERE field_name < 100`          |
+| >              | Greater than                                                                          | `WHERE field_name > 100`          |
+| \<=            | Less than or equal to                                                                 | `WHERE field_name <= 100`         |
+| >=             | Greater than or equal to                                                              | `WHERE field_name >= 100`         |
+
+### **Comparison Operations with NULL**
+
+In DQL, `NULL` represents missing or unknown data. It's not a value in the way that `1` or `'text'` are values. Any comparison operation that includes `NULL` will result in `NULL`.
+
+| **Equation**   | **Result** |
+| :------------- | :--------- |
+| `NULL = NULL`  | `NULL`     |
+| `NULL <> NULL` | `NULL`     |
+| `1 = NULL`     | `NULL`     |
+| `1 > NULL`     | `NULL`     |
+
+## Conditional Operators
+
+Conditional Operators allow you to more easily express conditional logic within your DQL queries.
+
+| **Operator**                                                     | **Purpose**                                                                                                                                                                                                   | **Example**                                                                                       |
+| :--------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------ |
+| coalesce(v1, v2, ...)                                            | Returns the first non-null value passed to the function                                                                                                                                                       | `WHERE coalesce(field_name_1, field_name_2, field_name_3) = 'foo'`                                |
+| decode(input, comp1, res1, \[comp2, res2...] \[, default value]) | Compares the input against each `comp`parameter, and if they match type and value, returns the corresponding`res` value. If no matches are found, the `default value` is returned (which defaults to `NULL`). | `WHERE decode(field_name, 'foo', 'I found foo', 'bar', 'I found bar', 'I found nothing') = 'foo'` |
+| nvl(input, default)                                              | Returns the `input` if `input` evaluates to NOT NULL, otherwise returns `default`.                                                                                                                            | `WHERE nvl(field_name, 0) > 10`                                                                   |
+
+## Logical Operators
+
+Logical operators perform logical `NOT`, `AND`, and `OR` operations over Boolean values (`TRUE` and `FALSE`), plus `NULL` and `MISSING`.
+
+| **Operator** | **Purpose**                                                                | **Example**                                |
+| :----------- | :------------------------------------------------------------------------- | :----------------------------------------- |
+| NOT          | Returns true if the following condition is false, otherwise returns false. | `WHERE NOT field_name = true`              |
+| AND          | Returns true if both branches are true, otherwise returns false            | `WHERE field_1 = true AND field_2 = false` |
+| OR           | Returns true if one branch is true; otherwise, returns false               | `WHERE field_1 = true OR field_2 = false`  |
+
+### NOT **Truth Table**
+
+| **Value** | **Result** |
+| :-------- | :--------- |
+| True      | False      |
+| False     | True       |
+| NULL      | NULL       |
+
+### AND **Truth Table**
+
+|           | **True** | **NULL** | **False** |
+| :-------- | :------- | :------- | :-------- |
+| **True**  | True     | NULL     | False     |
+| **NULL**  | NULL     | NULL     | False     |
+| **False** | False    | False    | False     |
+
+### OR **Truth Table**
+
+|           | **True** | **NULL** | **False** |
+| :-------- | :------- | :------- | :-------- |
+| **True**  | True     | True     | True      |
+| **NULL**  | True     | NULL     | NULL      |
+| **False** | True     | NULL     | False     |
+

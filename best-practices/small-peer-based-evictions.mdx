@@ -1,0 +1,94 @@
+---
+title: Small-Peer-Based Evictions
+description: "In most cases, choosing to use the Big Peer for TTL-based eviction management is ideal; however, in select scenarios where concerns like data availability, integrity, privacy, and security require local management, opting for the Small Peer local management approach may be the better choice."
+---
+
+<Steps>
+  <Step>
+Before invoking the Evict method to purge documents older than the TTL, cancel any active subscriptions that may be impacted by the eviction. ([Canceling Affected Subscriptions]())
+
+By stopping any subscriptions affected by the evict update, you ensure that Ditto does not attempt to purge documents actively syncing across the mesh.
+
+
+For more information about subscriptions, see *Platform Manual* > [Data Sync]().
+  </Step>
+  <Step>
+Once you ensure that any ongoing subscriptions affected by the eviction update are canceled, run the eviction process. (See [Invoking TTL-Based Eviction]())
+  </Step>
+  <Step>
+Once the eviction process is complete, set up a new subscription with your updated time‑based eviction criteria ([Creating New Subscriptions]())
+  </Step>
+</Steps>
+
+### Canceling Affected Subscriptions
+
+To cancel a subscription:
+
+```javascript pseudocode
+subscription.cancel()
+```
+
+<Warning>
+  To maintain data integrity, you must cancel any active subscription that the eviction update may impact *before *executing your eviction process.
+
+Otherwise, an undesirable loop may result in which Ditto continuously evicts documents from the local Ditto store and then automatically re‑syncs them, leading to increased memory usage.
+
+</Warning>
+
+### Invoking Eviction Updates
+
+<Steps>
+  <Step>
+  Using a top-level `args` variable, declare your TTL.
+  </Step>
+  <Step>
+  Using the Find method, define your time‑based eviction criteria.
+  </Step>
+  <Step>
+Using the Evict method, execute the eviction process on documents matching your criteria.
+
+
+<Warning>
+Notice that the query used for eviction is the opposite of the query used for subscription, enclosed as parameters in the Find method; that is, they do not select the same documents.
+
+By using opposite queries, you prevent potential conflict by ensuring that the queries you use for eviction and subscription are distinct and do not overlap.
+
+</Warning>
+```javascript pseudocode
+ditto.store.collection("flights")
+  .find("createdAt <= $args.ttl", args: [ "ttl": getTimeToLive() ])
+  .evict()
+```
+  </Step>
+</Steps>
+
+### Creating New Subscriptions
+
+To update a subscription with your updated time‑based eviction criteria, do the following:
+
+
+<Warning>
+  You must declare your subscription object from the top-most scope of your app to ensure access throughout the life cycle of your app.
+
+Otherwise, you cannot modify or cancel your subscription from any part of your code, resulting in difficulty and potential errors when managing the subscription's lifecycle.
+
+</Warning>
+
+<Steps>
+  <Step>
+  Specify the name of the collection to watch; for example, the `"flights"` collection.
+  </Step>
+  <Step>
+Using the Find method, define the query that retrieves documents where the `"createdAt"` field is greater than the `ttl`.
+
+  </Step>
+  <Step>
+Using the Subscribe method, initiate your subscription.
+
+```javascript pseudocode
+subscription = ditto.store.collection("flights")
+  .find("createdAt > $args.ttl", args: [ "ttl": getTimeToLive()])
+  .subscribe()
+```
+  </Step>
+</Steps>

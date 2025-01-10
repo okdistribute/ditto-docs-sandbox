@@ -1,0 +1,65 @@
+---
+title: "C++ Quickstart (Temp)"
+description: "This installation guide provides step-by-step instructions on installing and setting up the Ditto SDK in your C++ project."
+---
+
+To integrate Ditto with your app:
+
+1. Add a reference to the Ditto static library in your project’s build configuration settings. ([Installing Ditto](https://docs.google.com/document/d/1ROsL3hcc3p9pB7QE7tzcaPSKPjrVkq5WB1o4acPxh4w/edit#bookmark=id.reknuz4kegx)) 
+2. Add a linker flag to the Ditto static library in your project’s build configuration settings. ([Linking Your App to Ditto](https://docs.google.com/document/d/1ROsL3hcc3p9pB7QE7tzcaPSKPjrVkq5WB1o4acPxh4w/edit#bookmark=id.qcxmjadetmog))
+3. Add Ditto to your C++ code and initiate data sync. ([Initializing Ditto](https://docs.google.com/document/d/1ROsL3hcc3p9pB7QE7tzcaPSKPjrVkq5WB1o4acPxh4w/edit#bookmark=id.20snviwymv07))
+
+<Tabs>
+  <Tab title="Linux x86_64">
+```bash
+curl -O https://software.ditto.live/cpp-linux-x86_64/Ditto/4.3.0/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
+
+```
+  </Tab>
+  <Tab title="Linux aarch64">
+```bash
+curl -O https://software.ditto.live/cpp-linux-aarch64/Ditto/4.3.0/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
+
+```
+  </Tab>
+  <Tab title="iOS (x86\_64, arm64)">
+```none
+curl -O https://software.ditto.live/cpp-ios/Ditto/4.3.0/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
+```
+  </Tab>
+
+</Tabs>
+
+## Installing Ditto
+
+Install the SDK’s `libditto.a`static library and `Ditto.h` header files by downloading and extracting `Ditto.tar.gz` in your project’s `./sdk/` directory:
+
+## Linking Your App to Ditto
+
+Configure your app to link your C++ code to the Ditto static library at compilation time by doing either of the following as appropriate:
+
+If developing for Linux, create the executable file in the **./dist** directory from your **main.cpp** file and add the **-lditto** linker flag to your project’s build configuration settings:
+
+```bash Linux
+g++ -std=c++17 ./src/main.cpp -I ./sdk -lditto -ldl -lrt -pthread -L ./sdk -o dist/main;
+```
+
+
+## Initializing Ditto
+
+Finish integrating Ditto with your app by establishing an identity for your app, initializing Ditto, setting up the minimum log level for debugging, and starting the data sync process with the Ditto backend:
+
+```cpp C++
+auto identity =
+    Identity::OnlinePlayground("REPLACE_ME_WITH_YOUR_APP_ID",
+                               "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN", true);
+try {
+  Ditto ditto = Ditto(identity, dir);
+  ditto.set_minimum_log_level(LogLevel::debug);
+  ditto.start_sync();
+} catch (const DittoError &err) {
+}
+```
+
+
+

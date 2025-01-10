@@ -1,0 +1,16 @@
+---
+title: Sync Handling
+description: "When implementing sync in a peer-to-peer mesh network, handling synchronization efficiently is crucial."
+mode: wide
+---
+
+Here are some best practices for managing sync in Ditto's mesh network:
+
+1. **Optimize Transport Usage**: Leverage multiple communication transports (Wi-Fi, Bluetooth LE, WebSockets) based on network conditions. Ditto’s multiplexer automatically manages transport switching.
+2. **Query Subscription System**: Sync is query-based—only sync data relevant to each peer’s query to minimize bandwidth and processing.
+3. **Conflict Resolution**: Use Ditto’s conflict-free sync, which ensures eventual consistency through deterministic resolution of concurrent edits.
+4. **Flood-Fill Strategy**: For large-scale sync, Ditto uses a flood-fill process, propagating updates across the network via multihop connections. Ensure all peers share the same subscription for optimal performance.
+5. **Concurrency Handling**: Utilize Ditto’s version vectors to manage updates from peers and resolve conflicts predictably.
+6. **Offline-first Sync**: For offline functionality, configure an offline-first sync model that maintains data consistency even when devices are intermittently connected.
+
+For more information, see <a href="/sync/concepts/mesh-networking-101" target="_blank">Mesh Networking</a>.

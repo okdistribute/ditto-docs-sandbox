@@ -1,0 +1,102 @@
+---
+title: Flutter
+icon: flutter
+iconType: solid
+---
+
+<Update label="4.8.0-publicpreview.1" description="Release Date: Oct 17, 2024">
+
+We’re excited to announce the public preview of the Ditto Flutter SDK!
+
+While you can expect major feature compatibility with our production SDKs, we’re continuously refining the experience and closing any minor gaps. Join us on this journey, and share your feedback to help shape the future of Ditto for Flutter!
+</Update>
+
+
+<Update label="4.8.0-beta.12" description="Release Date: Oct 10, 2024">
+
+This change has a large number of new capabilities as well as some minor namings API Breaking Changes.
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: Presence API - Allows receiving syncing information about other peers. See Using Mesh Presence
+
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: WifiAware as a Transports protocol.
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: Retrieving active subscriptions. Syncing Data > Retrieving Subscriptions
+
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: Canceling subscriptions. Syncing Data > Canceling Subscriptions
+
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: Support for sync groups. Creating Sync Groups
+
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: Support to intercept and reject new connections. Handling Connection Requests
+
+<Icon icon="exclamation"iconType="solid" horizontal /> Breaking change: AuthenticationStatus.authenticated renamed to isAuthenticated
+
+<Icon icon="exclamation"iconType="solid" horizontal /> Breaking change: Various TransportConfig-related types have enabled properties renamed to isEnabled
+
+<Icon icon="exclamation"iconType="solid" horizontal /> Breaking change: HttpListenConfig.interfaceIp renamed to interfaceIP
+
+<Icon icon="exclamation"iconType="solid" horizontal /> Breaking change: HttpListenConfig.websocketSync renamed to webSocketSync
+
+<Icon icon="exclamation"iconType="solid" horizontal /> Breaking change: StoreObserver.cancelled renamed to isCancelled
+
+</Update>
+
+<Update label="4.8.0-beta.11" description="Release Date: Oct 4, 2024">
+<Icon icon="plus"iconType="solid" horizontal /> Added: Logger class that provides diagnostics capabilities.
+<Icon icon="plus"iconType="solid" horizontal /> Added: Device Dashboard Support - customers can now see device information on the Ditto Portal.
+<Icon icon="plus"iconType="solid" horizontal /> Added: Support for Attachments.
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> Changed:  The default `deviceName` will now represent the device's model.
+
+</Update>
+
+<Update label="4.8.0-beta.10" description="Release Date: Sept 13, 2024
+">
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: OnlineWithAuthenticationIdentity and ditto.auth
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: User-configurable transport config. Customizing Transports Configurations
+
+
+</Update>
+
+<Update label="4.8.0-beta.8 & 4.8.0-beta.9" description="No Notable Changes"/>
+
+<Update label="4.8.0-beta.7" description="Release Date: Aug 26, 2024">
+
+<Icon icon="plus"iconType="solid" horizontal /> Added: Ability to stop sync `ditto.stopSync()`
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed: Cancelling a subscription currently doesn't trigger any action
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed: Observer API no longer fires every 50ms. Previously the observer API was using a polling mechanism internally which resulted in an event ever 50ms no matter if there were changes or not. This has been updated with an event listener pattern.
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> Changed: Performance and battery life improvements from observers not continuously firing
+</Update>
+
+<Update label="4.8.0-beta.6" description="Release Date: Aug 21, 2024">
+Version 4.8.0-beta.6 has been Retracted due to an issue found with Android observer API not firing correctly.
+
+Please use earlier or later releases.
+</Update>
+<Update label="4.8.0-beta.5" description="Release Date: July 23, 2024">
+The initial beta release of Flutter
+</Update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

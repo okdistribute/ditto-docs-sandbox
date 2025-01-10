@@ -1,0 +1,97 @@
+---
+title: UPDATE
+description: The `UPDATE` operation modifies the content of existing documents in a collection.
+---
+
+With an `UPDATE` statement, you can update specific fields within the documents based on specified conditions:
+
+```sql DQL
+UPDATE your_collection_name
+SET field1 = value1, field2 -> [mutator], ...
+WHERE [condition]
+```
+
+In this syntax:
+
+- `your_collection_name` is the name of the collection in which you want to update data.
+- `field1 = value1, field2 -> [mutator], ...` represents the fields to be updated and their corresponding new value or functional mutator.
+- `[condition]` is the expression or set of conditions that determine which documents should be included in the result set.
+
+## Basic UPDATE
+
+Here is an example of a basic UPDATE operation:
+
+```sql DQL
+UPDATE your_collection_name
+SET field1 = 'blue'
+WHERE _id = '123'
+```
+
+
+## **UPDATE Multiple Fields**
+
+The following snippet shows an exampleUPDATE setting multiple fields:
+
+
+```sql DQL
+UPDATE your_collection_name
+SET
+  field1 = 'blue',
+  field2 = 0
+WHERE _id = '123'
+```
+
+## UPDATE with MAP Type
+
+When updating fields nested in a `MAP`, specify the field-value pairs you want to update.
+
+
+For `MAP` syntax, see Ditto Query Language > Types and Definitions > [Map Operations](/dql/types-and-definitions#map-operations).
+
+
+```sql DQL
+UPDATE COLLECTION your_collection_name (field2 MAP)
+SET
+  field2 -> (
+     sub1 = 2,
+     sub2 = 'spring'
+  )
+WHERE field1 = 'red'
+```
+
+
+## Flagging Fields as Removed
+
+In , you can mark a field as a *tombstone*. A tombstone is a flag signaling to remote peers that the field is deleted from the local Ditto store.
+
+In Ditto, when performing an operation like an UPDATE, excluding fields from your payload does *not* remove the existing data from the system. In other words, Ditto ignores any fields you've omitted from your payload and therefore they remain unchanged by that particular operation.
+
+
+To set a field as a tombstone, use the syntax `[field] -> tombstone()` as follows:
+
+
+```sql DQL
+UPDATE your_collection_name
+SET your_field_name -> tombstone()
+WHERE _id = '123'
+```
+
+
+### Setting a MAP as a Tombstone
+
+Using the `tombstone()` functional operation, you can mark a `MAP` data type as deleted.
+
+When a `MAP` is tombstoned, a metadata property is internally set on the field and all the data within the `MAP` is removed. This is done by iterating through all the fields in the `MAP` and calling `tombstone` on those fields.
+
+For `REGISTER` and `ATTACHMENT` data types within the `MAP`,  flagging values with `tombstone` results in their deletion.
+
+
+```sql DQL
+UPDATE COLLECTION cars (properties MAP)
+SET
+  properties -> tombstone()
+WHERE
+  _id = '123'
+```
+
+For more information and how-to instructions, see [Ditto Query Language](/dql/dql) > [Types and Definitions](/dql/types-and-definitions) > [Tombstone Operation](/dql/update#setting-a-map-as-a-tombstone).

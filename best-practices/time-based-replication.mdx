@@ -1,0 +1,33 @@
+---
+title: Time-Based Replication
+description: "When handling data in fast-paced industries, such as airlines, retail, quick-service restaurants, and other time‑sensitive environments, implement a design pattern that focuses on efficient memory management and performance optimization."
+sidebarTitle: Overview
+---
+
+## Time-to-Live Eviction Strategy
+
+A common implementation is the *time-based replication design pattern*, in which you use a Time‑to‑Live (*TTL*) Eviction strategy to set document retention logic; for example, logic specifying that only data written to the local Ditto store within the past 24 hours persists on the device.
+
+<Accordion
+  title="Example Scenario"
+>
+Imagine you're developing a meal ordering app that flight attendants use to record passenger meal orders on their devices.
+
+To ensure that your app remains highly performant throughout its life cycle while also guaranteeing that flight attendants using the app always work with the most recent and relevant information, you specify a TTL of 72 hours so that only documents written to the local Ditto store within the past 72 hours persist on the Small Peer device.
+
+```json
+{
+  "createdAt": "2022-09-17T20:00:46.945Z",
+  "flightNo": "DIT101"
+}
+```
+</Accordion>
+
+The implementation process of the time-based replication design pattern with a TTL Eviction strategy varies based on your approach to TTL-based eviction management:
+
+- Big Peer Management (Recommended) — Through regular interval HTTP API calls, the Big Peer cloud deployment delegates all TTL-based evictions mesh-wide. (For instructions, see [Big-Peer-Based Evictions](/best-practices/big-peer-based-evictions) )
+
+  By opting for the Big Peer approach, you ensure that locally stored documents sync with the Big Peer *before *eviction.
+
+- Small Peer Local Management — Each Small Peer device manages its own TTL-based evictions. (For instructions, see [Small-Peer-Based Evictions](/best-practices/small-peer-based-evictions) )
+

@@ -1,0 +1,12 @@
+@font-face {
+    font-family: '__aeonik_8efdfc';
+    src: url('https://ditto.live/_next/static/media/99d6c1192238c32a-s.p.woff2');
+    font-display: swap;
+    font-weight: 400;
+    font-style: normal
+}
+
+h1,h2,h3,h4{
+  font-family: '__aeonik_8efdfc';
+  letter-spacing: normal !important;
+}

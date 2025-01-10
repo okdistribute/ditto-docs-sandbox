@@ -1,0 +1,141 @@
+---
+title: Selecting the right pattern
+description: "When managing complex data structures, choosing the right pattern can significantly impact the efficiency and effectiveness of your app."
+sidebarTitle: Ovevriew
+---
+
+
+## Embedded Maps are Slow
+
+
+<Warning>
+Documents that exceed 5 MB do not sync with other connected peers. If a document exceeds 250 KB in size,  `stdout` warning prints to the console.
+</Warning>
+
+You can embed a map in another map to create an embedded `MAP` comprised of multiple, hierarchical levels.
+
+For example, consider a `people` collection that contains documents with the following schema:
+
+<Frame>
+    <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/qwuv59DhKOS3OBfV1viYF_badpatternschema.png"/>
+</Frame>
+
+Such a schema translates to a document with a nested map `cars` where each car can be arbitrarily large:
+
+```json JSON
+{
+    "name": "Susan",
+    "age": 43,
+    "cars": {
+        "abc123": {
+            "make": "Hyundai",
+            "color": "red",
+            "mileage": 13000
+        },
+        "def456": {
+            "make": "Jeep",
+            "color": "blue",
+            "mileage": 34000
+        }
+}
+```
+
+Deeply nested objects result in slow replication and data store performance as follows:
+
+- In scenarios with a limited internet connection or exclusive use of Bluetooth Low Energy (LE) for syncing across connected peers, replicating documents that contain large amounts of data experiences a slowdown. For instance, relying solely on Bluetooth LE for a document of typical size results in a maximum replication rate of 20 KB per second. Consequently, a document of 250 KB or more may take 10 seconds or more to replicate for the first time between devices.
+
+- There could still be slow replication and store performance on faster transports such as LAN or P2P Wifi. This is because the end‑to‑end replication process requires breaking down documents into smaller parts before syncing them across the mesh. Only once the client receives all the smaller parts and reconstructs them, is the document returned. Therefore, the callback is unable to render, store, and return a large document in a timely manner.
+
+## Flat Models are Faster
+
+Instead of using a single document to encode all of your large datasets, use a series of smaller documents.
+
+Nesting multiple `MAP` objects in a single document may result in slow sync performance. So, rather than using a single document to encode a large dataset, use a series of smaller documents, which are inexpensive in terms of storage and processing resources.
+
+Ditto considers collections inexpensive in terms of storage and processing resources. Ditto uses a combination of the collection name and the document ID to sync and query documents, and collections serve as an index for a set of related documents. You can use this index to establish foreign-key relationships between them by referencing the document ID. For more information, see [Relationships]().
+
+
+<Warning>
+Since the document `_id` is immutable, only use the flat model in situations where you have static identifiers within your foreign-key relationship.
+</Warning>
+
+
+For example, consider a `people` collection and a `cars` collection. In the following example, each car has an owner — represented by the `_id.ownerId` field — which relates to the person's document ID.  In the `people` collection:
+
+```json JSON
+{
+    "_id": "abc123",
+    "name": "Susan",
+    "age": 31
+}
+```
+
+In the `cars` collection:
+
+```json JSON
+{
+    "_id": {
+        "id": "def456",
+        "ownerId": "abc123"
+    },
+    "make": "Hyundai",
+    "color": "red",
+}
+```
+
+## Evaluation Criteria
+
+The decision to use deeply embedded objects in a single document or opt for a *flat model* instead depends on your specific requirements, relationships between data, and tolerance for certain tradeoffs.
+
+When assessing whether to embed a nested structure in a document or distribute the data across multiple smaller documents, refer to the following criteria to guide you:
+
+<CardGroup>
+<Card title="Query Performance" icon="square-1" href="/best-practices/9lD49ZtExskKuBX-Kq8Jn#query-performance" iconType="solid" horizontal/>
+<Card title="Data Size" icon="square-2" href="/best-practices/9lD49ZtExskKuBX-Kq8Jn#data-size" iconType="solid" horizontal/>
+
+<Card title="Concurrency" icon="square-3" href="/best-practices/9lD49ZtExskKuBX-Kq8Jn#concurrency" iconType="solid" horizontal/>
+
+<Card title="Document Structure" icon="square-4" href="/best-practices/9lD49ZtExskKuBX-Kq8Jn#document-structure" iconType="solid" horizontal/>
+
+</CardGroup>
+
+### Query Performance
+
+The following table provides criteria for the speed and efficiency of read and write operations:
+
+| **Criteria**                                                    | **Model**      |
+| --------------------------------------------------------------- | -------------- |
+| You often retrieve or update pairs of embedded items together.  | Embedded `MAP` |
+| You frequently access or modify only certain parts of the data. | Flat           |
+
+### Data Size
+
+
+Syncing large documents can significantly impact network performance. Caution is advised when handling large binary data, such as a high-resolution image or video exceeding 250kb, a deeply embedded document, or a large document.
+
+
+Instead of storing large files, such as an avatar image exceeding 250 kilobytes, directly within a document object, consider using the `ATTACHMENT` data type. For more information, see [ATTACHMENT]().
+
+| **Criteria**                                                                                                                                                           | **Model** |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| It is unlikely for the embedded `MAP` to potentially impact overall system performance.                                                                                | Embedded  |
+| You expect that the embedded `MAP` will become more complex and larger over time, making it difficult to manage and potentially causing system performance to degrade. | Flat      |
+
+### Concurrency
+
+The following table provides criteria for the potential for concurrent edits and resulting merge conflicts:
+
+| **Criteria**                                                                                                                                                   | **Model** |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| Your end users will likely modify the same data items stored locally on their respective devices while internet is unavailable.                                | Embedded  |
+| It is unlikely that your end users will simultaneously modify the same data items stored locally on their respective devices when the internet is unavailable. | Flat      |
+
+### Document Structure
+
+The following table provides a criteria for assessing the overall structure of your documents:
+
+| **Criteria**                                                                                                                                                                                             | **Model** |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| Your embedded `MAP` are relatively simple in structure and do not require maintainability over time.                                                                                                     | Embedded  |
+| Multiple embedded `MAP` structures are becoming *deeply* nested; as in there are embedded structures representing three or more levels in a hierarchy resulting in a necessity for better organization.  | Flat      |
+

@@ -1,0 +1,203 @@
+---
+title: DittoSwiftTools
+description: "DittoSwiftTools are diagnostic tools for Ditto. You can view connected peers, export debug logs, browse collections (documents), and monitor Ditto's disk usage."
+---
+
+
+For the source code, see the GitHub > getditto > <a href="https://github.com/getditto/DittoSwiftTools" target="_blank">DittoSwiftTools</a> repository.
+
+## Requirements
+
+- iOS 15.0+
+- Swift 5.0+
+
+## Installation
+
+The recommended approach to using DittoSwiftTools in your project is using the Swift Package Manager.
+
+<Steps>
+    <Step>
+        With your project open in Xcode go to File -> Add Packages, then search using "github.com/getditto/DittoSwiftTools" to find the DittoSwiftTools package.
+
+        <Frame>
+            ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/2Un0KRmDsFm71VZgFQAAw_image.png)
+        </Frame>
+
+    </Step>
+    <Step>
+        Select "Add Package"
+    </Step>
+    <Step>
+    Select which DittoSwiftTools products you would like, then select "Add Package"
+
+    <Info>
+    If you are looking for compatibility with Ditto v4, please target the <a href="https://github.com/getditto/DittoSwiftTools/tree/v4" target="_blank">v4 branch</a> in the Swift Package Manager.
+    </Info>
+
+    </Step>
+
+</Steps>
+
+## Usage
+There are four targets in this package: Presence Viewer, Data Browser, Export Logs, Disk Usage.
+
+<Steps>
+    <Step title="Presence Viewer">
+        The Presence Viewer displays a mesh graph that allows you to see all connected peers within the mesh and the transport that each peer is using to make a connection.
+
+        <Frame>
+            <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/hEGlPl93Bip8Z1ClnxITU_image.png"/>
+        </Frame>
+
+        First, make sure the `DittoPresenceViewer` was added to your Target. Then, use `import DittoPresenceViewer` to import the `PresenceViewer`.
+
+You can use the Presence Viewer in SiwftUI or UIKit.
+
+**SwiftUI**
+
+Use `PresenceView(ditto: Ditto)` and pass in your Ditto instance to display the mesh graph.
+
+```swift Swift
+import DittoPresenceViewer
+
+struct PresenceViewer: View{
+
+    var body: some View {
+        PresenceView(ditto: DittoManager.shared.ditto)
+    }
+}
+```
+
+
+**UIKit**
+
+Call `present`, pass the following as a parameter, and then set `animated` to `true`:
+
+`DittoPresenceView(ditto:DittoManager.shared.ditto).viewController`
+
+
+
+```swift Swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    present(DittoPresenceView(ditto: DittoManager.shared.ditto).viewController, animated: true) {
+        if let selected = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selected, animated: true)
+        }
+    }
+}
+```
+    </Step>
+    <Step title="Data Browser">
+The Ditto Data Browser allows you to view all your documents within each collection, including each document's fields. With the Data Browser, you can observe any changes that are made to your collections and documents in realtime.
+
+<Frame>
+    <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/_ZaGOev7zJWf15O3KXqcd_image.png"/>
+</Frame>
+
+**Standalone App** 
+
+If you are using the Data Browser as a standalone app, there is a button, `Start Subscriptions`, you must press in order to start syncing data.
+
+If you are embedding the Data Browser into another application then you do not need to press `Start Subscriptions` as you should already have your subscriptions running.
+
+First, make sure the "DittoDataBrowser" was added to your Target. Then, use `import DittoDataBrowser` to import the Data Browser.
+
+**SwiftUI**
+
+Use `DataBrowser(ditto: Ditto)` and pass in your Ditto instance to display the Data Browser.
+
+```swift Swift
+import DittoDataBrowser
+
+struct DataBrowserView: View {
+    var body: some View {
+       DataBrowser(ditto: DittoManager.shared.ditto)
+    }
+}
+```
+
+
+**UIKit**
+
+Pass `DataBrowser(ditto: Ditto)` to a <a href="https://sarunw.com/posts/swiftui-in-uikit/" target="_blank">UIHostingController</a> which will return a view controller that you can use to present.
+
+```swift Swift
+let vc = UIHostingController(rootView: DataBrowser(ditto: DittoManager.shared.ditto))
+
+present(vc, animated: true)
+```
+    </Step>
+    <Step title="Export Logs">
+    Export Logs allows you to export a file of the logs from your app.
+
+<Frame>
+    <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/Cr3L-KTIy8Jgap33QDdSU_image.png"/>
+</Frame>
+
+
+First, make sure the "DittoExportLogs" was added to your Target. Then, use `import DittoExportLogs` to import the export logs.
+
+**SwiftUI**
+
+Use `ExportLogs()` to export the logs. It is recommended to call `ExportLogs` from within a <a href="https://developer.apple.com/documentation/swiftui/view/sheet(ispresented:ondismiss:content:)" target="_blank">sheet</a>.
+
+```swift Swift
+.sheet(isPresented: $exportLogs) {
+    ExportLogs()
+}
+```
+
+
+**UIKit**
+
+Pass `ExportLogs()` to a <a href="https://sarunw.com/posts/swiftui-in-uikit/" target="_blank">UIHostingController</a> which will return a view controller that you can use to present.
+
+```swift Swift
+let vc = UIHostingController(rootView: ExportLogs())
+
+present(vc, animated: true)
+```
+    </Step>
+    <Step title="Disk Usage">
+    Disk Usage allows you to see Ditto's file space usage.
+
+<Frame>
+    <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/V9aX_dUson0LBAGCCKLIa_image.png"/>
+</Frame>
+
+
+First, make sure the "DittoDiskUsage" was added to your Target. Then, use `import DittoDiskUsage` to import the Disk Usage.
+
+<Frame>
+    <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/V9aX_dUson0LBAGCCKLIa_image.png"/>
+</Frame>
+
+
+First, make sure the "DittoDiskUsage" was added to your Target. Then, use `import DittoDiskUsage` to import the Disk Usage.
+
+**SwiftUI**
+
+Use `DittoDiskUsageView(ditto: Ditto)` and pass in your Ditto instance.
+
+```swift Swift
+import DittoDiskUsage
+
+struct DiskUsageViewer: View {
+    var body: some View {
+        DittoDiskUsageView(ditto: DittoManager.shared.ditto)
+    }
+}
+```
+
+**UIKit**
+
+Pass `DittoDiskUsageView(ditto: Ditto)` to a <a href="https://sarunw.com/posts/swiftui-in-uikit/" target="_blank">UIHostingController</a> which will return a view controller that you can use to present.
+
+```swift Swift
+let vc = UIHostingController(rootView: DittoDiskUsageView(ditto: DittoManager.shared.ditto))
+
+present(vc, animated: true)
+```
+
+    </Step>
+</Steps>
