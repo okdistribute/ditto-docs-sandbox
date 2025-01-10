@@ -1,0 +1,243 @@
+---
+title: Role-Based Access Control
+description: "We've introduced access permissions for organization end-user roles. "
+icon: key
+iconType: solid
+---
+
+This article provides the following information on creating and managing role-based access control (RBAC) within your organization:
+
+<CardGroup>
+ <Card title="Overview of RBAC" icon="square-1" href="/dql/ids-paths-strings-keywords#identifiers" iconType="solid" horizontal/>
+
+ <Card title="Organization Roles" icon="square-2" href="/dql/ids-paths-strings-keywords#path-expressions" iconType="solid" horizontal/>
+
+<Card title="Ditto Employee Access Grants" icon="square-3" href="/dql/ids-paths-strings-keywords#string-literals" iconType="solid" horizontal/>
+</CardGroup>
+
+## Overview of RBAC
+
+Previously, all end-user roles within an organization had the same access to app data. With the latest release, you can set fine-grained read-write access controls to app data.
+
+For instance, create, modify, and delete custom roles; establish organization hierarchies for permissions delegation; set permissions for portal functionality like viewing collections, querying tokens, transferring apps between organizations; and more.
+
+<Warning>
+Since implementing role-based access control, organization members no longer have read-write access to app data by default.
+
+To regain access, create custom roles that include permissions for accessing and modifying app data, and then assign these roles to the appropriate organization members. For instructions, see [Creating Roles](/cloud/portal/role-based-access-control#creating-new-roles) and [Assigning Roles](/cloud/portal/role-based-access-control#assigning-roles-to-end-users).
+
+</Warning>
+
+### Organization Permissions Settings
+
+When configuring access control for roles within an organization, there are various types of privileges you can choose from.
+
+Available within the portal > **Settings **> **Roles**, the following graphic and corresponding table provide an overview of the various settings you can configure for roles within an organization:
+
+<Frame>
+  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/vgGvoVQvbvI39hSzhBj38_image.png)
+</Frame>
+
+<Info>
+As indicated using matching superscript numbers, some privileges have one or more dependencies with other privileges. For example:
+
+- ¹ Selecting **Accept incoming app transfer requests **automatically toggles **View incoming app transfer requests**, granting both read and write privileges.
+- ² Selecting **Access audit logs** automatically toggles **View access grants**, granting view access to active app transfer requests.
+
+</Info>
+
+
+| **Item** | **Setting**                                    | **Description**                                                                          |
+| -------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 1        | **Accept incoming app transfer requests**¹     | Initiate, approve, or cancel requests to transfer apps between organizations.            |
+| 2        | **Create an app**                              | Set up new apps.                                                                         |
+| 3        | **View organization details**                  | Access and view details related to the organization.                                     |
+| 4        | **Reject incoming app transfer requests**      | Decline requests from other organizations to transfer apps to the organization.          |
+| 5        | **View access grants**²𝄒⁴                     | Review the permissions granted to specific users, roles, or organizations.               |
+| 6        | **Access audit logs**²𝄒³                      | Review audit logs.                                                                       |
+| 7        | **Manage organization members**                | Oversee and administer the membership of an organization.                                |
+| 8        | **View incoming app transfer requests**¹𝄒²𝄒³ | See requests from other organizations to transfer apps into the organization.            |
+| 9        | **Update the organization details**            | Modify information related to the organization.                                          |
+| 10       | **Manage access grants**⁴                      | Control and administer access privileges granted to other roles within the organization. |
+
+## App Permissions Settings
+
+Following is an overview of the various settings that, once assigned, grant end users the ability to manage the app. (See [Creating Roles](/cloud/portal/role-based-access-control#creating-new-roles))
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/zdsaJ2QzTtM2u2hEUMwfj_image.png"/>
+</Frame>
+
+
+
+| **Item** | **Setting**                                       | **Description**                                                                           |
+| -------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| 1        | **Cancel a request for an app transfer**          | Withdraw active requests to transfer apps to other organizations.                         |
+| 2        | **Delete an app**⁵                                | Permanently remove apps.                                                                  |
+| 3        | **Delete API keys**⁷                              | Revoke authentication and authorization to access to app data.                            |
+| 4        | **View app details**                              | Access and review specific information and settings associated with apps.                 |
+| 5        | **Access offline-only licenses**²𝄒⁶              | View the licenses designating apps for offline usage.                                     |
+| 6        | **Update app details**                            | Modify the information and settings associated with apps.                                 |
+| 7        | **Modify app data**⁵                              | Make changes to mesh-generated transactional data.                                        |
+| 8        | **Request offline-only licenses**⁶                | Manage the licenses designating apps for offline usage.                                   |
+| 9        | **Create API keys**⁶𝄒⁸                           | Generate unique identifiers used for authentication and authorization access to app data. |
+| 10       | **View app metrics**                              | Review various analytics associated with apps.                                            |
+| 11       | **Access API keys**²𝄒⁶𝄒⁷𝄒⁸                     | View the API keys used for authentication and authorization to access app data.           |
+| 12       | **Initiate a request for the transfer of an app** | Transfer ownership of apps to other organizations.                                        |
+
+## Organization Roles
+
+To establish role-based access controls for your organization:
+
+<Steps>
+  <Step>
+Create new roles with the desired settings. ([Creating New Roles](/cloud/portal/role-based-access-control#creating-new-roles))
+  </Step>
+  <Step>
+Designate roles for the appropriate end users within your organization. ([Assigning Roles to End Users](/cloud/portal/role-based-access-control#assigning-roles-to-end-users))
+  </Step>
+</Steps>
+
+### Creating New Roles
+
+To add a new role to your organization:
+
+<Steps>
+  <Step>
+From your organization, click **Settings**.
+  </Step>
+  <Step>
+Click **Roles**.
+  </Step>
+    <Step>
+Click **Add new role**.
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/kyU8gAZPDF1I5czKqNYx9_image.png"/>
+</Frame>
+  </Step>
+    <Step>
+Click to select and deselect the settings you want to apply to your new role as desired, and then click **Create role**.
+
+<Warning>
+For organization members to regain read-write access to app data, enable **Access app data** and **Modify app data** in the **App permissions **as shown in the following graphic.
+
+Once you've created your role with read-write access permissions, make sure to assign the role to your members as appropriate. ([Assigning Roles](/cloud/portal/role-based-access-control#assigning-roles-to-end-users))
+
+</Warning>
+
+<Frame>
+  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/e88HU-uzHAh1FQP7f_y8w_image.png)
+</Frame>
+  </Step>
+</Steps>
+
+
+### Assigning Roles to End Users
+
+Once you've created a role, designate them to the appropriate end users within your organization:
+
+<Steps>
+  <Step >
+From **Settings** > **Members**, click **Invite member** located on the right.
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/qsKrX_7paZPWcCqgX7yTn_invite-member.png"/>
+</Frame>
+  </Step>
+  <Step>
+From the **Invite users** modal that appears:
+
+1. Enter the email belonging to the end user you want to add.
+2. Click **Role** and select the role type you want to assign.
+3. Click **Add to list**.
+4. When finished adding end users to the invite, click **Invite users**.
+
+<Frame>
+  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/b1jzGcu_zFWLNnDTB9LRJ_image.png)
+</Frame>
+  </Step>
+</Steps>
+
+#### Viewing Pending Member Invitations
+
+Once a member is assigned a role, Ditto automatically sends a formal invitation to the email address specified in the invite, which must be accepted before RBAC privileges take effect.
+
+To view a list of invitations waiting for approval, go to **Settings **>** Members** in the portal. A complete list of invitations display within **Pending member invitations**, as shown in the following graphic:
+
+<Frame>
+  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/uMHQMz2nvCHcuJRl4toHo_pending-member-role.png)
+</Frame>
+
+### Modifying and Deleting Roles
+
+To edit a role's settings or permanently remove a role from your organization:
+
+<Steps>
+  <Step>
+From your organization, click **Settings**.
+  </Step>
+  <Step>
+Click **Roles**.
+  </Step>
+  <Step>
+Click the three-dot menu next to the role you want to modify or delete:
+
+- To modify, select **Edit**.
+- To permanently remove, select **Delete**.
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/pvmM5Ef8_0IUhpONKh5Sq_image.png"/>
+</Frame>
+
+  </Step>
+</Steps>
+
+
+## Ditto Employee Access Grants
+
+There are circumstances in which Ditto's support team requires elevated privileges to access your app data, for instance, to troubleshoot an issue.
+
+Ditto employees can only access your app data with an approved *access grant*. An access grant is a formal authorization provided by any of the following to approve the access request initiated by Ditto:
+
+- Current organization owner
+- Organization roles configured with** Manage access grants** privileges
+
+Once accepted, you can revoke access grants at any time. (See [Revoking Access](/cloud/portal/role-based-access-control#revoking-access))
+
+For more information, see [Organization Permissions Settings](/cloud/portal/role-based-access-control#organization-permissions-settings) and [Accepting Access Grants](/cloud/portal/role-based-access-control#granting-access).
+
+### Granting Access
+
+To approve a Ditto-initiated access grant:
+
+<Steps>
+  <Step>
+Click **Apps**.
+  </Step>
+  <Step>
+From **Access grants**, click **Accept**.
+
+<Frame>
+  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/y2cL7FHNiqJG9ROQ6wWK4_image.png)
+</Frame>
+  </Step>
+</Steps>
+
+### Revoking Access
+
+Once an access grant is approved, you can end access at any time:
+
+<Steps>
+  <Step >
+Click **Apps**.
+  </Step>
+  <Step>
+From **Access grants**, click **Revoke access**.
+
+<Frame>
+  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/PGV8GJ17AYQ1uTsY3jPhF_image.png"/>
+</Frame>
+  </Step>
+</Steps>
+

@@ -1,0 +1,201 @@
+---
+title: Permissions
+description: You can integrate the Ditto SDK into C# projects to develop for a wide range of platforms.
+---
+
+<Info>
+    For a complete overview of the platforms, transports, and devices the C# SDK supports, see [C#](/best-practices/how-to/c-sharp/permissions#prerequisites).
+</Info>
+
+To install the C# SDK:
+
+<Steps>
+    <Step>
+    Confirm that you meet the minimum requirements. ([Prerequisites](/best-practices/how-to/c-sharp/permissions#prerequisites))
+    </Step>
+    <Step>
+    Prepare your environment for Ditto. ([Setting Up Your Environment](/best-practices/how-to/c-sharp/permissions#permissions-configurations))
+    </Step>
+    <Step>
+    Set up your app permissions. ([Setting Up Permissions](/best-practices/how-to/c-sharp/permissions#setting-up-permissions))
+    </Step>
+    <Step>
+    Add Ditto to your app. ([Integrating Ditto](/best-practices/how-to/c-sharp/permissions#integrating-ditto))
+    </Step>
+</Steps>
+
+## Prerequisites
+
+Following are the minimum requirements that must be met before attempting to install Ditto.
+
+- <a href="https://learn.microsoft.com/en-us/dotnet/standard/net-standard?tabs=net-standard-2-1#net-standard-versions" target="_blank">.NET Standard 2.1</a>
+- <a href="https://dotnet.microsoft.com/en-us/download/dotnet/3.0" target="_blank">.NET Core 3</a>
+- <a href="https://dotnet.microsoft.com/en-us/download/dotnet-framework/net40" target="_blank">.NET Framework 4.0</a>
+
+## Installing Dependencies
+
+Using either the NuGet package manager, .NET CLI, or adding a reference to your `.csproj` XML file:
+<Tabs>
+    <Tab title="NuGet Package Manager">
+    ```bash
+    Install-Package Ditto -Version 4.3.0
+    ```
+    </Tab>
+    <Tab title=".NET CLI">
+    ```bash
+    dotnet add package Ditto --version 4.3.0
+    ```
+    </Tab>
+    <Tab title="CSProj XML">
+    ```bash
+    <PackageReference Include="Ditto" Version="4.3.0" />
+    ```
+    </Tab>
+</Tabs>
+
+
+For the official .NET standard for Ditto, see the official NuGet reference at Packages > <a href="https://www.nuget.org/packages/Ditto/" target="_blank">Ditto</a>.
+
+
+## Permissions Configurations
+
+If developing for Android or iOS targets through frameworks like *Xamarin.Forms* and Multi-Platform App UI (*MAUI*), once you've integrated the Ditto dependency in your environment, configure your permissions as appropriate.
+
+Xamarin is a Microsoft-developed framework for building cross-platform apps using C#. Building upon Xamarin's foundation, MAUI offers additional features and various cross‑platform development improvements. For more information, see Microsoft for the official <a href="https://learn.microsoft.com/en-us/xamarin/" target="_blank">*Xamarin documentation*</a>.
+
+### Setting Up Permissions
+
+Due to both Android and iOS limiting access to some device functionality for end‑user control and privacy by default, for Ditto to function optimally and use all the network transports — Bluetooth Low Energy (LE), Local Area Network, and so on — configure your app to automatically request all necessary permissions from end users at runtime by doing the following.
+
+<Tabs>
+    <Tab title="Android OS">
+    For more information on permissions requirements for Android OS, see the official Android documentation > <a href="https://developer.android.com/develop/connectivity/bluetooth/bt-permissions" target="_blank">*Bluetooth permissions*</a> and <a href="https://developer.android.com/develop/connectivity/wifi/wifi-permissions" target="_blank">*Request permission to access nearby Wi-Fi*</a>.
+    <Steps>
+    <Step>
+    Add the following permissions to your project's AndroidManifest.xml file:
+    <Info>
+The `tools:targetAPI` attribute ensures you avoid errors in older OS versions that do not recognize the permission.
+
+The `android:maxSdkVersion` attribute ensures you avoid asking for more permissions than Ditto needs by preventing permission requests on devices running a newer OS version.
+
+To opt out of this behavior, see step 2.
+
+</Info>
+
+
+```xml AndroidManifest.xml
+<manifest
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<uses-permission android:name="android.permission.BLUETOOTH"
+    android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+    android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"
+    tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
+    tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+    android:usesPermissionFlags="neverForLocation"
+    tools:targetApi="s" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+    android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+    android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
+    android:usesPermissionFlags="neverForLocation"
+    tools:targetApi="tiramisu" />
+```
+    </Step>
+    <Step>
+    If you want to request permissions on all OS versions, regardless of API (`tools:targetAPI`) and SDK levels (`tools:targetAPI`), add the following to override the location permission option:
+
+    ```xml AndroidManifest.xml Location Permission Override Option
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+    tools:remove="android:maxSdkVersion" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+    tools:remove="android:maxSdkVersion" />
+    ```
+
+    <Info>
+     Features related to runtime permissions management for Android is planned for future release.
+    </Info>
+
+    </Step>
+    </Steps>
+    </Tab>
+    <Tab title="iOS">
+    <Steps>
+    <Step>
+    From your **Info.Plist** file, add the following key-value pairs, and then, if applicable, modify each `string` assigned to **Value**:
+
+        - Once implemented, the following `string` values display as a prompt to your end users explaining why the app requires certain permissions.
+
+        - If your end users prefer a language other than English, replace the `string` values with their language equivalents or use localized strings.
+
+        ```xml XML
+        <key>NSBluetoothAlwaysUsageDescription</key>
+        <string>Uses Bluetooth to connect and sync with nearby devices</string>
+        <key>NSLocalNetworkUsageDescription</key>
+        <string>Uses WiFi to connect and sync with nearby devices</string>
+        <key>NSBonjourServices</key>
+        <array>
+        <string>_http-alt._tcp.</string>
+        </array>
+        ```
+    </Step>
+    <Step>
+        Ensure uninterrupted syncing, by enabling Bluetooth Background Modes in your **Info.Plist** file.
+
+        Once enabled, you ensure your app continuously runs in the background, even when the end-user's device is locked.
+
+        ```xml XML
+        <key>UIBackgroundModes</key>
+        <array>
+        <string>bluetooth-central</string>
+        <string>bluetooth-peripheral</string>
+        </array>
+        ```
+    </Step>
+    </Steps>
+    </Tab>
+</Tabs>
+
+## Integrating Ditto
+
+Integrate Ditto with your app:
+
+<Info>
+For instructions on how to obtain your access credentials, see [Get Started](/best-practices/how-to/c-sharp/permissions#IcofPONGVBYKVGGqJKTwX). For an introduction to authentication in Ditto, see *Ditto Basics* > [Authentication and Initialization](/best-practices/how-to/c-sharp/permissions#3Vo4OnmGEpp4S9IAm0HBZ).
+</Info>
+
+
+```csharp C#
+try
+{
+    DittoLogger.SetMinimumLogLevel(DittoLogLevel.Debug);
+    var ditto = new Ditto(DittoIdentity.OnlinePlayground("REPLACE_ME_WITH_YOUR_APP_ID", "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN", true), path);
+    ditto.StartSync();
+}
+catch (DittoException ex)
+{
+    Console.WriteLine($"Ditto Error {ex.Message}");
+}
+```
+
+```csharp C#
+var insertArgs = new Dictionary<string, object>();
+insertArgs.Add("newCar", new { _id = "123", color = "blue" })
+
+await ditto.Store.ExecuteAsync(
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  insertArgs);
+```
+

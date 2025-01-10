@@ -1,0 +1,277 @@
+---
+title: "Querying: HTTP (Legacy)"
+description: "This article provides an overview on how to perform read operations in Ditto, including how to construct your queries, use `$args` to query for dynamic data, sort and limit your results, and perform index testing."
+icon: database
+iconType: solid
+sidebarTitle: Overview
+---
+
+
+<Info>
+For a high-level overview of Ditto `create`, `read`, `update`, and `delete` (CRUD) operations, see *Ditto Basics *> [CRUD Fundamentals](/crud/create).
+
+</Info>
+
+## Creating Queries
+
+Ditto's query language is similar to what you'd write in most `if` statements. In addition, you can use intuitive query condition operators. For more information, see *Ditto Basics *>  [Query Syntax](/cloud/http-api/legacy/legacy-querying-http) and *Platform Manual* > [Querying Techniques](/cloud/http-api/legacy/legacy-querying-http).
+
+<Info>
+If you want to receive detailed information about the types of data being returned, specify the key `serializedAs: latestValuesAndTypes` in your request.
+
+</Info>
+
+
+As demonstrated in the following snippet, you query documents by their collection, rather than by individual document.
+
+However, if you need to find a specific document, you can query by its unique identifier. For more information, see [Finding by Document ID](/cloud/http-api/legacy/legacy-querying-http#finding-by-document-id).
+
+
+```bash cURL
+curl -X POST 'https://<CLOUD_ENDPOINT>/api/v4/store/find' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "collection": "people",
+    "query": "favoriteBook.title == 'The Great Gatsby'"
+  }'
+```
+
+
+## Using Query Variables with $args
+
+Instead of building or interpolating query strings, you can query Ditto using runtime variables through an `$args` map object:
+
+
+```bash cuRL
+curl -X POST 'https://<CLOUD_ENDPOINT>/api/v4/store/find' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "args": {
+      "name": "max",
+      "age": 32
+    },
+    "collection": "people",
+    "query": "name == $args.name && age <= $args.age"
+  }'
+```
+
+
+## Finding by Document ID
+
+To retrieve a single document by its unique identifier (`id`) or, if applicable, composite key, use the following endpoint:
+
+<Info>
+If retrieving a document based on a composite key, make sure to provide all of the fields that make up the compound identifier. For more information, see *Platform Manual *> [Identifiers](/cloud/http-api/legacy/legacy-querying-http).
+</Info>
+
+```none
+https://{app_id}.cloud.ditto.live/api/v4/store/findbyid
+```
+
+
+For example, the following snippet shows how to construct a cURL request to retrieve a document within the `people` collection with the document ID of `123abc`:
+
+```bash cURL
+curl --location --request POST 'https://{app_id}.cloud.ditto.live/api/v4/store/findbyid' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $API_KEY' \
+--data-raw '{
+  "collection": "people",
+  "id": "123abc"
+}'
+```
+
+
+## Finding Documents by Criteria
+
+The `find` method fetches the current version of multiple documents from the Big Peer:
+
+<Warning>
+Do *not *include a `find` query within a `write` command in a single operation. Instead, perform each as separate API calls. For instructions, see [Performing Find and Write Operations](/cloud/http-api/legacy/legacy-querying-http).
+</Warning>
+
+
+```none
+https://{app_id}.cloud.ditto.live/api/v4/store/find
+```
+
+
+### Performing Find and Write Operations
+
+Do *not *include a `find` query within a `write` command in a single operation. Instead, perform each operation as separate API calls:
+
+<Steps>
+  <Step>
+Send a `find` request to fetch the documents.
+
+  </Step>
+  <Step>
+Once you've received a response, send a separate `write` request to create or modify documents.
+
+  </Step>
+</Steps>
+
+
+## Sorting Results
+
+Unless you explicitly specify a `sort` direction in your request, the documents are returned in an arbitrary order.
+
+<Info>
+In previous versions of the HTTP API, there was an implicit default sorting order; however, as of HTTP API version 4, documents return in an arbitrary order by default.
+
+If you want to maintain the same default sorting order as previous versions, add sort by `_id` ascending in your request as follows:
+
+```json
+"sort": [
+
+    {"property": "_id", "direction": "asc"}
+]
+```
+</Info>
+
+
+The following snippet provides an example of two sort operations:
+
+- Sort documents with `name` field property set to ascending (`asc`) order.
+- Sort documents with the `age` field property set to descending (`desc`) order.
+
+
+```bash cURL
+curl -X POST 'https://<CLOUD_ENDPOINT>/api/v4/store/find' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "collection": "people",
+    "query": "favoriteBook.title == 'The Great Gatsby'",
+    "sort": [
+      {"property": "name", "direction": "asc"},
+      {"property": "age", "direction": "desc"}
+   ]
+  }'
+```
+
+
+## Limiting Results
+
+Limit the number of results that a query returns by calling the `limit` method before executing your query.
+
+For example, the following snippet demonstrates a limit of `100` results for documents within the `people` collection with a field property of `color` set to the value of `red`:
+
+```bash cURL
+curl -X POST 'https://<CLOUD_ENDPOINT>/api/v4/store/find' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "collection": "people",
+    "query": "color == 'red'",
+    "limit": 100
+  }'
+```
+
+
+## Performing Index Testing
+
+Query efficiency impacts the overall performance and scalability of your app.
+
+To determine how the particular query interacts with an index on the Big Peer, perform an index test by including the `describe` field set to `true`in the JSON body of your request.
+
+For example:
+
+```bash cURL
+curl -X POST 'https://<CLOUD_ENDPOINT>/api/v4/store/find' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "collection": "orders",
+    "query": "status != 'finalized'",
+    "limit": 100,
+    "describe": true
+  }'
+```
+
+
+If the query successfully made use of an index, you'll receive the following `"index_scan"` response:
+
+
+```bash JSON
+{
+  "documents": [
+    {
+      "id": "query_details",
+      "fields": {
+        "index_scan": {
+          "path": [
+            "status"
+          ]
+        }
+      }
+    }
+  ],
+  "txnId": 221984002
+}
+```
+
+
+If the query failed to use an index, you'll receive the following `"full_scan"` response:
+
+```bash JSON
+{
+  "documents": [
+    {
+      "id": "query_details",
+      "fields": {
+        "full_scan": {}
+      }
+    }
+  ],
+  "txnId": 221983514
+}
+```
+
+
+### Performing Find and Write Operations
+
+Do *not *include a `find` query within a `write` command in a single operation. Instead, perform the following as separate API calls:
+
+<Steps>
+  <Step>
+Send a `find` request to fetch the documents.
+  </Step>
+  <Step>
+Once you've received a response, send a separate `write` request to create create or modify documents.
+  </Step>
+</Steps>
+
+
+
+
+## Counting Documents
+
+When you want to ensure whether documents have been successfully synced to the Big peer or evaluate and test the amount of data that a subscription will sync to Small Peers, use the `count` command:
+
+Accessible using the following URL endpoint, the `count` command determines the number of documents that match a specific query expression at a particular moment in time:
+
+
+
+
+```none
+https://{app_id}.cloud.ditto.live/api/v4/store/count
+```
+
+
+<Info>
+With the `count` command, you can write queries directly in your request or, if querying dynamic data, pass them as `$args`. For more information about using $args, see the *Platform Manual *> [Querying Dynamic Data Using $args]().
+</Info>
+
+
+
+For example, the following snippet illustrates how to `count` the number of documents within the `people` collection with the field property of `name` set to the value of `John`:
+
+```bash cURL
+curl -X POST 'https://{app_id}.cloud.ditto.live/api/v4/store/count' \
+  --header 'Authorization: Bearer $API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "collection": "people",
+    "query": "name == \'John\'"
+}'
+```
+
+

@@ -1,0 +1,184 @@
+---
+title: HTTP API - DQL Queries
+description:  This article provides an overview of how to perform Ditto Query Language (DQL) queries in Ditto using the HTTP data API.
+icon: database
+iconType: solid
+---
+
+## RPC Endpoint
+
+Use the following endpoint to execute your queries: `https://<CLOUD_ENDPOINT>/api/v4/store/execute`
+
+## DQL Support
+
+The DQL HTTP API supports the following DQL commands:
+
+- `SELECT`
+- `INSERT`
+- `UPDATE`
+
+
+<Warning>
+  `EVICT` is not currently available for the Big Peer, although it's in development. To learn more about removing data from your Big Peer instance, see [Writing: HTTP (Legacy)](/cloud/http-api/legacy/writing-http-legacy) .
+</Warning>
+
+## SELECT
+
+To retrieve documents from a collection, use a `SELECT` statement and, if desired, include optional clauses pinpointing criteria to further filter results.
+
+For more information, see *Ditto Query Language* > [SELECT](/dql/select).
+
+### Optional Clauses for Filtering
+
+The following table provides an overview of the various clauses you can use to set granular controls for filter operations:
+
+| **Clause** | **Description** |
+| --- | --- |
+| FROM | The required clause specifying the collection containing the documents for retrieval. (See [FROM](/dql/select#from)) |
+| WHERE | Applies filtering conditions to restrict the documents included in the result set. (See  [WHERE](/dql/select#where)) |
+| ORDER BY | Specifies the sorting order of the result set based on one or more expressions. (See  [ORDER BY](/dql/select#order-by)) |
+| LIMIT | Restricts the number of documents included in the result set. (See [LIMIT](/dql/select#limit)) |
+| OFFSET | Skips a specific number of documents before returning the result set. (See  [OFFSET](/dql/select#offset)) |
+
+### Basic SELECT Operation
+
+The following syntax outlines the basic structure of a `SELECT` statement:
+
+```sql DQL
+SELECT * FROM collection
+```
+
+
+#### **cURL**** Request**
+
+For instance, performing the following cURL request to `SELECT` documents from the `cars` collection:
+
+```bash Curl
+curl -X POST "https://<CLOUD_ENDPOINT>/api/v4/store/execute" \
+  --header 'Authorization: <AUTHORIZATION-TOKEN>' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+      "statement": "SELECT * FROM cars"
+  }'
+```
+
+#### **Response Object**
+
+After invoking a request to `INSERT` documents, Ditto returns a response object similar to the following example:
+
+```json JSON
+{
+  "transactionId": 100,
+  "queryType": "select",
+  "items": [{
+    "_id": "123",
+    "color": "blue"
+  },{
+    "_id": "456",
+    "color": "red"
+  }],
+  "mutatedDocumentIds": [],
+  "error": {},
+  "warnings": [],
+  "totalWarningsCount": 0
+}
+```
+
+## INSERT with Arguments
+
+To create new documents, use an `INSERT` statement and, if desired, optional arguments defining the fields to include.
+
+```sql DQL
+INSERT INTO cars DOCUMENTS (:doc1), (:doc2)
+```
+
+
+**cURL Request**
+
+For example, initiating creating `doc1` and `doc2` as follows:
+
+```bash CURl
+curl -X POST "https://<CLOUD_ENDPOINT>/api/v4/store/execute" \
+  --header 'Authorization: <AUTHORIZATION-TOKEN>' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+      "statement": "INSERT INTO cars DOCUMENTS (:doc1), (:doc2)",
+      "args": {
+        "doc1": {
+          "_id": "123",
+          "color": "blue"
+        },
+        "doc2": {
+          "_id": "456",
+          "color": "red"
+        }
+      }
+  }'
+```
+
+**Sample Response**
+
+```json JSON
+{
+  "transactionId": 100,
+  "queryType": "mutation",
+  "items": [],
+  "mutatedDocumentIds": ["123", "456"],
+  "error": {},
+  "warnings": [],
+  "totalWarningsCount": 0
+}
+```
+
+## UPDATE
+
+To modify the content of existing documents in a collection, use the UPDATE operation.
+
+```sql DQL
+UPDATE your_collection_name
+SET field1 = value1, field2 -> [mutator], ...
+WHERE [condition]
+```
+
+
+For more information, see *Ditto Query Language* > [UPDATE]().
+
+## Response Object Definition
+
+The following snippet outlines the structure of a typical response for `insert` or `update` document operations:
+
+```json JSON
+{
+  // Transaction Identifier
+	"transactionId": number,
+  // Possible values:
+  // - "select"
+  // - "mutation" (for insert or update operations)
+  // - "unknown" (when returning an error before the query is known)
+  "queryType": string,
+  // Array of documents. Only populated for SELECT queries.
+  "items": [...],
+  // Document ids of documents modified by insert or update operations
+  "mutatedDocumentIds": [...],
+  // A single error. It prevents the query from executing / completing.
+  // Will always be present, even if there are no errors.
+  "error": {
+    // Description of error. Not present if no errors.
+    "description": string
+  },
+  // Array of warnings. Max 10 will be shown.
+  // Will always be present, even if there are no warnings.
+  "warnings": [
+     {
+        // Document identifier. May not be present
+        "_id": string,
+        // Description of warning
+        "description": string
+     }
+  ],
+  // Total number of warnings during query execution, including those in the
+  // `warnings` property above.
+  "totalWarningsCount": number
+}
+```
+

@@ -1,0 +1,150 @@
+---
+title: "Testing Best Practices: Big Peers, Small Peers, and Identity Switching"
+description: Follow this guide to help you test changes you make to your Ditto integration code, data models, and business logic.
+---
+
+In addition to their production app in the Portal, most developers operate two additional apps: one for development and another for staging. A staging instance is set up as a pre-release sandbox that can simulate real-world environments and data.
+
+## Big Peer
+
+Testing in a cloud environment offers scalability, flexibility, and cost efficiency by allowing dynamic resource allocation and parallel testing. It provides consistent, reproducible environments for reliable results and supports advanced automated and performance testing capabilities.
+
+In the Big Peer, each application is isolated from one another by default in a multi-tenant architecture, ensuring robust security and data privacy. This design allows multiple tenants to share the same infrastructure while keeping their data and applications completely separate.
+
+The following approaches allow multiple developers to work on Ditto in parallel, without conflict.
+
+- App per environment (dev, stage, prod), prefix collections with developer environment
+  - Each developer can work within the same app
+  - Running tests in isolation can be done by prefixing the collection with a unique identifier specific to that developer
+  - For example, a Collection named `john_smith.orders.v3`
+- App per developer
+  - Each developer creates their own “app” within an organization. This creates a sandbox for a developer to isolate work and data from other developers
+  - Starting a new test would require changing the AppID on the Small Peer
+
+### How do I migrate data between applications?
+
+
+<Info>
+  Please contact your dedicated support engineer to help migrate data between apps.
+</Info>
+
+
+**How to Reach Us:**
+
+- **Ditto Portal:**
+  - Log in to your account on the <a href="https://portal.ditto.live/" target="_blank">Ditto Portal</a>
+  - The <a href="https://support.ditto.live/hc/en-us/requests/new" target="_blank">Support Portal</a> is located in the upper right hand side of the portal
+- **Email:** Send an email to our support team at <a href="mailto:support@ditto.live" target="_blank">support@ditto.live</a>
+  - Please include the details of the apps you wish to help migrate data between.
+
+## Small Peer
+
+To test Small Peer integration in isolation, we suggest using a wrapper library that includes an interface and mock implementation for unit testing. Ditto can be injected with an offline-only instance using an offline license token, and building a wrapper library includes an interface and a mock implementation for unit testing. This allows you to test small peer logic and syncing between small peers without relying on the availability of a Big Peer, which is great for testing within a CI/CD pipeline.
+
+### Identity Switching
+
+When testing the production readiness of your app, it is best practice to incorporate *dynamic identity switching *to debug potential issues related to roles, permissions, sync, and authentication workflows, such as cleanup and resource management when changing identities within your app.
+
+In dynamic identity switching, end-user types adjust in realtime as a response to specific contexts or situations, without requiring an app restart or code change. From the end-user perspective, this automatic process means no interruptions or inconveniences like needing to log in again.
+
+
+<Info>
+  While testing with different digital identities is recommended during pre-production testing, this practice is *not* recommended for production environments due to potential performance and security concerns.
+
+</Info>
+
+To incorporate the process of automatically changing end-user types at runtime:
+
+<Tabs>
+  <Tab title="Swift">
+```swift
+var ditto: Ditto? = nil
+ditto = Ditto(...)
+```
+  </Tab>
+  <Tab title="Kotlin">
+```Kotlin
+var ditto: Ditto? = null
+ditto = Ditto(...)
+// or
+ditto?.close()
+ditto = Ditto(...)
+```
+  </Tab>
+  <Tab title="JS">
+```JS
+let ditto = null;
+let ditto = new Ditto(...);
+// or
+ditto.close();
+let ditto = new Ditto(...);
+```
+  </Tab>
+  <Tab title="Java">
+```Java
+Ditto ditto = null;
+ditto = new Ditto(...);
+// or
+ditto.close();
+ditto = new Ditto(...);
+```
+  </Tab>
+  <Tab title="C#">
+```C#
+Ditto ditto = null;
+ditto = new Ditto(...);
+// or
+ditto.Close();
+ditto = new Ditto(...);
+```
+  </Tab>
+  <Tab title="C++">
+```cpp
+Ditto* ditto = nullptr;
+ditto = new Ditto(...);
+// or
+delete ditto;
+ditto = new Ditto(...);
+```
+  </Tab>
+  <Tab title="Rust">
+```Rust
+let mut ditto: Option<Ditto> = None;
+ditto = Some(Ditto::new(...));
+// or
+ditto = None;
+ditto = Some(Ditto::new(...));
+```
+  </Tab>
+</Tabs>
+
+Ditto will persist data on each device. Data within the sandboxed application will be treated as new data and continue to sync, even if the developer changes the AppID. We suggest changing the persistence directory to prepend the appId to the path to avoid this.
+
+See the <a href="https://github.com/getditto/samples/tree/main/testing" target="_blank">example projects in GitHub</a> for testing the Small Peer by leveraging the *OfflinePlayground* identity and changing the persistence directory to prepend the appId to the path.
+
+
+**Example Usage in iOS App**
+
+For a realworld implementation of switching user identities in Swift, see the <a href="https://github.com/getditto/DittoSwiftTools/tree/f5938eb40a8fc3a3a73f87bb95745087903988b4/DittoToolsApp" target="_blank">DittoToolsApp</a> in the *getditto* > *DittoSwiftTools* repository on GitHub.
+
+In this implementation, the <a href="https://github.com/getditto/DittoSwiftTools/blob/f5938eb40a8fc3a3a73f87bb95745087903988b4/DittoToolsApp/DittoToolsApp/DittoManager.swift#L51" target="_blank">`DittoManager`</a> method class configures, manages, and interacts with authentication functionality in the app.
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion
+    title="Can I mock the big peer or small peer for CI use?"
+  >
+  We don’t have anything to provide today.
+  </Accordion>
+  <Accordion
+    title="Can I run the Big Peer on my local laptop?"
+  >
+We don’t have this yet, but it’s on the roadmap.
+  </Accordion>
+  <Accordion
+    title="Is it a problem to have multiple apps?"
+  >
+No, it is designed for multi-tenancy.
+  </Accordion>
+</AccordionGroup>

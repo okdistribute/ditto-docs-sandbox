@@ -1,0 +1,204 @@
+---
+title: "JavaScript | Web and Node.js | React Native"
+icon: js
+iconType: solid
+---
+
+<Frame>
+  <img src="/images/v4.8/release-3.webp"/>
+</Frame>
+
+
+<Update label="4.8.3 Version Release" description="Release Date:Dec 18, 2024">
+## 4.8.3 React Native Specific Changes
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Error messages and documentation for APIs not supported in React Native environments. Some parts of the SDK's API, in particular the original query builder APIs, are not supported and throw errors when called from a React Native app. In these cases, error message wording and documentation has been improved to make it easier to find the right replacement APIs to use instead. (#14612)
+
+## 4.8.3 Common Release Notes
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** iOS 18 crashes related to Bluetooth LE are now resolved. (#15351)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Added more actionable information to common connection handshake issues. (#15298)
+
+
+</Update>
+
+<Update label="4.8.2 Version Release" description="Release Date: Sept 25, 2024">
+
+## 4.8.2 JavaScript Specific Changes
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** Missing API reference for class UpdateResult. (#14611)
+
+## 4.8.2 Common Changes
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Setting the minimum log level to WARN or ERROR will now correctly filter out very early logger initialization messages. (#14451)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** A bug that could prevent an attachment created with the same data on multiple peers from syncing. (#14481)
+</Update>
+
+
+<Update label="4.8.1 Version Release" description="Release Date: Sept 5, 2024">
+
+## 4.8.1 JavaScript Release Notes
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** Prevent race condition that can cause attachment fetchers to fail being cleaned up. (#13961)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed: a memory leak affecting attachments downloaded using the legacy query builder API. (#13819)
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** iOS devices may fail to sync on LAN when the app is backgrounded then foregrounded. (#14150)
+
+## 4.8.1 Common Changes
+
+**<Icon icon="plus"iconType="solid" horizontal /> Added:** The presence\_use\_multihop system parameter can be used to disable replicating presence information to other peers in the mesh, reducing network overhead. Use **ONLY** with guidance from the Ditto Customer Experience team. (#14128)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** When failing to load document data sync (replication) metadata, Ditto now attempts to clear and regenerate the metadata. This is a behavior change where previously Ditto would fail to start. This serves to prevent problems after SDK version downgrades. (#13111)
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** A rare issue where attachments may not be transferred between two peers.(#14158)
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** On-disk logs are more robust in situations with unexpected Ditto shutdown. (#13723)
+
+</Update>
+
+<Update label="4.8.0 Version Release" description="Release Date: Aug 28, 2024">
+The version 4.8.0 SDK release update brings a substantial number of improvements and new features designed to enhance your development experience and provide even more powerful tools for building robust, real-time applications.
+
+## 4.8.0 JavaScript Release Notes
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="plus"iconType="solid" horizontal /> **Added:** Method exportToFile() to Logger, which exports collected logs to a compressed and JSON-encoded file on the local file system. Logs returned through this method are at DEBUG log level. This new API can be used to do forensic log gathering on a device. Logs are always collected and restricted to a fixed specific size limit to ensure they don't grow endlessly. Once the size limit has reached new logs replace the oldest logs. #11961
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Properties peerKeyString1 and peerKeyString2 on DittoConnection replacing the deprecated properties peer1 and peer2  #12799
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Documentation for startSync() and disableSyncWithV3() to include a recommendation for performance improvement. #13098
+
+Performance of initial sync when bootstrapping a new peer can be improved by calling disableSyncWithV3() before calling startSync(). Only do this when all peers in the mesh are known to be running Ditto v4 or higher.
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Documentation for property peerMetadata on DittoPeer to add information about how the property behaves over the lifecycle of the DittoPresenceGraph #13479
+
+
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** DQL methods now use generics for improved type safety and better IDE support. This change affects the Ditto Store's methods execute(), registerObserver(), registerObserverWithNextSignal(), its observers field, as well as the related types QueryResult, QueryResultItem, StoreObserver, StoreObservationHandler, and StoreObservationHandlerWithSignalNext. In the Sync class, the method registerSubscription() and the subscriptions field are updated, as well as the related SyncSubscription class. Type generics are added in a backwards-compatible manner by providing default types with wide bounds.
+
+<Icon icon="exclamation"iconType="solid" horizontal /><Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:**  Ditto.runGarbageCollection() is now an async method, which allows awaiting the completion of manual garbage collection. #8743
+
+
+
+<Icon icon="exclamation"iconType="solid" horizontal /><Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Errors that occur while running manual garbage collection with Ditto.runGarbageCollection() are now thrown. #8743
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Ditto logger is now initialized when first constructing a Ditto instance, when it used to be initialized on calling init() in browser environments and on import of the SDK in other environments. This fixes an issue where it was not possible to set the logger's verbosity level before logging began. #12719
+
+
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated:** Properties peer1 and peer2 on DittoConnection, please use peerKeyString1 and peerKeyString2 instead #12799
+
+
+
+## 4.8.0 Common Changes
+
+<Icon icon="exclamation"iconType="solid" horizontal /><Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** The Logging output format for Ditto SDKs has been changed in 4.8.0 as part of our process to improve readablility and observability across the Ditto platform. Customers should validate the new data format in their existing data ingestion pipelines.
+
+***New Logging Schema:***
+
+YYYY-MM-DDTHH:MM:SS.ssssss LEVEL TARGET: MESSAGE \{field1=value1, field2=value2, ...}
+
+- **Timestamp (YYYY-MM-DDTHH:MM.ssssss):**
+
+- **Format:** ISO 8601 format (e.g., 2024-08-16T14:23:05.123456Z).
+- **Description:** The exact time when the log entry was generated.
+- **Log Level (LEVEL):**
+
+- **Format:** One of the following levels— DEBUG, INFO, WARNING, ERROR.
+- **Description:** Indicates the severity or importance of the log entry.
+- **Target (TARGET):**
+
+- **Format:** A string, representing the internal module/area
+- **Description:** The source of the log entry, often corresponding to the internal module where the error was called. (e.g. ditto\_init or peer\_event\_listener)
+- **Message (MESSAGE):**
+
+- **Format:** A human-readable string.
+- **Description:** The main content of the log entry.
+- **Structured Fields (\{field1=value1, field2=value2, ...}):**
+
+- **Format:** A list of key-value pairs enclosed in curly braces.
+- **Description:** Any additional structured data associated with the log entry. These fields can include custom data that you attach to the log entry using the tracing::info!(field1 = value1, "Message") syntax.
+
+
+
+***4.7 and earlier Logging Format Example***
+
+\[INFO\] 2024-08-02T10:25:39.981Z: AuthClient: using cached SiteId; site\_id = 16248337916605943930
+
+***4.8.0 and later Logging Format Example***
+
+2024-08-02T11:32:25.905562+01:00 INFO ditto\_init:new\_auth\_client: ditto\_auth: using cached SiteId site\_id=16248337916605943930
+
+
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="plus"iconType="solid" horizontal /> **Added:** DQL support for string functions byte\_length and char\_length #12147
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="plus"iconType="solid" horizontal /> **Added:** DQL support for inline object and array literal creation #12312
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="plus"iconType="solid" horizontal /> **Added:** object\_length and deserialize\_json functions in DQL #12605
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="plus"iconType="solid" horizontal /> **Added:** DQL INSERT statements support inlining the construction of an object #12761
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Remote query capability allows Big Peer to execute read-only queries on Small Peers. Usagne currently internal to Ditto Customer Experience team members #12268
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Diagnostics are now provided when collecting Small Peer Info on-disk logs #12080
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** output version, sdk and build information on startup for easier debugging #12845
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Introduced new internal capabilities ensure a large data payload (e.g. a large attachment file) cannot use all the bandwidth and prevent other data from being synced.
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** mDNS transport can now be configured with a static port for the TCP server using the tcp\_server\_bind\_mdns\_server\_port system parameter #13442
+
+
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** New logging format that includes detailed information #10794
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** The Ditto logger is now more verbose by default, with a minimum log level of INFO instead of WARNING #11141
+
+<Icon icon="star"iconType="solid" horizontal /> <Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** small peer info collection is now enabled by default and its default sync scope is now BigPeerOnly #12709 (Device dashboard will populate information automatically)
+
+<Icon icon="exclamation"iconType="solid" horizontal /><Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** (**Experimental**) Multihop connections are formed more efficiently, e.g., for Ditto Bus. This is an incompatible protocol change from previous versions #12108, #12623
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Improve performance by avoiding deserializing the entire Document if only part of it is required #10887
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Attachments now sync independently of documents, improving rainbow connection efficiency #11156
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Updating several depdencies for security patching (Patch multiple old packages #12087)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** How network OS capabilities are internally linked into the library to allow for more relaiable and reusable internal logic #12362
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** API documentation for execute method to include information about its interaction with sync subscriptions #12365
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Default to creating backup Bluetooth connections when there is an existing WiFi connection (Default mesh\_chooser\_avoid\_redundant\_bluetooth to false #13398)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** console logging will now output to STDERR instead of STDOUT (\[logs\] logging now outputs to STDERR instead of STDOUT #13477)
+
+
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Bytes and Arrays not being always comparable in the legacy query language #10887
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Legacy query language casting counters and maps with tombstones to the wrong boolean value #10887
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** Lowered the log level of a few SQLite3 notices that were being unnecessarily logged as warnings #12032
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** A crash that can occur if a DQL query contains a multi-byte character #12324
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** An issue with the transports multiplexer that could lead to a hung process. This occured when dealing with large messages spanning multiple chunks (>64KB)  #12428
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** A rare edge case that could slow down data sync betten peers #12527
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** Frequent subscription changes along with eviction calls could cause failure to converge on data leading to inconsistent data state #11431
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** Memory leak in third party library used for peer-internal messaging #12895
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** Transport inactive connection tracking no longer stores identifiers indefinitely. This could lead to a slow growth in memory consumption for long lived applications (~ 1MB/day on transports with high rate, unreliable discovery - such as BLE) #13147
+
+**<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> Fixed:** Unexpected failures to obtain a certificate for peer-to-peer sync are now logged at ERROR level instead of WARNING #13323
+
+
+
+<Icon icon="exclamation"iconType="solid" horizontal /><Icon icon="bin-recycle"iconType="solid" horizontal /> **Removed:** (**Experimental**) Ditto no longer supports the experimental Query Overlap Groups feature and support has been removed. This experimental feature has been removed after running a determining a lack of feasability in production scenarios. The team is iterating and plan on interoducing improved capabilitites. #13075
+
+</Update>

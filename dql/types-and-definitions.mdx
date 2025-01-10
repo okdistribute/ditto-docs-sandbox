@@ -1,0 +1,258 @@
+---
+title: Types and Definitions
+description: "Ditto Query Language (DQL) offers a set of *data types* designed to accommodate any edge sync scenario."
+---
+
+A data type is different than a standard scalar type by declaring merge behaviors, operations, and the spectrum of scalar types accessible for individual fields:
+
+<CardGroup>
+ <Card title="Data Types" icon="square-1" href="/dql/types-and-definitions#data-types" iconType="solid" horizontal/>
+
+ <Card title="Declaring Type Definitions" icon="square-2" href="/dql/types-and-definitions#declaring-type-definition" iconType="solid" horizontal/>
+
+<Card title="MAP Type Specifics" icon="square-3" href="/dql/types-and-definitions#map-type-specifics" iconType="solid" horizontal/>
+
+<Card title="Data Type Operations" icon="square-4" href="/dql/types-and-definitions#data-type-operations" iconType="solid" horizontal/>
+
+<Card title="Document Operations" icon="square-5" href="/dql/types-and-definitions#document-operations" iconType="solid" horizontal/>
+</CardGroup>
+
+## Data Types
+
+In DQL, you'll use three data types:`REGISTER`, `MAP`, and `ATTACHMENT` type. By default, fields in a DQL statement are assigned the `REGISTER` type unless otherwise specified by way of *type definition*.
+
+Following are the key characteristics:
+
+| `REGISTER`** (Default)**                                                                                                                                                                       | `MAP`                        | `ATTACHMENT`                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ---------------------------- |
+| Last-write-wins merge                                                                                                                                                                          | Add-wins merge               | Last-write-wins merge        |
+| Supports multiple scalar types, including primitive types, such as `string` and `boolean`, as well as a JSON blob, encapsulating multiple field‑value pairs that function as a single object.  | Supports embedded data types | Ditto attachment object&#xA; |
+
+## Declaring Type Definition
+
+DQL type definitions describe the schema of the documents within a specific collection — defining the field types within the collection and specifying the assigned data types for each field.
+
+Since `REGISTER` is the default type in DQL, you only need to specify the type definition when overriding with type `MAP` or `ATTACHMENT` within your query.
+
+To explicitly declare the type definition as `non-REGISTER` type, add a prefix of `COLLECTION` and the suffix of `(field1 data_type, field2 data_type, ...)` to list the fields within the collection and their associated data types:
+
+```sql DQL
+SELECT *
+FROM COLLECTION your_collection_name (field1 MAP, field2 ATTACHMENT)
+WHERE field1.rating > 100
+```
+
+
+In this syntax:
+
+```sql DQL
+... COLLECTION your_collection_name (field1 data_type, field2 data_type, ...) ...
+```
+
+
+- `COLLECTION` declares that the collection has a type definition
+- `your_collection_name` is the name of the collection from which you want to set a definition.
+- `(field1 data_type, field2 data_type, ...)` specifies the data type of each field such as `REGISTER` , `MAP`, or `ATTACHMENT`
+
+### SELECT with Definition
+
+```sql DQL
+SELECT *
+FROM COLLECTION your_collection_name (field1 MAP, field2 ATTACHMENT)
+```
+
+
+### UPDATE with Definition
+
+
+```sql DQL
+UPDATE COLLECTION your_collection_name (field1 MAP, field2 ATTACHMENT)
+SET ...
+```
+
+
+### INSERT with Definition
+
+```sql DQL
+INSERT INTO COLLECTION your_collection_name (field1 MAP, field2 ATTACHMENT)
+DOCUMENTS (...)
+```
+
+
+## MAP Type Specifics
+
+The `MAP` (Add-Wins Map) contains fields with their own data type. Data types for these fields are defined using parentheses following the `MAP` keyword. For example, `MAP(sub1 data_type, sub2 data_type, ...)`:
+
+```sql DQL
+... COLLECTION your_collection_name (map_name MAP(sub1 ATTACHMENT, sub2 MAP))
+```
+
+
+### Single MAP
+
+The syntax for a single `MAP` with all other fields type `REGISTER`:
+
+```sql DQL
+... COLLECTION your_collection_name (field1 MAP)
+```
+
+
+### Single ATTACHMENT
+
+The syntax for a single `ATTACHMENT` with all other fields type `REGISTER`:
+
+```sql DQL
+... COLLECTION your_collection_name (field1 ATTACHMENT)
+```
+
+
+### MAP and ATTACHMENT
+
+The syntax for a single `MAP` and a single `ATTACHMENT` with all other fields type `REGISTER`:
+
+```sql DQL
+... COLLECTION your_collection_name (field1 MAP, field2 ATTACHMENT)
+```
+
+
+### **Deeply Embedded MAP**
+
+The syntax for a document hierarchy of depth two — a single `MAP` nested with another `MAP` — with all other fields type `REGISTER`:
+
+```sql DQL
+... COLLECTION your_collection_name (field1 MAP(sub1 MAP))
+```
+
+The syntax for a document hierarchy of depth four with all other fields type `REGISTER`:
+
+```sql DQL
+... COLLECTION your_collection_name (field1 MAP(sub1 MAP(s_sub1 MAP(s_s_sub1 MAP))))
+```
+
+
+## Data Type Operations
+
+Data types have different operations available.
+
+- Assignment operations are denoted with an equals (`=`).
+- Functional operations are denoted with an arrow (`->`).
+
+### **REGISTER Operations**
+
+The `REGISTER` can only be set to a specific field. For example:
+
+```sql DQL
+-- Setting `field1` to 1
+field1 = 1
+```
+
+
+### **MAP Operations**
+
+The `MAP` type supports inserting and tombstoning of fields using the functional operators. Inserting a field is an implicit operation performed by assigning a value to a field or a child of the field.
+
+To assign a default value to a field, use the `default()` operation.
+
+To perform `MAP` operations, use the arrow `->` operator followed by parentheses `()`, which contain one or more operations on child fields of the `MAP`.
+
+**Setting or Inserting **`field1.sub1`** to 1**** **
+
+
+```sql DQL
+field1 -> (
+  sub1 = 1
+)
+```
+
+
+**Tombstoning (Remove) 'field1.sub1'**
+
+```sql DQL
+field1 -> (
+  sub1 -> tombstone()
+)
+```
+
+
+**Setting the Value of 'sub1' to 1 and Tombstoning 'sub2'**
+
+
+```sql DQL
+field1 -> (
+  sub1 = 1,
+  sub2 -> tombstone()
+)
+```
+
+
+**Setting the Value of **`field1.sub1.s_sub1`** to 1**
+
+```sql DQL
+field1 -> (
+  sub1 -> (
+    s_sub1 = 1
+  )
+)
+```
+
+
+**Setting the Value of **`field1.sub1`** as Default Value**
+
+```sql DQL
+field1 -> (
+  sub1 -> default()
+)
+```
+
+
+### **ATTACHMENT Operations**
+
+To set the last-write-wins `ATTACHMENT` data type, provide an `ATTACHMENT` object:
+
+
+```sql DQL
+field1 = :attachment
+```
+
+
+### **Default Value Operation**
+
+All data types can be set to a default value type using the `default()` functional operator.
+
+- `REGISTER` → `NULL`
+- `AWMAP` → Empty Map `{}`
+
+
+<Info>
+  `ATTACHMENT` → *NOT SUPPORTED*
+</Info>
+
+
+```sql DQL
+field1 -> default()
+```
+
+
+### **Tombstone Operation**
+
+To remove all fields from a document, use the `tombstone()` functional operator.
+
+
+```sql DQL
+field1 -> tombstone()
+```
+
+<Info>
+  In Ditto, fields need to be marked as "deleted" for other peers to know the field has been removed.
+
+Ditto does this by internally setting a `tombstone` metadata on the field and removing the value:
+
+- When tombstoning a `MAP`, all children data types are iteratively tombstoned.
+- Fields that are tombstoned are ignored during subsequent DQL statements.
+- While tombstoned fields are relatively inexpensive, they cannot be permanently deleted. Therefore, tombstoning in large numbers may cause performance to degrade.
+</Info>
+
+
+## Document Operations
+
+Documents have the same data type operations as the `MAP`. For syntax, see [MAP Operations](/dql/types-and-definitions#map-operations).

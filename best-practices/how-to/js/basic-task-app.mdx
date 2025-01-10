@@ -1,0 +1,924 @@
+---
+title: Basic Task App
+description: "To get started right away without having to build an app from scratch, explore with the Ditto ready-to-use demo task app."
+---
+This article provides a quickstart on building and interacting with a basic task app for managing and tracking task items.
+
+## Code Overview with Comments
+
+Following is an overview of the installation, setup, and build process with comments. For a step-by-step walkthrough:
+
+<Info>
+  For the full source code, see getditto > samples > nodejs > <a href="https://github.com/getditto/samples/blob/main/tasks/nodejs/index.ts" target="_blank">index.ts</a> repository in GitHub.
+</Info>
+
+<CardGroup>
+  <Card
+    title="Installing and Setting Up Ditto"
+    icon="square-1"
+    href="/best-practices/how-to/js/basic-task-app#installing-and-setting-up-ditto"
+    iconType="solid"
+    horizontal
+  />
+  <Card
+    title="Building and Running the App"
+    icon="square-2"
+    href="/best-practices/how-to/js/basic-task-app#building-and-running-the-app"
+    iconType="solid"
+    horizontal
+  />
+  <Card
+    title="Creating New Task Documents"
+    icon="square-3"
+    href="/best-practices/how-to/js/basic-task-app#creating-new-task-documents"
+    iconType="solid"
+    horizontal
+  />
+  <Card
+    title="Editing Task Documents"
+    icon="square-4"
+    href="/best-practices/how-to/js/basic-task-app#editing-task-documents"
+    iconType="solid"
+    horizontal
+  />
+  <Card
+    title="Replicating Data"
+    icon="square-5"
+    href="/best-practices/how-to/js/basic-task-app#replicating-data"
+    iconType="solid"
+    horizontal
+  />
+</CardGroup>
+
+```javascript JS
+import { init, Ditto } from '@dittolive/ditto'
+import * as readline from 'readline/promises'
+import { stdin as input, stdout as output } from 'node:process';
+
+let ditto
+let liveQuery
+let tasks = []
+let subscription
+
+async function main () {
+  await init()
+
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  ditto.startSync()
+
+  ////
+  // Data Replication Section
+  ////
+
+  // Subscribe to changes from other peers
+  subscription =
+    ditto.store
+    .collection("tasks")
+    .find("isDeleted == false")
+    .subscribe()
+
+  ////
+  // Live Query Section
+  ////
+
+  const liveQueryCallback = (docs, event) => {
+    tasks = docs;
+  }
+
+  liveQuery =
+    ditto.store
+    .collection("tasks")
+    .find("isDeleted == false")
+    .observeLocal(liveQueryCallback)
+
+  tasks = await ditto.store
+    .collection("tasks")
+    .find("isDeleted == false")
+
+  ////
+  // Command Line Interface Section
+  ////
+
+  console.log("************* Commands *************")
+  console.log("--create <task name>");
+  console.log("   Creates a task");
+  console.log("   Example: \"--create My New Task\"");
+  console.log("--toggle <task id>");
+  console.log("   Toggles the isCompleted field");
+  console.log("   Example: \"--toggle 1234abc\"");
+  console.log("--delete <task id>");
+  console.log("   Deletes a task");
+  console.log("   Example: \"--delete 1234abc\"");
+  console.log("--list");
+  console.log("   List the current tasks");
+  console.log("--exit");
+  console.log("   Exits the program");
+  console.log("************* Commands *************")
+
+  const rl = readline.createInterface({ input, output })
+
+  while (true) {
+      let answer = await rl.question('Your command:')
+
+      if (answer.startsWith("--create")) {
+        // Upsert a new document into tasks
+        let body = answer.replace("--create ", "")
+        ditto.store.collection("tasks").upsert({
+          body,
+          isDeleted: false,
+          isCompleted: false
+        })
+      } else if (answer.startsWith("--toggle")) {
+        // Find the document based on the id an toggle the
+        // 'isCompleted' field to true using the update API
+        const id = answer.replace("--toggle ", "")
+        const toggleCompleted = (doc) => {
+          const isCompleted = doc.value.isCompleted
+          doc.at("isCompleted").set(!isCompleted)
+        }
+        ditto.store.collection("tasks")
+          .findByID(id).update(toggleCompleted)
+      } else if (answer.startsWith("--list")) {
+        console.log(tasks.map((task) => task.value))
+      } else if (answer.startsWith("--delete")) {
+        // Find the document based on the id an set the
+        // 'isDeleted' field to true using the update API
+        const id = answer.replace("--delete ", "")
+        const setDeleted = (doc) => {
+          doc.at("isDeleted").set(true)
+        }
+        ditto.store.collection("tasks")
+          .findByID(id).update(setDeleted)
+        } else if (answer.startsWith("--exit")) {
+        ditto.stopSync()
+        process.exit()
+      }
+  }
+}
+
+main()
+```
+
+## Installing and Setting Up Ditto
+
+Create a new directory, navigate to it, and then initialize `npm`:
+
+<Steps>
+    <Step>
+    ```bash Bash
+    mkdir ditto-example
+    cd ditto-example
+    npm init
+    ```
+    </Step>
+    <Step>
+    Install the `@dittolive/ditto` and `readline` package:
+
+    ```bash Bash
+    npm i @dittolive/ditto readline
+    ```
+    </Step>
+    <Step>
+    Open the current directory in your IDE. For example, if using <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>:
+
+    ```bash Bash
+    code .
+    ```
+    </Step>
+    <Step>
+Import and initialize Ditto:
+
+1. Create an `index.js` file, and then import, initialize, instantiate, and start Ditto by adding the following to it.
+
+2. Replace `'YOUR_APP_ID'` and `'YOUR_TOKEN'` with your access credentials.
+
+
+<Info>
+  To get your access credentials, you must create an account and register an app in the portal. For instructions, see [Get Started]().
+</Info>
+
+```javascript
+import { init, Ditto } from '@dittolive/ditto'
+
+let ditto
+
+async function main () {
+  // Initialize the Ditto module
+  await init()
+
+  // Create a Ditto instance
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  // Start synchronization
+  ditto.startSync()
+}
+
+main()
+```
+    </Step>
+</Steps>
+
+
+## Setting Up the App
+
+Once you've installed and set up your environment with Ditto, create a command-line interface (CLI) along with the various placeholder logic, or *stubs*, for the methods you'll use to perform various operations:
+
+```javascript JS
+import { init, Ditto } from '@dittolive/ditto'
+
+// Add new import modules
+import * as readline from 'readline/promises'
+import { stdin as input, stdout as output } from 'node:process';
+
+let ditto: Ditto | undefined
+
+async function main () {
+  // Initialize the Ditto module
+  await init()
+
+  // Create a Ditto instance
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  // Start synchronization
+  ditto.startSync()
+
+  ////
+  // Data Replication Section
+  ////
+
+  // ...
+
+  ////
+  // Live Query Section
+  ////
+
+  // ...
+
+  ////
+  // Command Line Interface Section
+  ////
+
+  console.log("************* Commands *************")
+  console.log("--create <task name>");
+  console.log("   Creates a task");
+  console.log("   Example: \"--create My New Task\"");
+  console.log("--toggle <task id>");
+  console.log("   Toggles the isComplete field");
+  console.log("   Example: \"--toggle 1234abc\"");
+  console.log("--delete <task id>");
+  console.log("   Deletes a task");
+  console.log("   Example: \"--delete 1234abc\"");
+  console.log("--list");
+  console.log("   List the current tasks");
+  console.log("--exit");
+  console.log("   Exits the program");
+  console.log("************* Commands *************")
+
+  // Create a new readline interface
+  const rl = readline.createInterface({ input, output })
+
+  while (true) {
+      let answer = await rl.question('Your command:')
+
+      if (answer.startsWith("--create")) {
+        // --create logic stub
+      } else if (answer.startsWith("--toggle")) {
+        // --toggle logic stub
+      } else if (answer.startsWith("--list")) {
+        // --list logic stub
+      } else if (answer.startsWith("--delete")) {
+        // --delete logic stub
+      } else if (answer.startsWith("--exit")) {
+        ditto.stopSync()
+        process.exit()
+      }
+  }
+}
+
+main()
+```
+
+## Building and Running the App
+
+Now that you have the app's CLI implemented, build and run the task app:
+
+<Tabs>
+  <Tab title="Bash - JS">
+    ```bash Bash
+    node index.js
+    ```
+
+  <Info>
+    The following output CLI indicates that the demo task app is running.
+  </Info>
+  </Tab>
+  <Tab title="Output">
+    ```bash Bash
+    ************* Commands *************
+    --create <task name>
+      Inserts a task
+      Example: "--create My New Task"
+    --toggle <task id>
+      Toggles the isComplete field
+      Example: "--toggle 1234abc"
+    --delete <task id>
+      Deletes a task
+      Example: "--delete 1234abc"
+    --list
+      List the current tasks
+    --exit
+      Exits the program
+    ************* Commands *************
+    Your command:
+
+    ```
+  </Tab>
+</Tabs>
+
+
+## Performing Reads
+
+Now that the setup is complete, create a *live query*. A live query is a mechanism that allows you to track specific changes stored within the local environment, referred to as the *Ditto store*.
+
+Relevant documents are stored in a local `tasks` object; as these documents change, the `tasks` object automatically updates to reflect their most current state that automatically updates to reflect the latest state. As data changes occur, the `tasks` object updates to reflect the latest state.
+
+Once you've installed and set up the Ditto SDK, create a live query that will allow us to see when changes we care about happen to our local store. We store any relevant documents in a local `tasks` object and update the `tasks` object as changes happen using the live query.
+
+We'll also implement our `--list` command to return known documents.
+
+<Steps>
+    <Step>
+Implement live query logic and `--list` command
+
+```javascript JS
+import { init, Ditto } from '@dittolive/ditto'
+import * as readline from 'readline/promises'
+import { stdin as input, stdout as output } from 'node:process';
+
+let ditto
+
+// Add a liveQuery variable to store the LiveQuery object
+// The liveQuery must be kept in a location where it will not be
+// cleaned up by the garbage collector
+let liveQuery
+
+// Create a new tasks object to store known task documents
+let tasks = []
+
+async function main () {
+  await init()
+
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  ditto.startSync()
+
+  ////
+  // Data Replication Section
+  ////
+
+  //...
+
+  ////
+  // Live Query Section
+  ////
+
+  // Callback that will be triggered
+  const liveQueryCallback = (docs, event) => {
+    // Store documents that match our query in the local tasks object
+    tasks = docs;
+  }
+
+  // Create a live query that will trigger or callback
+  liveQuery =
+    ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+      .observeLocal(liveQueryCallback)
+
+  // Get an initial set of data from the store after setting the
+  // live query. This ensures we don't have any stale initial data.
+  tasks =
+    await ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+
+  ////
+  // Command Line Interface Section
+  ////
+
+  console.log("************* Commands *************")
+  console.log("--create <task name>");
+  console.log("   Creates a task");
+  console.log("   Example: \"--create My New Task\"");
+  console.log("--toggle <task id>");
+  console.log("   Toggles the isComplete field");
+  console.log("   Example: \"--toggle 1234abc\"");
+  console.log("--delete <task id>");
+  console.log("   Deletes a task");
+  console.log("   Example: \"--delete 1234abc\"");
+  console.log("--list");
+  console.log("   List the current tasks");
+  console.log("--exit");
+  console.log("   Exits the program");
+  console.log("************* Commands *************")
+
+  const rl = readline.createInterface({ input, output })
+
+  while (true) {
+      let answer = await rl.question('Your command:')
+
+      if (answer.startsWith("--create")) {
+        // --create logic stub
+      } else if (answer.startsWith("--toggle")) {
+        // --toggle logic stub
+      } else if (answer.startsWith("--list")) {
+        // console log known tasks
+        console.log(tasks.map((task) => task.value))
+      } else if (answer.startsWith("--delete")) {
+        // --delete logic stub
+      } else if (answer.startsWith("--exit")) {
+        ditto.stopSync()
+        process.exit()
+      }
+  }
+}
+
+main()
+```
+    </Step>
+    <Step>
+    Run the `--list` command in the console. The output should be an empty array.
+
+    ```bash Bash
+    Your command:--list
+    ```
+
+    ```bash Output
+    []
+    ```
+    </Step>
+</Steps>
+
+
+
+
+## Creating New Task Documents
+
+We'll now extend our application with the ability to create new task documents in the Ditto store using the Upsert method. We'll do this by implementing the `--create` command in our application.
+
+<Steps>
+    <Step>
+    Implement `--create` command logic
+
+
+```javascript JS
+import { init, Ditto } from '@dittolive/ditto'
+import * as readline from 'readline/promises'
+import { stdin as input, stdout as output } from 'node:process';
+
+let ditto
+let liveQuery
+let tasks = []
+
+async function main () {
+  await init()
+
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  ditto.startSync()
+
+  ////
+  // Data Replication Section
+  ////
+
+  //...
+
+  ////
+  // Live Query Section
+  ////
+
+  const liveQueryCallback = (docs, event) => {
+    tasks = docs;
+  }
+
+  liveQuery =
+    ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+      .observeLocal(liveQueryCallback)
+
+  tasks =
+    await ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+
+  ////
+  // Command Line Interface Section
+  ////
+
+  console.log("************* Commands *************")
+  console.log("--create <task name>");
+  console.log("   Creates a task");
+  console.log("   Example: \"--create My New Task\"");
+  console.log("--toggle <task id>");
+  console.log("   Toggles the isComplete field");
+  console.log("   Example: \"--toggle 1234abc\"");
+  console.log("--delete <task id>");
+  console.log("   Deletes a task");
+  console.log("   Example: \"--delete 1234abc\"");
+  console.log("--list");
+  console.log("   List the current tasks");
+  console.log("--exit");
+  console.log("   Exits the program");
+  console.log("************* Commands *************")
+
+  const rl = readline.createInterface({ input, output })
+
+  while (true) {
+      let answer = await rl.question('Your command:')
+
+      if (answer.startsWith("--create")) {
+        // Upsert a new document into tasks
+        let body = answer.replace("--create ", "")
+        ditto.store.collection("tasks").upsert({
+          body,
+          isDeleted: false,
+          isCompleted: false
+        })
+      } else if (answer.startsWith("--toggle")) {
+        // --toggle logic stub
+      } else if (answer.startsWith("--list")) {
+        console.log(tasks.map((task) => task.value))
+      } else if (answer.startsWith("--delete")) {
+        // --delete logic stub
+      } else if (answer.startsWith("--exit")) {
+        ditto.stopSync()
+        process.exit()
+      }
+  }
+}
+
+main()
+```
+    </Step>
+    <Step>
+    Run the `--create My First Task` command.
+    </Step>
+    <Step>
+Run the `--list` command.
+
+By default, the document `_id` is automatically generated.
+
+    ```bash Output
+    [
+      {
+        _id: '64c9b6480049a0c400c95c51',
+        body: 'My First Task',
+        isCompleted: false,
+        isDeleted: false
+      }
+    ]
+    ```
+    </Step>
+    <Step>
+    You can now open the data browser in the Ditto Portal to see the changes in the Big Peer. (<a href="https://portal.ditto.live" target="_blank">https\://portal.ditto.live/data-browser/\{APP-ID}</a>)
+    </Step>
+</Steps>
+
+## Editing Task Documents
+
+We'll now extend our application to support editing documents. To do this we'll introduce:
+
+1. The ability to mark a file as deleted by setting the `isDeleted` field to `true`.
+2. The ability to change the completed state by being able to `toggle` the `isComplete` field
+
+<Steps>
+    <Step>
+    Add logic for `--toggle` and `--deleted` input.
+
+```javascript JS
+import { init, Ditto } from '@dittolive/ditto'
+import * as readline from 'readline/promises'
+import { stdin as input, stdout as output } from 'node:process';
+
+let ditto
+let liveQuery
+let tasks = []
+
+async function main () {
+  await init()
+
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  ditto.startSync()
+
+  ////
+  // Data Replication Section
+  ////
+
+  //...
+
+  ////
+  // Live Query Section
+  ////
+
+  const liveQueryCallback = (docs, event) => {
+    tasks = docs;
+  }
+
+  liveQuery =
+    ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+      .observeLocal(liveQueryCallback)
+
+  tasks =
+    await ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+
+  ////
+  // Command Line Interface Section
+  ////
+
+  console.log("************* Commands *************")
+  console.log("--create <task name>");
+  console.log("   Creates a task");
+  console.log("   Example: \"--create My New Task\"");
+  console.log("--toggle <task id>");
+  console.log("   Toggles the isCompleted field");
+  console.log("   Example: \"--toggle 1234abc\"");
+  console.log("--delete <task id>");
+  console.log("   Deletes a task");
+  console.log("   Example: \"--delete 1234abc\"");
+  console.log("--list");
+  console.log("   List the current tasks");
+  console.log("--exit");
+  console.log("   Exits the program");
+  console.log("************* Commands *************")
+
+  const rl = readline.createInterface({ input, output })
+
+  while (true) {
+      let answer = await rl.question('Your command:')
+
+      if (answer.startsWith("--create")) {
+        // Upsert a new document into tasks
+        let body = answer.replace("--create ", "")
+        ditto.store.collection("tasks").upsert({
+          body,
+          isDeleted: false,
+          isCompleted: false
+        })
+      } else if (answer.startsWith("--toggle")) {
+        // Find the document based on the id an toggle the
+        // 'isCompleted' field to true using the update API
+        const id = answer.replace("--toggle ", "")
+        const toggleCompleted = (doc) => {
+          const isCompleted = doc.value.isCompleted
+          doc.at("isCompleted").set(!isCompleted)
+        }
+        ditto.store.collection("tasks")
+          .findByID(id).update(toggleCompleted)
+      } else if (answer.startsWith("--list")) {
+        console.log(tasks.map((task) => task.value))
+      } else if (answer.startsWith("--delete")) {
+        // Find the document based on the id an set the
+        // 'isDeleted' field to true using the update API
+        const id = answer.replace("--delete ", "")
+        const setDeleted = (doc) => {
+          doc.at("isDeleted").set(true)
+        }
+        ditto.store.collection("tasks")
+          .findByID(id).update(setDeleted)
+        } else if (answer.startsWith("--exit")) {
+        ditto.stopSync()
+        process.exit()
+      }
+  }
+}
+
+main()
+```
+    </Step>
+    <Step>
+    Run the `--list` command to get known documents. (Note: The `_id` is generated and will be different)
+
+    ```bash Output
+    [
+      {
+        _id: '64c9b6480049a0c400c95c51',
+        body: 'My First Task',
+        isCompleted: false,
+        isDeleted: false
+      }
+    ]
+    ```
+
+    </Step>
+    <Step>
+    Run the `--toggle` command with the `_id` of the document you want to change `isCompleted` state of. In our case it's document `64c9b6480049a0c400c95c51`.
+    </Step>
+    <Step>
+    Run the `--list` command to see state update.
+
+    ```bash Output
+    [
+      {
+        _id: '64c9b6480049a0c400c95c51',
+        body: 'My First Task',
+        isCompleted: true,
+        isDeleted: false
+      }
+    ]
+    ```
+    </Step>
+    <Step>
+    Run the `--delete` command with the `_id` of the document you want to set to deleted. In our case it's document `64c9b6480049a0c400c95c51`.
+    </Step>
+    <Step>
+    Run the `--list` command to see state update. We now have an empty list because our live query is only subscribing to documents that have `"isDeleted == false"`
+
+    ```bash Output
+    []
+    ```
+    </Step>
+</Steps>
+
+
+
+## Replicating Data
+
+Finally, we'll extend our application to replicate data from other locally connected peers. We'll do this by adding a subscription with a query that matches our live query.
+
+<Steps>
+    <Step>
+    Add a subscription with a query that looks for documents in the `tasks` collection with `"isDeleted == false"`
+
+    ```javascript JS
+import { init, Ditto } from '@dittolive/ditto'
+
+let ditto
+
+// Add a subscription variable to store the Subscription object
+// The subscription must be kept in a location where it will not be
+// cleaned up by the garbage collector
+let subscription
+
+async function main () {
+  await init()
+
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  ditto.startSync()
+
+  // Start a new subscription
+  subscription =
+    ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+      .subscribe()
+}
+
+main()
+```
+
+```typescript
+import { init, Ditto } from '@dittolive/ditto'
+import * as readline from 'readline/promises'
+import { stdin as input, stdout as output } from 'node:process';
+
+let ditto
+let liveQuery
+let tasks = []
+
+// Add a subscription object to store the subscription
+let subscription
+
+async function main () {
+  await init()
+
+  ditto = new Ditto({
+    type: 'onlinePlayground',
+    appID: 'YOUR_APP_ID',
+    token: 'YOUR_TOKEN_HERE'})
+
+  ditto.startSync()
+
+  ////
+  // Data Replication Section
+  ////
+
+  // Subscribe to changes from other peers
+  subscription =
+    ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+      .subscribe()
+
+  ////
+  // Live Query Section
+  ////
+
+  const liveQueryCallback = (docs, event) => {
+    tasks = docs;
+  }
+
+  liveQuery =
+    ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+      .observeLocal(liveQueryCallback)
+
+  tasks =
+    await ditto.store
+      .collection("tasks")
+      .find("isDeleted == false")
+
+  ////
+  // Command Line Interface Section
+  ////
+
+  console.log("************* Commands *************")
+  console.log("--create <task name>");
+  console.log("   Creates a task");
+  console.log("   Example: \"--create My New Task\"");
+  console.log("--toggle <task id>");
+  console.log("   Toggles the isCompleted field");
+  console.log("   Example: \"--toggle 1234abc\"");
+  console.log("--delete <task id>");
+  console.log("   Deletes a task");
+  console.log("   Example: \"--delete 1234abc\"");
+  console.log("--list");
+  console.log("   List the current tasks");
+  console.log("--exit");
+  console.log("   Exits the program");
+  console.log("************* Commands *************")
+
+  const rl = readline.createInterface({ input, output })
+
+  while (true) {
+      let answer = await rl.question('Your command:')
+
+      if (answer.startsWith("--create")) {
+        // Upsert a new document into tasks
+        let body = answer.replace("--create ", "")
+        ditto.store.collection("tasks").upsert({
+          body,
+          isDeleted: false,
+          isCompleted: false
+        })
+      } else if (answer.startsWith("--toggle")) {
+        // Find the document based on the id an toggle the
+        // 'isCompleted' field to true using the update API
+        const id = answer.replace("--toggle ", "")
+        const toggleCompleted = (doc) => {
+          const isCompleted = doc.value.isCompleted
+          doc.at("isCompleted").set(!isCompleted)
+        }
+        ditto.store.collection("tasks")
+          .findByID(id).update(toggleCompleted)
+      } else if (answer.startsWith("--list")) {
+        console.log(tasks.map((task) => task.value))
+      } else if (answer.startsWith("--delete")) {
+        // Find the document based on the id an set the
+        // 'isDeleted' field to true using the update API
+        const id = answer.replace("--delete ", "")
+        const setDeleted = (doc) => {
+          doc.at("isDeleted").set(true)
+        }
+        ditto.store.collection("tasks")
+          .findByID(id).update(setDeleted)
+        } else if (answer.startsWith("--exit")) {
+        ditto.stopSync()
+        process.exit()
+      }
+  }
+}
+
+main()
+```
+    </Step>
+</Steps>

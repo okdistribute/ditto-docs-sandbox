@@ -1,0 +1,21 @@
+---
+title: "1. Planning and Architecture Design"
+description: Incorporating Ditto's offline-first and peer-to-peer sync capabilities requires thoughtful planning to ensure seamless integration into your app's overall architecture.
+mode: wide
+sidebarTitle: Overview
+---
+This section outlines key decisions around data flow, sync logic, and conflict handling that will set the foundation for your application’s design, emphasizing an offline-first strategy to provide a consistent user experience even with intermittent connectivity.
+
+<CardGroup>
+  <Card title="Sync Handling" icon="rotate" iconType="solid" href="/best-practices/sync-handling">
+This article provides best practices for handling sync in Ditto's mesh networks, focusing on efficient transport usage, query-based sync, conflict resolution, and offline-first models to ensure data consistency in distributed environments.
+
+  </Card>
+  <Card title="Conflict Handling" icon="code-merge" iconType="solid" href="/best-practices/conflict-handling">
+In mesh networking, conflict handling ensures data consistency by using version vectors to track updates, deterministic merging for eventual consistency, and predictable resolution of conflicting data inputs.
+  </Card>
+  <Card title="Data Flow Management" icon="network-wired" iconType="solid" href="/best-practices/data-flow-management">
+In mesh networks, efficient data flow is achieved through multiple transports (Wi-Fi, Bluetooth), localized syncing to reduce latency, and flood-fill propagation for consistency. Using a multiplexer optimizes bandwidth, and conflict-free sync ensures consistency across peers.
+
+  </Card>
+</CardGroup>

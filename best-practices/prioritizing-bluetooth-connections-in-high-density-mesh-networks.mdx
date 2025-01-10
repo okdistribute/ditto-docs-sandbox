@@ -1,0 +1,32 @@
+---
+title: "Prioritizing Bluetooth Connections in High-Density Mesh Networks"
+description: "When deploying applications that require multiple Bluetooth devices in a mesh network, it is crucial to prioritize connections to critical devices like payment readers."
+mode: wide
+---
+On iOS, where native prioritization may not be available, developers should implement custom logic to ensure that essential devices maintain a stable connection. Consider using tools like the Ditto Presence viewer to monitor Bluetooth connections and manually adjust priorities as needed. Additionally, regularly monitor device behavior to prevent unintentional disconnections, especially in environments with high Bluetooth traffic.
+
+
+<Info>
+  Learn more about integrating [Ditto Tools](/best-practices/integrate-ditto-tools-for-kotlin-swift-and-c-net-in-15-minutes#what-are-ditto-tools).
+</Info>
+
+
+- **Prioritize Critical Connections:**
+  - Ensure that critical devices, such as payment readers, have a stable and prioritized Bluetooth connection within the mesh network.
+  - Recognize that on iOS, native prioritization options may be limited, making custom solutions essential.
+- **Implement Custom Bluetooth Management Logic:**
+  - Develop and incorporate custom logic in your application to prioritize key Bluetooth connections.
+  - Focus on maintaining the stability of connections to critical devices, even if it requires disconnecting less essential Bluetooth peers.
+- **Utilize Monitoring Tools:**
+  - Leverage tools like the Ditto Presence viewer to actively monitor Bluetooth connections within your app.
+  - Use these insights to manually adjust connection priorities, ensuring that important devices remain connected without interruption.
+- **Proactive Connection Management:**
+  - Regularly assess and monitor device behavior, particularly in environments with high Bluetooth traffic, to identify potential connection issues early.
+  - Implement proactive measures to prevent unintentional disconnections, such as periodic checks and automated reconnection logic for essential devices.
+- **Test in High-Density Scenarios:**
+  - Conduct thorough testing of your application in high-density Bluetooth environments to identify potential challenges and fine-tune connection management strategies.
+  - Simulate real-world scenarios where multiple devices are connected to ensure your app can handle high traffic without losing critical connections.
+- **Documentation and Updates:**
+  - Document your custom Bluetooth management solutions and share best practices within your development team.
+  - Stay updated on iOS updates and changes in Bluetooth management that could affect your application’s performance and adjust your logic as necessary.
+

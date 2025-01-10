@@ -1,0 +1,176 @@
+---
+title: DQL Roadmap Functionality
+description: This document outlines functionality in the DQL language that is in active development. This is not an exhaustive list of the features and functionality the Ditto team is tracking concerning DQL and aims to address larger functionality gaps.
+---
+
+<Warning>
+  The functionality in this article is in active development and **NOT **supported in this version of the DQL language.
+</Warning>
+
+All syntax included in this article is sudo syntax added to express functionality. The final syntax may differ from the syntax included here.
+
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> Projections
+
+A projection refers to an operation of selecting specific fields from a collection in a query result by allowing you to specify which fields you want to include in the output of a query while excluding others.
+
+
+```sql DQL
+SELECT field1, field2
+FROM your_collection_name
+```
+
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> Aggregates
+
+Applied most commonly to grouped data or the entire result set of a query, use aggregation functions to perform calculations on a set of values and produce a single result, as well as summarize data across multiple documents in a collection.
+
+Aggregate operations: `COUNT` `SUM` `MAX` `MIN` `AVG`
+
+```sql DQL
+SELECT COUNT(field1), SUM(field2), MAX(field3), MIN(field4), AVG(field5)
+FROM your_collection_name
+```
+
+
+### <Icon icon="road-barrier" iconType="solid"  size="28"/> GROUP BY
+
+The `GROUP BY` clause is used to group documents based on one or more fields in a query. It allows you to group data together based on common values in specific fields and perform aggregate calculations on those groups.
+
+```sql DQL
+SELECT category, COUNT(*)
+FROM your_collection_name
+GROUP BY category;
+```
+
+
+### <Icon icon="road-barrier" iconType="solid"  size="28"/> HAVING
+
+The `HAVING` clause is used in conjunction with the `GROUP BY` clause to filter the result of a query based on conditions involving aggregate functions. The `HAVING` clause allows you to apply filtering conditions to the grouped data in a query.
+
+
+```sql DQL
+SELECT field1, aggregate_function(field2)
+FROM your_collection_name
+GROUP BY field1
+HAVING condition;
+```
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> Aliasing
+
+Aliasing allows users to assign a temporary name or alias to a collection or field in a query. Aliases are assigned using the AS keyword followed by the alias.
+
+***Aliasing a collection***
+
+```sql DQL
+SELECT c.field1
+FROM your_collection_name AS c
+```
+
+
+***Aliasing a field***
+
+```sql DQL
+SELECT field1 AS f
+FROM your_collection_name
+```
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> Multiple FROM Terms
+
+Multiple `FROM` terms can be used to refer to multiple collections within a query. When you include multiple `FROM` terms, the result is a cross-product of the collections. This results in a larger result set that includes all possible combinations.
+
+```sql DQL
+SELECT *
+FROM collection1, collection2
+```
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> JOINs
+
+Joins are used to combine documents from two or more tables based on a related fields between them.
+
+Join types include: `LEFT JOIN` `INNER JOIN` `CROSS JOIN` `RIGHT JOIN` `OUTER JOIN`
+
+```sql DQL
+SELECT cars._id, dealerships._id, dealerships.location
+FROM cars
+INNER JOIN dealerships ON cars.dealership_id = dealerships._id
+```
+
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> INSERT with CBOR
+
+The `INSERT INTO` statement will support CBOR serialized data.
+
+CBOR data is declared using `CBOR` keyword prior to the CBOR object.
+
+```javascript JS
+import { encode, decode } from "cbor";
+
+const data = {
+  _id: "123",
+  field1: 0,
+  field2: "blue"
+};
+const cborData = encode(data);
+
+ditto.store.execute(`
+	INSERT INTO your_collection_name
+	DOCUMENTS (CBOR :cborData)`,
+	{ cborData });
+```
+
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> Secondary Indexing
+
+An index is a data structure that enhances the efficiency of queries by providing a faster lookup mechanism for retrieving data based on specific attributes or fields. An index allows DQL to locate and access data more quickly, reducing the need for scanning the entire collection or table.
+
+
+```sql DQL
+CREATE INDEX index_name
+ON your_collection_name (field1, field2, ...);
+```
+
+```sql DQL
+DROP INDEX index_name
+```
+
+```sql DQL
+SELECT *
+FROM your_collection_name
+USE INDEX (index_name)
+WHERE field1 > 10000
+```
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> Pre-Defined Type Definitions
+
+Setting a pre-defined type definition will allow users to set a type definition once for a given collection instead of needing to declare it within each query.
+
+```sql DQL
+DEFINE COLLECTION your_collection_name (
+  field1 REGISTER,
+  field2 MAP,
+  filed3 ATTACHMENT,
+  ...
+)
+```
+
+## <Icon icon="road-barrier" iconType="solid"  size="28"/> Cross Collection Transactions
+
+Cross collection atomic modifications allows for multiple modifications to occur across transactions.
+
+```sql DQL
+BEGIN TRANSACTION;
+
+-- Update an employee's name
+UPDATE employees
+SET name = 'New Name'
+WHERE _id = '123';
+
+-- Update a department's budget
+UPDATE departments
+SET budget = 50000
+WHERE _id = 'department_456';
+
+COMMIT;
+```
+

@@ -1,0 +1,234 @@
+---
+title: "Rust"
+icon: rust
+iconType: solid
+---
+
+<Frame>
+  <img src="/images/v4.9/release-7.webp"/>
+</Frame>
+
+<Update label="4.9.2 Version Release" description="Release Date: Dec 19, 2024">
+*No Rust Specific Changes*
+</Update>
+
+<Update label="4.9.1 Version Release" description="Release Date: Dec 13, 2024">
+## 4.9.1 Common Changes
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** iOS 18 crashes related to Bluetooth LE are now resolved. (#15351)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Disk usage stats are now reported in small peer info on android devices
+
+</Update>
+<Update label="4.9.0 Version Release" description="Release Date: Nov 21, 2024">
+## 4.9.0 Rust Specific ChangesThe 4.9.0 Rust release has come with a collection of API changes designed to align the Rust SDK with the standards of our other SDK. These changes were done to align naming conventions as well as to regorganice the module to make it more consistent with other SDKs.
+
+These API changes include a number of depreciated APIs. For insteances where APIs are depreciated you'll find replacement APIs provided.
+
+All changes are backwards compatable.
+
+### General Changes
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed**: Resolved an issue where store\_observer.is\_cancelled() could return incorrect values (#14419).
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added**: ditto.update\_transport\_config() API (#5928)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added**: V3ConnectionType to provide internal access to a presence peer’s connection type (#12945).
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added**: #\[must\_use\] attribute on Subscription, PresenceObserver, and LiveQuery to encourage correct usage (#13256).
+
+### API Renaming
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: ditto.authenticator() & DittoAuthenticator::new(#13606, 13851)
+
+- Useditto.auth()
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: ditto.current\_transport\_config() (#13606).
+
+- Use ditto.transport\_config()
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: ditto.application\_id() (#13606).
+
+- Use ditto.app\_id()
+
+
+
+### Module Reorganization***Added a dedicated*** presence ***module for the Presence API***
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: dittolive\_ditto::transport::\{Peer, Presence, PresenceGraph, PresenceObserver, PresenceOs, Connection, ConnectionType} (#13645).
+
+- use dittolive\_ditto::presence::\{Peer, Presence, PresenceGraph, PresenceObserver, PresenceOs, Connection, ConnectionType}
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added**: dittolive\_ditto::presence::\{ConnectionRequest, ConnectionRequestAuthorization} (previously only available via prelude) (#13645)
+
+
+
+***Flattened store module, improved store docs***
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed**: Moved store::dql module to crate-level
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: store::attachment, store::collection, and store::collections modules, with items moved to streamlined modules.
+
+- use store::attachment::\{FetcherVersion, DittoAttachmentFetcher, DittoAttachmentToken, DittoAttachmentFetchEvent, DittoAttachmentTokenLike}
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: store::collections::\{event, pending\_collections\_operation} modules
+
+- use store::collections::\{CollectionsEvent, PendingCollectionsOperation, CollectionsEventHandler}
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: store::collection::\{document, document\_id, pending\_cursor\_operation, pending\_id\_specific\_operation, type\_traits} modules
+
+- use store::collection::\{DocumentId, PendingCursorOperation, PendingIdSpecificOperation, DittoDocument, DittoMutDocument, MutableValue}
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed**: Moved dql::\{StoreObserver, ChangeHandler, ChangeHandlerWithSignalNext, SignalNext} to the store module
+
+
+
+***Additonal Module Changes***
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed**: Moved SyncSubscription to sync module, updated docs (#13645)
+
+<Icon icon="bin-recycle"iconType="solid" horizontal /> **Removed**: ditto module from the public API (#13645).
+
+- Moved ditto module contents to crate-level (#13645)
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: the auth module, items moved to identity (#13645)
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: the observer module and Observer trait (#13645)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed**: Moved SyncSubscription to sync module (#13702)
+
+- Changed: Updated sync module docs (#13702)
+- Deprecated: dittolive\_ditto::store::dql::SyncSubscription
+- Added: dittolive\_ditto::sync::SyncSubscription
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added**: DittoMutableCounter and DittoMutableRegister to prelude
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added**: New store::query\_builder module as home for all QueryBuilder types (#14162)
+
+- Deprecated: crate-level types module, contents moved into query\_builder
+- Deprecated: store::\{batch,collection,collections,live\_query,update} modules, contents moved into query\_builder
+- Deprecated: crate-level subscription module, Subscription moved into query\_builder module
+
+### Depreciated unused and unintentially exposed items
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: removed ValidityListener from public API (#13857)
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: DittoBuilder::new()
+
+- use Ditto::builder() instead.
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: the store::timeseries module and items (#13902)
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: SiteId, use ditto.presence().graph().local\_peer.peer\_key\_string instead
+
+## 4.9.0 Logging Clarity ImprovementsThis release comes with a number of logging clarity improvements. The goal of these changes are to make Ditto logs more consumable and actionable for end users. While there are wide ranging changes one of the principal goals of this work is to make our INFO level logs contain the right information to understand the state and health of the Ditto SDK.
+
+- More information is included when physical connections start and end (such as the type of connection and the remote peer’s key)
+- Devices that try to connect to themselves now say “device has connected to itself” instead of an error about the remote site ID being the same as the local peer
+- Authentication client logs have been made more human readable. In particular:
+
+- Recoverable errors are logged together with information about the recovery actions that are being undertaken
+- Several abbreviations have been replaced with human-readable descriptions
+- Errors are printed using their descriptions rather than by dumping debug representations
+- Abbreviated jargon has been replaced with clearer wording in various log lines
+
+- “phy ended” has become “physical connection ended”
+- “error getting char” has become “required Ditto BLE characteristic not found”
+- “error getting radio state” has become “error getting Windows Bluetooth radio state”
+- Peer events that represent a transport starting or stopping are now logged with the message “transport started”/”transport ended” rather than as a raw peer\_event=... log
+- Reduced the noisiness of “starting” log lines around Ditto initialization time
+- Noise from long peer keys in logs has been reduced in some places by replacing them with their truncated form
+- Noise from duplicated peer ID/peer key information in replication logs has been reduced by consolidating the information
+- “starting compression and export” is now followed by a “completed export” log at the same level
+- Successful SQLite WAL recovery logs were further lowered from INFO to DEBUG
+
+## 4.9.0 Common Changes
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** regexp\_like function in DQL. (#12129)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** peer\_metadata and identity\_service\_metadata to the small peer info document (#12477)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** WebSocket connections now send X-DITTO-PEERPUBKEY and X-DITTO-ROUTING-HINT headers as part of the client connect handshake on all platforms except wasm32 (#13171)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Small Peer Info now includes information about the current logger configuration (#14317)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Permission rules can be written in DQL. (#14563)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** Ditto logs clearly indicate if a device has established a connection to itself. (#14634)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** the ability for DQL select statement to produce arbitrary projection lists. (#7979)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** local subscription info to small peer info (#9412)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** "device\_disk\_usage" information to small peer info (#9784)
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** "store" information to small peer info (#9785)
+
+
+
+<Icon icon="star"iconType="solid" horizontal /><Icon icon="exclamation"iconType="solid" horizontal /><Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Internal sync metadata format changed. Peers that downgrade to a previous SDK version after upgrading may require full resynchronization. (#14799)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Improved (de)serialization performance and reduced its contribution to the library size (#11545)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** In updated replication protocol, verification of a received update file no longer requires both peers to use the same approach to subscription hashing. (#12672)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Experimental multihop connectivity is more resilient to mesh disruptions (#13648)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Synchronization protocol enhanced to reduce the amount of redundant data sent from small peers to big peers. (#13737)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Failed certificate verification due to a lagging device clock now results in a clearer error message (#14035)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Multicast peer-to-peer transport is no longer deprecated to improve support for environments where mDNS is unavailable (#14188)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Replication no longer redundantly re-transmits unchanged subscriptions after eviction. (#14290)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** truncated peer keys are now logged in lieu of site IDs. (#14362)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** improved logging in the authentication code to provide more useful error context. (#15038)
+
+<Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** made the small peer "log request" feature much more responsive (#9777)
+
+
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Windows P2P LAN now can connect to IPv6 peers (#11468)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** In certain rare cases, resetting the same replication session multiple times could cause failure to converge. (#12616)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Internal connection TLS caches are now bounded in size. This prevents a long living peer from holding onto more memory than required. (#13801)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** small peer info "metadata" is now persisted across app launches. (#13987)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Bluetooth peers are handled better when disconnections occur, fixing a possible loop where a device might repeatedly try and fail to connect. (#14018)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** When replication sessions time out, write transactions on the document store may be blocked for a long period. (#14148)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Multicast peer-to-peer transport (non-MDNS) is no longer influenced by TCP listen configuration in DittoTransportConfig (#14187)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** an issue preventing attachment transfers under high document sync load is now resolved. (#14189)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** A race condition that could cause attachments to unexpectedly crash under heavy load. (#14342)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** device name no longer incorrectly defaults to "ditto" in small peer info, when a named device first starts syncing (#14674)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** presence observers are now less-likely to fire when there is no observable change to presence data. (#14807)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Logs report blocked\_by="no blocking transaction" when blocking transaction is known (#14966)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** In-band authentication data is now cleared on logout. (#15039)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** switching appIDs now invalidates cached authentication material correctly. (#15040)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Transport conditions are now reported for a wider range of failures when starting Bluetooth and mDNS transports. (#8729)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** documentation for the stopSync() method to clarify that the Ditto store can be used locally after stopping sync. (#8849)
+
+<Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Auth Client would hang when cached X.509 was expired. (#15110)
+
+
+
+<Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated:**
+
+<Icon icon="exclamation"iconType="solid" horizontal /><Icon icon="bin-recycle"iconType="solid" horizontal /> **Removed:**
+</Update>
+
+

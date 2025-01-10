@@ -1,0 +1,99 @@
+---
+title: "Big-Peer-Based Evictions"
+description: "As Ditto's recommended approach, by opting to use the Big Peer to manage TTL-based evictions not only do you ensure that locally stored documents sync with the Big Peer before eviction, but you also streamline the eviction process by reducing the frequency of needing to perform subscription updates on Small Peers to align with the latest TTL queries."
+---
+
+To Implement TTL-based evictions using the Big Peer make a `POST` request to the `/api/v4/store/write` endpoint:
+
+<Steps>
+  <Step>
+  Using a top-level `args` variable, declare your TTL.
+  </Step>
+  <Step>
+  Include the necessary authorization headers. For information on access credentials, see [Onboarding]().
+  </Step>
+  <Step>
+  In your request body, indicate which documents to target for eviction. (See [Specifying Targets for Purge]())
+  </Step>
+  <Step>
+Configure your HTTP server to run the TTL-based eviction operation at regular intervals using HTTP API calls.
+
+For example, set it to run daily, removing all documents older than 24 hours from the current day.
+
+  </Step>
+  <Step>
+Make sure the Small Peer devices are evicting and subscribing to the right documents. (See [Configuring Small Peers]())
+  </Step>
+</Steps>
+
+### Specifying Targets for Purge
+
+1. Pass the `update` command.
+
+2. Specify the target collection; for instance, the `“orders”` collection.
+
+3. Using a `query`,  define time‑based eviction criteria to select documents where the `createdAt` time is less than or equal to `$TTL`.
+
+4. Ensure only eligible documents, those not previously evicted, are considered by setting `evictionFlag` in your query to `true`.
+
+```bash cURL
+curl -X POST 'https://{app_id}.cloud.ditto.live/api/v4/store/write' \
+  --header 'Authorization: Bearer $API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "commands": [{
+        "method": "update",
+        "collection": "orders",
+        "query": "createdAt <= $TTL && evictionFlag == false",
+				"commands": [{
+					"method": "set",
+					"path": "evictionFlag",
+					"value": "true"
+				}]
+     }]
+}'
+```
+
+
+### Configuring Small Peers
+
+Once you've configured for TTL-based eviction management using the Big Peer, configure Small Peers to make sure their devices are evicting and subscribing to the right documents:
+
+<Steps>
+  <Step>
+Using the Find method, evict all documents that have the `evictionFlag` set to `true`.
+  </Step>
+  <Step>
+Using the [EVICT]() method, execute the eviction process on the documents that match your time-based eviction criteria.
+
+```javascript pseudocode
+ditto.store.collection("orders")
+  .find("evictionFlag == true")
+  .evict()
+```
+  </Step>
+  <Step>
+
+
+Once eviction is complete, using the Find method, subscribe to all documents that have the `evictionFlag` set to `false`.
+
+  </Step>
+  <Step>
+Using the [Subscribe]() method, execute the sync subscription on the documents that match your query criteria.
+
+
+<Info>
+  Make sure to remove the timestamp range from your subscription query.
+</Info>
+
+This is because, by using the Big Peer for management, Small Peers no longer need to perform regular subscription updates to align their time-based eviction criteria in their queries.
+
+```javascript pseudocode
+
+subscription = ditto.store.collection("orders")
+  .find("locationId == 1234 && evictionFlag == false")
+  .subscribe()
+```
+  </Step>
+
+</Steps>

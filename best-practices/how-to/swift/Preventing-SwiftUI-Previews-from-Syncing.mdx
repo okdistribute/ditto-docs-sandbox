@@ -1,0 +1,34 @@
+---
+title: Preventing SwiftUI Previews from Syncing
+description: 'When developing with SwiftUI, you may notice that data from a regular simulator or physical device will sync with a mysterious "other" device.'
+mode: wide
+---
+
+This mysterious device is most likely the SwiftUI Preview Simulator. Simply closing XCode doesn't guarantee that this preview simulator closes. In order to stop this from happening, you'll need to prevent SwiftUI preview simulator from calling `startSync`.
+
+<Frame>
+  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/G_PEfSA3OFltsFgjBO4En_image.png)
+</Frame>
+
+If you want to check that your runtime is running as a SwiftUI preview, you can read the process environment variables like so:
+
+```swift Swift
+let isPreview: Bool = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+```
+
+To prevent your Ditto instance in the preview from syncing, ensure to wrap `startSync()` in an `if` clause like so:
+
+
+<Info>
+  Although a Ditto instance that has not previously invoked `startSync` is unable to connect or replicate to discoverable devices, it can perform local datastore operations: upsert (insert), find, observe, update, and remove.
+</Info>
+
+```swift Swift
+let isPreview: Bool = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+
+if !isPreview {
+  // non preview simulators and real devices can sync
+  try ditto.startSync()
+}
+```
+

@@ -1,0 +1,117 @@
+---
+title: visionOS on Swift
+description: "This article provides an overview of the Ditto SDK for visionOS, instructions on how to get started, as well as steps outlining example integration with our demo chat app, *DittoChat*:"
+---
+
+<CardGroup>
+  <Card
+    title="Ditto SDK for visionOS Beta"
+    icon="square-1"
+    href=""
+    iconType="solid"
+    horizontal
+  />
+  <Card
+    title="Getting Started"
+    icon="square-2"
+    href=""
+    iconType="solid"
+    horizontal
+  />
+  <Card
+    title="Exploring with a Demo App"
+    icon="square-3"
+    href=""
+    iconType="solid"
+    horizontal
+  />
+</CardGroup>
+
+In beta as an early preview, our Swift SDK now offers support for the visionOS target — enabling you to sync Apple Vision Pro devices on- or offline across devices including iPhone, Android, and other Apple Vision Pros.
+
+For more information about the visionOS platform, see the official Apple documentation for <a href="https://developer.apple.com/visionos/" target="_blank">visionOS</a>.
+
+## Getting Started
+
+To get started with the Ditto SDK for visionOS on Swift:
+
+<Steps>
+    <Step>
+    Confirm you have the minimum requirements:
+
+    - Xcode version 15.2 or later
+    - visionOS platform version 1.0, 1.1, or 1.2
+
+    </Step>
+    <Step>
+    Explore with either a prebuilt app, your existing Ditto-backed app, or a brand-new app:
+
+    - To use a prebuilt app, clone, install dependencies, build, and run the DittoChat demo app upgraded to visionOS beta release version 4.8.0. ([Exploring with a Demo App](/best-practices/how-to/swift/visionos-beta-guide#VoKdd))
+
+    - To enable Apple Vision Pro compatibility for an existing app already integrated with Ditto, add version 4.8.0 visionOS beta Ditto Swift Package dependencies to your project.
+
+      For dependencies, go to the `getditto/DittoSwiftPackage` repo in GitHub:
+      <a href="https://github.com/getditto/DittoSwiftPackage/releases/tag/4.8.0-visionos-beta.1" target="_blank">`DittoSwiftPackage/releases/tag/4.8.0-visionos-beta.1
+      `</a>
+
+    - To build a new app, install the Ditto SDK for Swift with the **4.8.0-visionos-beta.1** dependency rule. (See  [Swift Install Guide](/best-practices/how-to/swift/visionos-beta-guide#FonMHjPHDgLwDeZcHoonq))
+
+    </Step>
+    <Step>
+    Once installed and your environment configured for visionOS, the Ditto Swift SDK automatically enables Apple Vision Pro compatibility for your app:
+
+    <Frame>
+      <iframe width="100%" height="420" src="https://www.youtube.com/embed/8Kf8bSGaf14" title="Builds Apps for Apple Vision Pro That Sync Without Any Internet" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </Frame>
+    </Step>
+</Steps>
+
+
+### Exploring with a Demo App
+
+If you prefer learning by doing, run the upgraded DemoChat app with an Apple Vision Pro simulator:
+
+<Steps>
+    <Step>
+    Ensure you have the visionOS version 1.0, 1.1, or 1.2 installed in Xcode.
+    </Step>
+    <Step>
+    Clone the <a href="https://github.com/getditto/demoapp-chat/tree/visionos-beta" target="_blank">`visionos-beta`</a> branch of the `getditto/demoapp-chat` GitHub repo:
+
+
+    ```bash bash
+    git clone -b visionos-beta https://github.com/getditto/demoapp-chat.git
+    ```
+    </Step>
+    <Step>
+    Navigate to the `/iOS` directory:
+
+    ```bash bash
+    cd demoapp-chat/iOS
+    ```
+    </Step>
+    <Step>
+    Set up the environment variables:
+
+    ```bash bash
+    cp .env.template .env
+    ```
+    </Step>
+    <Step>
+    Open the `.env` file located in the `/iOS` directory, and then enter your sync credentials for peer-to-peer authentication.
+
+    Add your sync credentials (app ID and online playground token) available from the <a href="https://portal.ditto.live/?_gl=1*1cej9hc*_ga*MjAxODM3ODUyMi4xNzE4NjUzNzYz*_ga_D8PMW3CCL2*MTcxODc1NDE1OS45LjAuMTcxODc1NDE1OS42MC4wLjA." target="_blank">portal</a>. (See [Sync Credentials](/best-practices/how-to/swift/visionos-beta-guide#1zqHo9HLq-mO6v1AQnAzl))
+
+    ```bash
+    DITTO_APP_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    DITTO_PLAYGROUND_TOKEN=yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
+    ```
+    </Step>
+    <Step>
+    From Xcode, using the Apple Vision Pro simulator, build the app and sync.
+
+    <Info>
+      For the minor changes in progress for DittoChat enabled with visionOS compatibility, see <a href="https://github.com/getditto/demoapp-chat/pull/124" target="_blank">visionOS Beta Platform Support #124</a> pull request in GitHub.
+    </Info>
+    </Step>
+</Steps>

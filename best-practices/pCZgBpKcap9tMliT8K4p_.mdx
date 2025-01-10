@@ -1,0 +1,232 @@
+---
+title: Device Storage Management
+description: "Data storage management is essential for preventing unnecessary resource usage, which affects not only performance but also battery life and overall end-user experience."
+---
+
+With a soft-delete pattern, you flag documents as inactive by adding the `isArchived` field while keeping them available if needed.* *(See* *[Soft-Delete Pattern](/best-practices/)). However, this does not remove data from disk.
+
+Implementing a well-thought data storage strategy can ensure that your app remains efficient, resulting in faster load times, improved battery life, and a more responsive UI.
+
+## Using Eviction
+
+Use the `EVICT` API method to remove data from the local disk. You will need to set up an automatic process that evicts documents on a regular basis, such as once per day. Evict documents that are accessed less frequently or are no longer relevant in order to free up disk space.
+
+
+<Warning>
+### Eviction can slow down the Mesh
+
+Remember that before invoking the `EVICT` method, you must cancel relevant subscriptions and then restart them.
+
+This results in an increase in network usage, which can degrade sync performance.
+
+Call `EVICT` on a regular basis, but no more than once per day during periods of minimal disruption, such as after hours and at night.
+
+</Warning>
+
+## Time-to-Live Eviction Strategy
+
+Implement a design pattern that focuses on efficient memory management and performance optimization when handling data in fast-paced industries, such as airlines, retail, quick-service restaurants, and other time‑sensitive environments.
+
+The implementation process of the time-based replication design pattern with a TTL Eviction strategy varies based on your approach:
+
+- Big Peer Management (Recommended) — Through regular interval HTTP API calls, the Big Peer cloud deployment delegates all TTL-based evictions mesh-wide. By opting for the Big Peer approach, you ensure that documents sync with the Big Peer *before *eviction to prevent any potential data loss. (See [Big-Peer-Based Evictions]())
+
+- Small Peer Local Management — Each Small Peer device manages its own TTL-based evictions. This is suiSteple if you either are not using the Big Peer, or if you are confident operationally that devices will never be offline longer than the eviction process will run. (See [Small-Peer-Based Evictions]())
+
+A common implementation is the *time-based replication design pattern*, in which you use a Time‑to‑Live (*TTL*) Eviction strategy to set document retention logic; for example, logic specifying that only data written to the local Ditto store within the past seven days will persist on a local device.
+
+### Example Scenario
+
+Imagine you're developing a meal ordering app that flight attendants use to record passenger meal orders on their devices.
+
+To ensure that your app remains highly performant throughout its life cycle while also guaranteeing that flight attendants using the app always work with the most recent and relevant information, you specify a TTL of 72 hours so that only documents written to the local Ditto store within the past 72 hours persist on the Small Peer device.
+
+```json
+{
+  "createdAt": "2022-09-17T20:00:46.945Z",
+  "expiresAt": "2022-09-20T20:00:46.945Z",
+  "flightNo": "DIT101"
+}
+```
+
+## Big-Peer-Based Eviction
+
+As Ditto's recommended approach, by opting to use the Big Peer to manage TTL-based evictions not only do you ensure that locally stored documents sync with the Big Peer before eviction, but you also streamline the eviction process by reducing the frequency of needing to perform subscription updates on Small Peers to align with the latest TTL queries.
+
+To Implement TTL-based evictions using the Big Peer make a `POST` request to the `/api/v4/store/write` endpoint:
+
+<Steps>
+  <Step>
+  Using a top-level `args` variable, declare your TTL.
+  </Step>
+  <Step>
+Include the necessary authorization headers. (See [Sync Credentials](/best-practices))
+  </Step>
+  <Step>
+In your request body, indicate which documents to target for eviction. (See [Specifying Targets for Purge](/best-practices))
+  </Step>
+  <Step>
+Configure your HTTP server to run the TTL-based eviction operation at regular intervals using HTTP API calls.
+
+For example, set it to run daily, removing all documents older than 24 hours from the current day.
+  </Step>
+  <Step>
+Make sure the Small Peer devices are evicting and subscribing to the right documents. (See [Configuring Small Peers](/best-practices/))
+  </Step>
+</Steps>
+
+
+### Specifying Targets for Purge
+
+1. Pass the `update` command.
+
+2. Specify the target collection; for instance, the `“orders”` collection.
+
+3. Using a `query`,  define time‑based eviction criteria to select documents where the `createdAt` time is less than or equal to `$TTL`.
+
+4. Ensure only eligible documents, those not previously evicted, are considered by setting `evictionFlag` in your query to `true`.
+
+```bash cURL
+curl -X POST 'https://{app_id}.cloud.ditto.live/api/v4/store/write' \
+  --header 'Authorization: Bearer $API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "commands": [{
+        "method": "update",
+        "collection": "orders",
+        "query": "createdAt <= $TTL && evictionFlag == false",
+				"commands": [{
+					"method": "set",
+					"path": "evictionFlag",
+					"value": "true"
+				}]
+     }]
+}'
+```
+
+### Configuring Small Peers
+
+Once you've configured for TTL-based eviction management using the Big Peer, configure Small Peers to make sure their devices are evicting and subscribing to the right documents:
+
+<Steps>
+  <Step>
+Using the Find method, evict all documents that have the `evictionFlag` set to `true`.
+  </Step>
+  <Step>
+Using the [EVICT](/best-practices/) method, execute the eviction process on the documents that match your time-based eviction criteria.
+
+```javascript pseudocode
+ditto.store.collection("orders")
+  .find("evictionFlag == true")
+  .evict()
+```
+  </Step>
+  <Step>
+Once eviction is complete, using the Find method, subscribe to all documents that have the `evictionFlag` set to `false`.
+  </Step>
+  <Step>
+Using the `subscription` method, execute the sync subscription on the documents that match your query criteria.
+
+
+Make sure to remove the timestamp range from your subscription query.
+
+This is because, by using the Big Peer for management, Small Peers no longer need to perform regular subscription updates to align their time-based eviction criteria in their queries.
+
+```javascript pseudocode
+subscription = ditto.store.collection("orders")
+  .find("locationId == 1234 && evictionFlag == false")
+  .subscribe()
+```
+  </Step>
+</Steps>
+
+
+
+## Small-Peer-Based Eviction
+
+In most cases, choosing to use the Big Peer for TTL-based eviction management is ideal; however, in select scenarios where concerns like data availability, integrity, privacy, and security require local management, opting for the Small Peer local management approach may be the better choice.
+
+<Steps>
+  <Step>
+Before invoking the Evict method to purge documents older than the TTL, cancel any active subscriptions that may be impacted by the eviction. (See [Canceling Affected Subscriptions](/best-practices/))
+
+By stopping any subscriptions affected by the evict update, you ensure that Ditto does not attempt to purge documents actively syncing across the mesh.
+
+
+  </Step>
+  <Step >
+Once you ensure that any ongoing subscriptions affected by the eviction update are canceled, run the eviction process. (See [Invoking Eviction Updates](/best-practices/))
+
+  </Step>
+  <Step >
+Once the eviction process is complete, set up a new subscription with your updated time‑based eviction criteria. (See [Creating New Subscriptions](/best-practices/))
+  </Step>
+</Steps>
+
+### Cancel Affected Subscriptions
+
+To maintain data integrity, you must cancel any active subscription that the eviction update may impact *before *executing your eviction process.
+
+Otherwise, an undesirable loop may result in which Ditto continuously evicts documents from the local Ditto store and then automatically re‑syncs them, leading to increased memory usage.
+
+```javascript pseudocode
+subscription.cancel()
+```
+
+
+### Invoke Eviction Updates
+
+<Steps>
+  <Step>
+  Using a top-level `args` variable, declare your TTL.
+  </Step>
+  <Step>
+  Using the Find method, define your time‑based eviction criteria.
+  </Step>
+  <Step>
+  Using the Evict method, execute the eviction process on documents matching your criteria.
+
+  Notice that the query used for eviction is the opposite of the query used for subscription, enclosed as parameters in the Find method; that is, they do not select the same documents.
+
+  By using opposite queries, you prevent potential conflict by ensuring that the queries you use for eviction and subscription are distinct and do not overlap.
+
+  ```javascript pseudocode
+  ditto.store.collection("flights")
+    .find("createdAt <= $args.ttl", args: [ "ttl": getTimeToLive() ])
+    .evict()
+  ```
+  </Step>
+</Steps>
+
+
+### Create New Subscriptions
+
+To update a subscription with your updated time‑based eviction criteria, do the following:
+
+
+<Warning>
+You must declare your subscription object from the top-most scope of your app to ensure access throughout the life cycle of your app.
+
+Otherwise, you cannot modify or cancel your subscription from any part of your code, resulting in difficulty and potential errors when managing the subscription's lifecycle.
+</Warning>
+
+<Steps>
+  <Step>
+Specify the name of the collection to watch; for example, the `"flights"` collection.
+  </Step>
+  <Step >
+Using the Find method, define the query that retrieves documents where the `"createdAt"` field is greater than the `ttl`.
+
+  </Step>
+  <Step >
+Using the Subscribe method, initiate your subscription.
+
+```javascript pseudocode
+subscription = ditto.store.collection("flights")
+  .find("createdAt > $args.ttl", args: [ "ttl": getTimeToLive()])
+  .subscribe()
+```
+  </Step>
+</Steps>
+
+

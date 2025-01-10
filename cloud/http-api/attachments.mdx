@@ -1,0 +1,37 @@
+---
+title: HTTP API - Attachments
+description: With the `ATTACHMENT` data type, you can link extensive binary data, such as avatar images, videos, and PDFs, to a document.
+icon: paperclip
+iconType: solid
+---
+
+This article provides an overview of the attachment-related endpoints and functionality available for the HTTP Data API.
+
+Attachments consist of two distinct parts: *metadata* and a binary large object* *(*blob*) datastore. (See [ATTACHMENT](/v4-7/document-model/data-types/attachment))
+
+## Uploading Attachments
+
+Using the Multipart Form method, upload the raw binary contents of the file you want to attach:
+
+
+<Info>
+  Although Ditto will eventually support attaching files of up to 20 MB in size, the current infrastructure supports only a 1 MB maximum limit.
+</Info>
+
+```bash Curl
+curl -X POST "$HOST/api/v4/attachments/upload" \
+  --header "Authorization: Bearer ${API_KEY}" \
+  -F 'file=@post.png'
+#=> {"id": "RUGMUxzHDRH1x94uH_QcrkzUhV5-j6oFd1c9eAFMxNZDmQ", "len": 261322}
+```
+
+## Downloading Attachments
+
+Using `/api/v4/attachment/{attachment_id}`, download attachments:
+
+```bash Curl
+curl "$HOST/api/v4/attachments/${ATTACHMENT_ID}" \
+  --header "Authorization: Bearer $API_KEY" \
+  --output file.png
+```
+

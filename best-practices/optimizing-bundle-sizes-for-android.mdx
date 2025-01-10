@@ -1,0 +1,178 @@
+---
+title: Optimizing Bundle Sizes for Android
+---
+
+### Ditto SDK Size
+
+The Ditto SDK for Android is a fairly large package. The bulk of the size is made up of native binaries compiled from native Rust code which - unlike Kotlin and Java - need to be compiled for each CPU type (ABI) that the SDK will be used on. We currently support [all 4 ABIs](https://developer.android.com/ndk/guides/abis#sa) supported by the Android NDK. This means that there are 4 native binaries included inside the Android archive `.aar` file we publish to [Maven Central.](https://central.sonatype.com/artifact/live.ditto/ditto/versions)
+
+Below are various options to reduce the size of your application package. These change aspects of the Ditto SDK as it is included inside your app’s final `.apk` file.
+
+## Publishing to Google Play Store
+
+If you publish your app to the Google Play Store, the easiest way to [reduce your app size](https://developer.android.com/topic/performance/reduce-apk-size) is to package your app as an [Android App Bundle](https://developer.android.com/guide/app-bundle). This format allows Google Play to generate optimized APKs for each device configuration so that users download packages streamlined for their specific device.
+
+## Publishing to Private Distribution Channels
+
+If your app is distributed privately to enterprise users via an MDM system, check with your MDM vendor to see whether they integrate with [Managed Google Play](https://www.android.com/enterprise/management/). If so, they may support Android App Bundles (`.aab` files) and automatic package optimization.
+
+However, if your MDM system does not support this, there are several options for manually optimizing the size of your app package.
+
+### Compress Native Binaries
+
+The native binaries included with the Android Ditto SDK are included in an app’s package in uncompressed form by default. However, setting the `useLegacyPackaging` value to `true` in your app’s Gradle configuration will change this to store the binaries in compressed form. Compressed binaries will take up less space and help to reduce the app’s final `.apk` file size.
+
+In your app’s `build.gradle(.kts)` file, add the following `jniLibs` block inside the `packaging` block.
+
+<Tabs>
+    <Tab title="Gradle (Groovy)">
+```js
+android {
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}
+```
+    </Tab>
+    <Tab title="tab 2">
+```js
+android {
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}
+```
+    </Tab>
+</Tabs>
+
+
+
+Compressed binaries has shown to reduce a simple demo app’s size by 50%.
+
+This `useLegacyPackaging` build option can also be controlled using the (deprecated)[`android:extractNativeLibs` attribute](https://developer.android.com/guide/topics/manifest/application-element#extractNativeLibs) on the `<application>` element in the Android manifest. This option used to be available using the  `android.bundle.enableUncompressedNativeLibs` Gradle property.
+
+#### Caveats
+
+While this `useLegacyPackaging` option can help to reduce your final `.apk` file size, it is important to be aware of the side effects of changing this setting and to test your application to understand how it will behave.
+
+- Increased app launch time as compressed binaries need to be decompressed.
+- Increased app install size as uncompressed binaries are copied into app’s data directory.
+- App updates through the Google Play Store will be larger.
+
+#### More details
+
+- [Reduce your app size](https://developer.android.com/topic/performance/reduce-apk-size#extract-false)
+- [Use the DSL to package compressed native libraries](https://developer.android.com/build/releases/past-releases/agp-4-2-0-release-notes#compress-native-libs-dsl)
+- [Native libraries package uncompressed by default](https://developer.android.com/build/releases/past-releases/agp-3-6-0-release-notes#extractNativeLibs)
+
+### Exclude Unused CPU Architectures
+
+If your app does not need to support all of the different types of CPUs (ABIs) that the Ditto SDK supports, you can configure your build to exclude the unwanted files. There are two main approaches to this. The first is to just exclude the one or more ABIs that you don’t want. The second approach is more extreme and involves building multiple APKs, each with only a single ABI, but it is more complicated to deploy.
+
+Including only a single ABI has shown to reduce a simple demo app’s size by 70%.
+
+
+<Warning>
+In order to use either of these approaches you need to understand the CPU architecture (ABI) of all the devices you will be deploying your app to. Excluding the ABI for a device and then attempting to run the app on a device that uses the missing ABI will cause the Ditto SDK to crash.
+
+</Warning>
+
+#### Single APK with reduced ABIs
+
+This approach is very simple and just excludes one or more Ditto native binaries from your app package.
+
+In your app’s `build.gradle(.kts)` file, add an `ndk` block inside the `defaultConfig` block like so:
+
+<Tabs>
+    <Tab title="Gradle (Groovy)">
+```java
+android {
+    ...
+    defaultConfig {
+        ndk {
+            abiFilters.clear()
+            abiFilters("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
+        }
+    }
+}
+```
+    </Tab>
+    <Tab title="Gradle (Kotlin)">
+```kotlin
+android {
+    ...
+    defaultConfig {
+        ndk {
+            abiFilters.clear()
+            abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86"))
+        }
+    }
+}
+```
+    </Tab>
+</Tabs>
+
+
+The example snippet above adds all 4 ABIs that are contained in the Ditto Android SDK. Reduce this list to just the ABIs of the devices that your app is deployed to. Android devices with Intel CPUs (`x86*` ABIs) are rare nowadays, but Chromebooks often have these types of CPUs.
+
+For more details about this `ndk.abiFilters` configuration, see [Generate Code for a specific ABI](https://developer.android.com/ndk/guides/abis#gc).
+
+#### Caveats
+
+- Your app will crash with message "Native library failed to load" if run on a device that uses an ABI excluded using this method.
+
+#### Separate APKs for each Supported ABI
+
+This is the most involved process but it yields the absolute smallest APK size possible. There are several caveats with this approach but it may be necessary if your deployment system has very limited requirements.
+
+Add the following `splits` block to your app’s `build.gradle(.kts)` file inside the `android` block.
+
+<Tabs>
+    <Tab title="Gradle (Groovy)">
+```java
+android {
+    ...
+    splits {
+        abi {
+            enable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
+            universalApk = false
+        }
+    }
+}
+```
+    </Tab>
+    <Tab title="Gradle (Kotlin)">
+```kotlin
+android {
+	...
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
+            isUniversalApk = false
+        }
+    }
+}
+```
+    </Tab>
+</Tabs>
+
+
+The above configuration will generate a separate APK for each ABI listed above in the `include` configuration. You may remove any ABIs that your environment doesn’t need.
+
+For more details see about the `splits.abi` Gradle configuration, see [Configure multiple APKs for ABIs](https://developer.android.com/build/configure-apk-splits#configure-abi-split).
+
+Note that the Google Play Store requires each APK you publish to have a unique `versionCode`. Check with your MDM system’s requirements as to what their app versioning policies are. A strategy for generating a unique `versionCode` for each APK is detailed in the [Build multiple APKs](https://developer.android.com/build/configure-apk-splits#configure-APK-versions) guide. For more information about this topic, see [Assigning version codes](https://developer.android.com/google/play/publishing/multiple-apks#VersionCodes).
+
+#### Caveats
+
+- Single-ABI APKs need to be carefully deployed to the correct devices via MDM.
+- APK versioning can be more complicated, depending on your MDM system’s requirements.
+

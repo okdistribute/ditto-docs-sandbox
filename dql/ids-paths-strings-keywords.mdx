@@ -1,0 +1,571 @@
+---
+title: IDs, Paths, Strings, and Keywords
+---
+
+This article provides reference information for the following:
+
+<CardGroup>
+ <Card title="Identifiers" icon="square-1" href="/dql/ids-paths-strings-keywords#identifiers" iconType="solid" horizontal/>
+
+ <Card title="Path Expressions" icon="square-2" href="/dql/ids-paths-strings-keywords#path-expressions" iconType="solid" horizontal/>
+
+<Card title="String Literals" icon="square-3" href="/dql/ids-paths-strings-keywords#string-literals" iconType="solid" horizontal/>
+
+<Card title="Comments" icon="square-4" href="/dql/ids-paths-strings-keywords#comments" iconType="solid" horizontal/>
+
+<Card title="Reserved Keywords" icon="square-5" href="/dql/ids-paths-strings-keywords#reserved-keyword" iconType="solid" horizontal/>
+</CardGroup>
+
+
+## Identifiers
+
+Identifiers are the names of collections, documents, fields, and other database objects.
+
+### **Rules for Identifiers**
+
+| **Rule** | **Guidelines** | **Examples** |
+| --- | --- | --- |
+| Case-Sensitivity | Identifiers are always case-sensitive | * DOCUMENTNAME<br/>    <br/>* DocumentName<br/>    <br/>* documentname |
+| Non-Quoted Identifiers | Must start with a letter (A-Z or a-z) or an underscore<br/><br/>Can contain **only** letters, digits, and underscores<br/><br/>INVALID: Cannot use reserved keywords; for example:<br/><br/>* 1abc<br/>    <br/>* ab$c | * abc_4u<br/>    <br/>* _abc<br/>    <br/>* abc123 |
+| Quoted Identifiers | Quote identifiers using backticks (``)<br/><br/>Usage of double quotes ("") is deprecated<br/><br/>Use any UTF-8 character<br/><br/>Can be escaped inside existing delimiters | * \`1abc\`<br/>    <br/>* \`ab$c\`<br/>    <br/>* \`a b\`<br/>    <br/>* \`a b\`.c<br/>    <br/>* \`a \`\`b`` c` |
+
+### **Reserved Identifiers**
+
+The following table provides an overview of the DQL-specific restrictions that supersede common identifier rules:
+
+| **Element**                   | **Rule**                                                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Document Identifier           | `_id` is a reserved identifier for the document ID. All documents must have an assigned document ID.                           |
+| System Collection Identifiers | Double underscore (`__`) is a reserved identifier prefix for collections. Double underscore denotes a Ditto system collection. |
+
+## Path Expressions
+
+Since Ditto stores data as JSON-like documents, you can use keypath indexing, known commonly as *dot syntax*, to navigate and reference specific parts of a Ditto document when performing query operations in DQL.
+
+To separate a name in a path, use a dot (`.`).
+
+For example, to navigate to the `seats` field in a `SELECT` statement:
+
+<CardGroup>
+```mysql MySQL
+SELECT * FROM COLLECTION cars (features MAP)
+WHERE features.seats = 'leather'
+```
+```json JSON
+{
+  "_id": "123abc",
+  "year": 2018,
+  "vin": 123456,
+  "features": {
+    "speakers": 5
+    "seats": "leather"
+    }
+  }
+```
+</CardGroup>
+
+
+### **Rules for Path Expressions**
+
+Following is an overview of the of the DQL-specific restrictions that supersede common rules:
+
+| **Topic**       | **Guideline**                                                                                                                                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Path Evaluation | Path expressions are evaluated from left to right. For example, `a.b.c`:* `a` is the leftmost name
+* `b` is an intermediate name
+* `c` is the rightmost name                                                                          |
+| Collections     | Collection names cannot be present in path expressions.                                                                                                                                                                               |
+| Types           | Only `REGISTER` with nested JSON object and `MAP` types can be navigated with path expressions.                                                                                                                                       |
+| `MISSING`       | The path expression result is `MISSING` for the following conditions are both true:* The leftmost name and all intermediate names are a `REGISTER` with JSON object type or a `MAP` type.
+* The last name in the path does not exist. |
+
+
+## String Literals
+
+Enclose `string` literals in single quotes (`''`) in DQL; for example `'blue'` :
+
+```sql DQL
+SELECT * FROM cars WHERE color = 'blue'
+```
+
+<Warning>
+  Double quotes (`""`) cannot be not used to represent `string` literals within DQL.
+</Warning>
+
+## Comments
+
+DQL supports both inline and multi-line comments.
+
+### Inline Comments
+
+Inline comments are made using the `--` operator.
+
+
+```sql DQL
+-- This is an inline comment
+```
+
+
+### Multi-line Comments
+
+Multi-line comments are inclosed by the `/*` and `*/`operator.
+
+```sql DQL
+/*
+ This is a multi-line comment
+*/
+```
+
+## Reserved Keyword
+
+The following table provides a complete overview of the reserved keywords in DQL:
+
+<CardGroup>
+<Card>
+AGAINST
+<br/>
+ALL
+<br/>
+ALTER
+<br/>
+ANALYZE
+<br/>
+AND
+<br/>
+ANTI
+<br/>
+ANY
+<br/>
+APPLY
+<br/>
+ARRAY
+<br/>
+ARRAY\_AGG
+<br/>
+AS
+<br/>
+ASC
+<br/>
+AT
+<br/>
+ATTACHMENT
+<br/>
+BETWEEN
+<br/>
+BIGINT
+<br/>
+BINARY
+<br/>
+BLOB
+<br/>
+BOOLEAN
+<br/>
+BOTH
+<br/>
+BY
+<br/>
+BYTEA
+<br/>
+CASE
+<br/>
+CAST
+<br/>
+CEIL
+<br/>
+CENTURY
+<br/>
+CHAR
+<br/>
+CHARACTER
+<br/>
+CHARACTERS
+<br/>
+CLOB
+<br/>
+CLUSTER
+<br/>
+COLLATE
+<br/>
+COLLECTION
+<br/>
+CONFLICT
+<br/>
+COUNT
+<br/>
+COUNTER
+<br/>
+CROSS
+<br/>
+CURRENT
+<br/>
+CURRENT\_DATE
+<br/>
+CURRENT\_TIME
+<br/>
+CURRENT\_TIMESTAMP
+<br/>
+DATE
+<br/>
+DATETIME
+<br/>
+DAY
+<br/>
+DEC
+<br/>
+DECADE
+<br/>
+DECIMAL
+<br/>
+DEFAULT
+<br/>
+DESC
+<br/>
+DISTINCT
+<br/>
+DISTRIBUTE
+<br/>
+DO
+<br/>
+DOCUMENTS
+<br/>
+DOUBLE
+<br/>
+DOW
+<br/>
+DOY
+<br/>
+ELSE
+<br/>
+END
+<br/>
+ENUM
+<br/>
+EPOCH
+<br/>
+ERROR
+<br/>
+ESCAPE
+<br/>
+EVICT
+<br/>
+EXCEPT
+<br/>
+EXISTS
+<br/>
+EXPANSION
+<br/>
+EXPLAIN
+<br/>
+EXTRACT
+<br/>
+FAIL
+<br/>
+FALSE
+<br/>
+FETCH
+<br/>
+FILTER
+<br/>
+FLOAT
+<br/>
+FLOOR
+<br/>
+FOLLOWING
+<br/>
+FOR
+<br/>
+FROM
+<br/>
+FULL
+<br/>
+GROUP
+<br/>
+GROUPS
+<br/>
+HAVING
+<br/>
+HOUR
+<br/>
+ID
+<br/>
+ILIKE
+<br/>
+IN
+<br/>
+INCREMENT
+<br/>
+INHERIT
+<br/>
+INITIAL
+<br/>
+INNER
+<br/>
+INSERT
+<br/>
+INT
+<br/>
+INTEGER
+<br/>
+INTERSECT
+<br/>
+INTERVAL
+<br/>
+INTO
+<br/>
+IS
+<br/>
+ISODOW
+<br/>
+ISOYEAR
+<br/>
+JOIN
+<br/>
+JULIAN
+<br/>
+LANGUAGE
+<br/>
+LARGE
+<br/>
+LATERAL
+<br/>
+LEADING
+<br/>
+LEFT
+<br/>
+LIKE
+<br/>
+LIMIT
+<br/>
+LISTAGG
+<br/>
+LOCALTIME
+<br/>
+LOCALTIMESTAMP
+<br/>
+
+</Card>
+<Card
+>
+MAP
+<br/>
+MEDIUMINT
+<br/>
+MICROSECOND
+<br/>
+MICROSECONDS
+<br/>
+MILLENIUM
+<br/>
+MILLENNIUM
+<br/>
+MILLISECOND
+<br/>
+MILLISECONDS
+<br/>
+MINUTE
+<br/>
+MISSING
+<br/>
+MODE
+<br/>
+MONTH
+<br/>
+NANOSECOND
+<br/>
+NANOSECONDS
+<br/>
+NATURAL
+<br/>
+NOT
+<br/>
+NOTHING
+<br/>
+NULL
+<br/>
+NUMERIC
+<br/>
+NVARCHAR
+<br/>
+OBJECT
+<br/>
+OCTETS
+<br/>
+OFFSET
+<br/>
+ON
+<br/>
+OPERATOR
+<br/>
+OR
+<br/>
+ORDER
+<br/>
+OUTER
+<br/>
+OUTPUTFORMAT
+<br/>
+OVER
+<br/>
+OVERFLOW
+<br/>
+OVERLAY
+<br/>
+PARTITION
+<br/>
+PERCENT
+<br/>
+PLACING
+<br/>
+PNCOUNTER
+<br/>
+POSITION
+<br/>
+PRECEDING
+<br/>
+PRECISION
+<br/>
+QUALIFY
+<br/>
+QUARTER
+<br/>
+QUERY
+<br/>
+RANGE
+<br/>
+REAL
+<br/>
+REGCLASS
+<br/>
+REGISTER
+<br/>
+RESET
+<br/>
+RETURNING
+<br/>
+RIGHT
+<br/>
+ROW
+<br/>
+ROWS
+<br/>
+SAFE\_CAST
+<br/>
+SECOND
+<br/>
+SELECT
+<br/>
+SEMI
+<br/>
+SET
+<br/>
+SHOW
+<br/>
+SIMILAR
+<br/>
+SMALLINT
+<br/>
+SORT
+<br/>
+STCOUNTER
+<br/>
+STRING
+<br/>
+SUBSTRING
+<br/>
+SYSTEM
+<br/>
+TABLE
+<br/>
+TEMP
+<br/>
+TEMPORARY
+<br/>
+TEXT
+<br/>
+THEN
+<br/>
+TIES
+<br/>
+TIME
+<br/>
+TIMESTAMP
+<br/>
+TIMESTAMPTZ
+<br/>
+TIMETZ
+<br/>
+TIMEZONE
+<br/>
+TIMEZONE\_HOUR
+<br/>
+TIMEZONE\_MINUTE
+<br/>
+TINYINT
+<br/>
+TO
+<br/>
+TOMBSTONE
+<br/>
+TOP
+<br/>
+TRAILING
+<br/>
+TRIM
+<br/>
+TRUE
+<br/>
+TRUNCATE
+<br/>
+TRY\_CAST
+<br/>
+UNBOUNDED
+<br/>
+UNION
+<br/>
+UNKNOWN
+<br/>
+UNLOGGED
+<br/>
+UNNEST
+<br/>
+UNSIGNED
+<br/>
+UPDATE
+<br/>
+USING
+<br/>
+UUID
+<br/>
+VALID
+<br/>
+VALUES
+<br/>
+VARBINARY
+<br/>
+VARCHAR
+<br/>
+VARYING
+<br/>
+VIEW
+<br/>
+WEEK
+<br/>
+WHEN
+<br/>
+WHERE
+<br/>
+WITH
+<br/>
+WITHIN
+<br/>
+WITHOUT
+<br/>
+XOR
+<br/>
+YEAR
+<br/>
+ZONE
+<br/>
+</Card>
+
+</CardGroup>

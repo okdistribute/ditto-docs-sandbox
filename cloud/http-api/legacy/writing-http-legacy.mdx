@@ -1,0 +1,143 @@
+---
+title: "Writing: HTTP (Legacy)"
+description: "Ditto provides a robust query engine that allows you to perform various filter operations to carry out traditional `create`, `read`, `update`, and `delete` (CRUD) operations."
+icon: feather
+iconType: solid
+---
+ For an overview, see *Ditto Basics *> [CRUD Fundamentals](/v4-7/crud/create).
+
+Use the `write` command to `upsert`, `update`, and `remove` documents from the Big Peer.
+
+<Warning>
+  Do *not *include a `find` query within a `write` command in a single operation. Instead, perform each as separate API calls. For instructions, see [Performing Find and Write Operations](/cloud/legacy/).
+</Warning>
+
+
+Once changes are made to the Big Peer, those changes then propagate to all Small Peers connected to the mesh network.
+
+## Write Endpoint
+
+To access Ditto's HTTP API, direct your write requests to the following URL endpoint, making sure to replace `{app_id}` with the ID Ditto generated when you created your app in the portal.
+
+<Info>
+For instructions on how to get your app ID, see [Get Started](/cloud/http-api/legacy/writing-http-legacy).
+
+</Info>
+
+
+```none
+https://{app_id}.cloud.ditto.live/api/v4/store/write
+```
+
+
+## Upsert
+
+The following snippet demonstrates how to use the `curl` command to perform a complete `upsert` operation to explicitly create or replace a document.
+
+In this example, a `friends` key contains a `register` of the `array` type, alongside `orderCount` which functions as a `counter`.
+
+<Info>
+For more information about `registers` and `counters`, see the *Platform Manual* > [Data Types (TEMP)](/cloud/http-api/legacy/writing-http-legacy).
+</Info>
+
+```curl cURL
+curl -X POST 'https://{app_id}.cloud.ditto.live/api/v4/store/write' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer $API_KEY' \
+  --data-raw '{
+      "commands": [{
+        "method": "upsert",
+        "collection": "people",
+        "id": "123abc",
+        "value": {
+          "name": "John",
+          "friends": ["Susan"],
+          "orderCount": 5
+        }
+      }]
+  }'
+```
+
+### Specifying Types
+
+When invoking `upsert`, use the `valueTypeOverrides` payload to create or modify a mutable type, such as a `register map` or a `counter`, in your request. For example, instead of using the default type, you explicitly specify to create a `counter` instead.
+
+<Info>
+In Ditto, an `array` behaves as a `register` by default. This means you do not need to explicitly specify an `array` as a `register` in your request.
+
+For more information, see the *Platform Manual* > [REGISTER](/cloud/http-api/legacy/writing-http-legacy).
+
+</Info>
+
+```curl cURL
+curl -X POST 'https://{app_id}.cloud.ditto.live/api/v4/store/write' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer $API_KEY' \
+  --data-raw '{
+      "commands": [{
+        "method": "upsert",
+        "collection": "people",
+        "id": "123abc",
+        "value": {
+          "name": "John",
+          "friends": ["Susan"],
+          "orderCount": 5
+        },
+        "valueTypeOverrides": {
+          "orderCount": "counter",
+          "friends": "register"
+        }
+      }]
+  }'
+```
+
+
+## Update Subcommands
+
+When using `update` to make changes in the Big Peer, you can include any of the following  subcommands within your `update` command to perform specific actions:
+
+| **Subcommand**       | **Description**                                   |
+| -------------------- | ------------------------------------------------- |
+| `set`                | Sets a specific value for a given field property. |
+| `increment`          | Increments the value of a `counter`.              |
+| `replaceWithCounter` | Replaces the current value with the `counter`.    |
+
+
+
+```none
+https://{app_id}.cloud.ditto.live/api/v4/store/findbyid
+```
+
+
+## Remove
+
+Use the `remove` command to delete documents from the Big Peer and all Small Peers connected in the mesh network.
+
+Once deleted, Ditto indicates a document's removal by creating a ***tombstone*** document. A tombstone contains metadata indicating that the associated data has been removed. Ditto creates a single tombstone for each document ID that matches the specified query.
+
+To ensure that all Small Peers connected in the mesh network are aware that the document has been deleted, the tombstone, once created, triggers a change event that propagates across the mesh network as a record of its removal.
+
+
+<Warning>
+Although each tombstone document is not very large, there is no way to evict or remove them, so over time, if a user keeps doing `remove`operations, tombstones will be an "invisible" source of disk usage with no upper bound.
+
+For this reason, we strongly encourage the use of `evict` (combined with a thoughtful subscription and soft-delete strategy) instead. Learn more about [EVICT](/cloud/http-api/legacy/writing-http-legacy).
+</Warning>
+
+
+For example, the following snippet demonstrates how to `remove` a document from the `people` collection where the `name` field is set to the value of `John`:
+
+```curl cURL
+curl -X POST 'https://{app_id}.cloud.ditto.live/api/v4/store/write' \
+  --header 'Authorization: Bearer $API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "commands": [{
+        "method": "remove",
+        "collection": "people",
+        "query": "name==\'John\'"
+     }]
+}'
+```
+
+

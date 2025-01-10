@@ -1,0 +1,17 @@
+---
+title: Data Flow Management
+description:  In a mesh network, the efficiency and reliability of data flow depend on key principles of transport, synchronization, and routing.
+mode: wide
+---
+
+## Data Flow
+
+ To optimize data flow in such environments, follow these best practices:
+
+1. **Leverage Multiple Transports**: Use a mix of Wi-Fi, Bluetooth LE, and WebSocket based on device capabilities and network conditions. This ensures flexibility, resilience, and continuous connectivity, even in low-bandwidth environments.
+2. **Minimize Latency with Localized Syncing**: Employ LAN and peer-to-peer Wi-Fi for local syncing, reducing the need to send data over long distances unnecessarily. This helps conserve bandwidth and improve responsiveness.
+3. **Use Flood-Fill for Data Propagation**: Implement the flood-fill process, where data is transmitted via multiple hops across peers. This ensures data consistency across the mesh, particularly in offline-first scenarios, where peers might intermittently lose network connectivity.
+4. **Optimize with the Multiplexer**: Make use of an intelligent multiplexer that seamlessly switches between transports without duplicating data. This feature maximizes bandwidth efficiency and prevents data loss during transitions.
+5. **Ensure Conflict-Free Synchronization**: Design systems that resolve concurrency conflicts using version vectors and metadata databases. This guarantees eventual consistency among peers, especially when dealing with asynchronous updates.
+
+For more information, see <a href="/sync/concepts/mesh-networking-101" target="_blank">Mesh Networking</a>.
