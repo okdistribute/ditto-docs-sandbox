@@ -41,10 +41,7 @@ Once you've completed the prerequisite steps, build the UI for your task app wit
 
 
 <Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/HmERccoa_ipZc-r7iNemM_image.png)
-</Frame>
-<Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/TrV6i-cClcJw-RWHxEgnF_image.png)
+    <img src="/images/best-practices/kotlin/jetpack-compose/project-setup-1.png"/>
 </Frame>
 
     </Step>
@@ -77,11 +74,11 @@ dependencies {
     Right-click **res > drawable** and add a new **Vector Asset**:
 
     <Frame>
-        <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/PRGM3OK5g_ebLt4V9n8vI_image.png"/>
+        <img src="/images/best-practices/kotlin/jetpack-compose/vector-assets/add-vector-asset.png"/>
     </Frame>
     Click the "add" icon and select it for size \`24\`
     <Frame>
-        <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/i-Z9d1_YR-VRDsPZLBd7F_image.png"/>
+        <img src="/images/best-practices/kotlin/jetpack-compose/vector-assets/select-add-icon.png"/>
     </Frame>
     Repeat the previous steps for adding:
 
@@ -91,12 +88,12 @@ dependencies {
 <CardGroup>
     <Card>
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/F9z9hIwMeHBg5uZqhr_9s_image.png)
+        ![](/images/best-practices/kotlin/jetpack-compose/vector-assets/circle-filled.png)
     </Frame>
     </Card>
     <Card>
     <Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/cNlRVsujZZmXBFdM2mn5f_image.png)
+        ![](/images/best-practices/kotlin/jetpack-compose/vector-assets/circle-outline.png)
     </Frame>
     </Card>
 </CardGroup>
@@ -308,28 +305,48 @@ Now back in the `MainAcivity.kt` file look for `setContent{ }` and replace it co
 
 ```kotlin
 class MainActivity : ComponentActivity() {
+
+    val ditto = TasksApplication.ditto
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+      super.onCreate(savedInstanceState)
 
-        val ditto = TasksApplication.ditto
-        try {
-            ditto!!.startSync()
-        } catch (e: DittoError) {
-            Toast.makeText(
-                this@MainActivity,
-                """
-                    Uh oh! There was an error trying to start Ditto's sync feature.
-                    That's okay, it will still work as a local database.
-                    This is the error: ${e.localizedMessage}
-                """.trimIndent(), Toast.LENGTH_LONG
-            ).show()
-        }
+      try {
+          ditto!!.startSync()
+      } catch (e: DittoError) {
+          // 2.
+          Toast.makeText(
+              this@MainActivity,
+              """
+                  Uh oh! There was an error trying to start Ditto's sync feature.
+                  That's okay, it will still work as a local database.
+                  This is the error: ${e.localizedMessage}
+              """.trimIndent(), Toast.LENGTH_LONG
+          ).show()
+      }
 
-        // highlight-start
-        setContent {
-            Root()
+      setContent {
+          Root()
+      }
+
+      ditto!!.store["tasks"].find("isDeleted == true").evict()
+    }
+
+    fun checkPermissions() {
+        val missing = DittoSyncPermissions(this).missingPermissions()
+        if (missing.isNotEmpty()) {
+            this.requestPermissions(missing, 0)
         }
-        // highlight-end
+    }
+
+    override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Regardless of the outcome, tell Ditto that permissions maybe changed
+        ditto?.refreshPermissions()
     }
 }
 ```
@@ -355,7 +372,7 @@ In the last part of the tutorial, we referenced a class called `TasksListScreen`
         We've also included included a `@Preview` `TaskRowPreview` which allows you to quickly see the end result with some test data.
 
         <Frame>
-            <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/v57OWcZNi_tb4dfIfUKm2_image.png"/>
+            <img src="/images/best-practices/kotlin/jetpack-compose/app-ui-preview.png"/>
         </Frame>
         ```kotlin codeblocktabs
         @Composable
@@ -597,7 +614,7 @@ Our final screen will be the `EditScreen`. The `EditScreen` will be in charge
         We've also included a `@Preview` of the `EditForm`:
 
         <Frame>
-            <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/1nMruWypAkOAa2Z7RuTmM_image.png"/>
+            <img src="/images/best-practices/kotlin/jetpack-compose/edit-form-preview.png"/>
         </Frame>
 
         ```kotlin EditForm.kt

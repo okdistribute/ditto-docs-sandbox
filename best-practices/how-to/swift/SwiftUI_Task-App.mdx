@@ -39,7 +39,7 @@ This article provides reference information for the following:
     In the **Choose a template for your new project **modal, select **App** and then click **Next**.
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/SbPLGrogPpdylnJUx6hgB_screenshot-2024-07-23-at-110813-am.png)
+        ![](/images/best-practices/swift/swiftui/project-setup-1.png)
     </Frame>
 
     </Step>
@@ -60,7 +60,7 @@ This article provides reference information for the following:
     5. For **Life Cycle**, select **Swift UI App**. (iOS app only)
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/sVQ5cNKuYaOlsZ4Ki5iaa_screenshot-2024-07-23-at-110957-am.png)
+        ![](/images/best-practices/swift/swiftui/project-setup-2.png)
     </Frame>
     </Step>
     <Step>
@@ -69,7 +69,7 @@ This article provides reference information for the following:
     1. From the **PROJECT** list in the editor, click to select **ToDo**, and then under Supported Destinations click the + icon to add tvOS.
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/3IIq66-3Vh2xeOK4kJIpc_screenshot-2024-07-23-at-111907-am.png)
+        ![](/images/best-practices/swift/swiftui/project-setup-3.png)
 
     </Frame>
     </Step>
@@ -96,7 +96,7 @@ From the search bar in the **Add Package** modal that appears, enter the followi
 Click **Dependency Rule** > select **Up to Next Major Version** from the list > and then, in the field located on the right, type "`4.8.0`".
 
 <Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/rw3zHK4ue2_38k_l4r-0u_image.png)
+    ![](/images/best-practices/swift/swiftui/app-dependencies.png)
 </Frame>
     </Step>
     <Step>
@@ -107,7 +107,7 @@ From **Choose Package Products for DittoSwiftPackage**, click to select both **D
 Click **Add Package**.
 
 <Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/Hx83iQXJaV5aqI4Mz5Ebj_image.png)
+    ![](/images/best-practices/swift/swiftui/app-ui-preview.png)
 </Frame>
     </Step>
 </Steps>
@@ -251,7 +251,7 @@ struct TasksListScreen: View {
     We've also included a `TaskRow_Previews` that allows you to see the end result with some test data quickly.
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/Za6AxDqputILOUVkMmB2k_image.png)
+        ![](/images/best-practices/swift/swiftui/app-ui-preview.png)
     </Frame>
 
     ```swift TaskRow.swift
@@ -413,7 +413,7 @@ This will tell the list to iterate over all the `viewModel.tasks` and render a `
 3. We've also included a `TasksListScreen_Previews` so that you can add some test data and see the result in a live view.
 
 <Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/vb-n-VM9nnNxcu2o2ObeZ_image.png)
+    ![](/images/best-practices/swift/swiftui/app-ui-preview.png)
 </Frame>
 
 ```swift TasksListScreen.swift
@@ -475,7 +475,7 @@ struct TasksListScreen_Previews: PreviewProvider {
 
 
 
-Notice that we *DO NOT HAVE TO* manipulate the `tasks` value directly. Executing the `UPDATE` query on `dittoStore` will automatically fire the `storeObserver` to update the `tasks`. You can always trust  `DittoStoreObserver` to immediately update the `@Published var tasks` with changes. There is no reason to poll or force reload. Ditto will automatically handle the state changes and SwiftUI will pick these changes up automatically.
+Notice that we *DO NOT HAVE TO* manipulate the `tasks` value directly. Executing the `UPDATE` query on `dittoStore` will automatically fire the `storeObserver` to update the `@Published var tasks` with changes. You can always trust  `DittoStoreObserver` to immediately update the `@Published var tasks` with changes. There is no reason to poll or force reload. Ditto will automatically handle the state changes and SwiftUI will pick these changes up automatically.
     </Step>
     <Step title ="Editing Tasks">
     Our final screen will be the **EditScreen** and its ViewModel. The **EditScreen** will be in charge of 3 functions:
@@ -488,7 +488,7 @@ Notice that we *DO NOT HAVE TO* manipulate the `tasks` value directly. Executing
     <Step title ="Creating the EditScreenViewModel">
     Like before, we need to create an `EditScreenViewModel` for the `EditScreen`. Since we've already gone over the concepts of MVVM, we will go a bit faster.
 
-    1. The `EditScreenViewModel` needs to be initialized with `ditto` and an optional `task: Task?` value. If the task value is `nil` we need to set the `canDelete` variable to `false`. This means that the user is attempting *create* a new `Task`. We will use this value to show a delete `Button` in the `EditScreen` later. We will store the `_id: String?` from the `task` parameter and use it later in the `save()` function.
+    1. The `EditScreenViewModel` needs to be initialized with `ditto` and an optional `task: Task?` value. If the task value is `nil`, we need to set the `canDelete` variable to `false`. This means that the user is attempting *create* a new `Task`. We will use this value to show a delete `Button` in the `EditScreen` later. We will store the `_id: String?` from the `task` parameter and use it later in the `save()` function.
     2. We need two `@Published` variables to bind to a `TextField` and `Toggle` SwiftUI views for the task's `isCompleted` and `body` values. If the `task == nil`, we will set some default values like an empty string and a false `isCompleted` value.
     3. When the user wants to click a save `Button`, we need to `save()` and handle either an `.upsert` or `.update` function appropriately. If the local `_id` variable is `nil`, we assume the user is attempting to create a `Task` and will call ditto's `.upsert` function. Otherwise, we will attempt to `.update` an existing task with a known `_id`.
     4. Finally if a delete button is clicked, we attempt to find the document and call `.remove`
@@ -565,7 +565,7 @@ Notice that we *DO NOT HAVE TO* manipulate the `tasks` value directly. Executing
     4. A `Button` for deleting a task
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/qxnw8uO3LAHZsyqJjXLdh_image.png)
+        ![](/images/best-practices/swift/swiftui/app-ui-preview.png)
     </Frame>
 
     1. In the `EditScreen` we need to add a `@Environment(\.presentationMode) private var presentationMode`. In SwiftUI views house some environment variables. Because the `TasksListScreen` presened the `EditScreen` as a `.sheet`, we need a way to dismiss the current screen if the user taps any of the buttons. To learn more about `Environment`, [read Apple's official documentation.](https://developer.apple.com/documentation/swiftui/environment). To dismiss the current screen we can call `self.presentationMode.wrappedValue.dismiss()`

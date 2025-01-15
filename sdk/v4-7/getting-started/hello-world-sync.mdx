@@ -369,20 +369,20 @@ To complete your understanding, the following graphic illustrates how sync subsc
 The associated query specifying the data you want to watch then propagates to each end-user device connected within the mesh network:
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/B6un7DS5lflzYqDal7w-L_data-flow-sync-query.png"/>
+  <img src="/images/v4.7/sync-query-flow.png"/>
 </Frame>
 
 When the data you've subscribed to changes on a remote peer — whether through insertions, updates, or deletions — the remote peer automatically syncs these delta changes to your local Ditto store over the mesh network:
 
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/NWdlCq9SOTHs-qsz1uE-x_data-flow-sync-query3.png"/>
+  <img src="/images/v4.7/sync-query-flow-detail.png"/>
 </Frame>
 
 Combining store observers with your sync subscriptions ensures that you receive updates from remote stores, enabling you to quickly respond in your app. (See [Seetting Up Store Observers]())
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/gLL2rTiuac9pOV7ApCyFW_data-flow-sync-observer2.png"/>
+  <img src="/images/v4.7/sync-observer-flow.png"/>
 </Frame>
 
 <Info>

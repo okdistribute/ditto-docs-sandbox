@@ -83,10 +83,10 @@ Once you've installed the latest version of Xcode and Visual Studio:
 
 <Steps>
     <Step>
-    Open Visual Studio and click **File > New Project** under **IOS** select **App** and then **Single View App**. Make sure language is **C#**
+    Open Visual Studio and click **File > New Project** under **IOS** select **App** and then **Single View App**. Make sure language is **C#**
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/jgivfasGJfP2yxz_TyULd_image.png)
+        ![](/images/best-practices/xamarin/nuget-package-manager.png)
     </Frame>
     </Step>
     <Step>
@@ -97,7 +97,7 @@ Once you've installed the latest version of Xcode and Visual Studio:
     - Target: iOS 12.0
 
     <Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/uSKUZuYv-HqtgktihvWYH_image.png)
+    ![](/images/best-practices/xamarin/nuget-search-ditto.png)
     </Frame>
     </Step>
     <Step>
@@ -110,10 +110,10 @@ Once you've installed the latest version of Xcode and Visual Studio:
 
 <Steps>
     <Step>
-    Follow the instructions on the [Installation page for C#](https://legacydocs.ditto.live/csharp/installation) to use Package Manager or .NET CLI.
+    Follow the instructions on the [Installation page for C#](https://legacydocs.ditto.live/csharp/installation) to use Package Manager or .NET CLI.
     </Step>
     <Step>
-    Now open `Tasks.csproj.`
+    Now open `Tasks.csproj.`
     </Step>
 
 </Steps>
@@ -144,11 +144,11 @@ Each app created on the portal has a unique `appID` which can be seen on your 
 
 For Ditto to fully use all the network transports like Bluetooth Low Energy, Local Area Network, Apple Wireless Direct, the app will need to ask the user for permissions. These permission prompts need to be in the `Info.plist` file of your project.
 
-Follow the instructions on the [iOS Installation page](https://legacydocs.ditto.live/ios/installation#platform-permissions).
+Follow the instructions on the [iOS Installation page](https://legacydocs.ditto.live/ios/installation#platform-permissions).
 
 ### Adding **ditto** to **AppDelegate.cs**
 
-When Visual Studio generated your project, there should be a file called "AppDelegate.cs." We will need an instance of Ditto throughout this tutorial and the app's lifecycle.
+When Visual Studio generated your project, there should be a file called "AppDelegate.cs." We will need an instance of Ditto throughout this tutorial and the app's lifecycle.
 
 <Steps>
     <Step>
@@ -276,7 +276,7 @@ var tasksCollection = ditto.Store["tasks"]
 
 <Steps>
     <Step>
-        Create a new cs file called "Task.cs" in your project:
+        Create a new cs file called "Task.cs" in your project:
         ```bash
          Import Ditto with `using DittoSDK`.
         ```
@@ -320,7 +320,7 @@ Once we set up our user interface, you'll notice that reading these values becom
 
 ### Creating the User Interface
 
-When we generated the project, Visual Studio created a default Main.StoryBoard file.
+When we generated the project, Visual Studio created a default Main.StoryBoard file.
 
 <Steps>
     <Step>
@@ -342,14 +342,14 @@ When we generated the project, Visual Studio created a default Main.StoryBoard�
     Select the Root View Controller top bar. Then go to the Inspectors panel and select the **identity** inspector. We will create a custom class for this View Controller. In the Class section type "TasksTableViewController".
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/NIQMjwfObn8Inm6ShzirZ_image.png)
+        ![](/images/best-practices/xamarin/task-app-running.png)
     </Frame>
     </Step>
     <Step>
     Next, select the **Prototype cells** and give it an identifier of "taskCell".
 
     <Frame>
-        ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/3PXgTQCyYEiyHCww8bXoR_image.png)
+        ![](/images/best-practices/xamarin/task-app-sync-demo.gif)
     </Frame>
     </Step>
     <Step>
@@ -388,7 +388,7 @@ In the last part of the tutorial we setup the user interface using the Xcode int
 
 <Steps>
     <Step>
-    First, we need to add some variables that will be created on viewDidLoad of the TasksTableViewController so adjust the class to match this code:
+    First, we need to add some variables that will be created on viewDidLoad of the TasksTableViewController so adjust the class to match this code:
 
 ```csharp TasksTableViewController.cs
 using System;
@@ -498,7 +498,7 @@ namespace Tasks
 ```
     </Step>
     <Step>
-Let's break down what this code does. First, we create the variables needed and then initialize them in `ViewWillAppear()`.
+Let's break down what this code does. First, we create the variables needed and then initialize them in ViewWillAppear().
 
 ```csharp TasksTableViewController.cs
 // These hold references to Ditto for easy access
@@ -538,38 +538,8 @@ public override void ViewWillAppear(bool animated)
 ```
     </Step>
     <Step>
-After setting up the variables and starting Ditto, we then use Ditto's key API to observe changes to the database by creating a live-query in the `setupTaskList()` function. This allows us to set the initial state of the UITableView after the query is immediately run and then subsequently get callbacks for any new data changes that occur locally or that were synced from other devices:
+After setting up the variables and starting Ditto, we then use Ditto's key API to observe changes to the database by creating a live-query in the setupTaskList() function. This allows us to set the initial state of the UITableView after the query is immediately run and then subsequently get callbacks for any new data changes that occur locally or that were synced from other devices:
 
-
-
-```csharp TasksTableViewController.cs
-public override void ViewDidLoad()
-{
-    base.ViewDidLoad();
-    setupTaskList();
-}
-
-// Sets up Live Query for syncing
-public void setupTaskList()
-{
-    liveQuery = ditto.Store["tasks"].Find("!isDeleted").ObserveLocal((docs, _event) =>
-    {
-        tasks = docs.ConvertAll(d => new Task(d));
-
-        // We will implement this later
-        tasksTableSource.updateTasks(tasks);
-
-        InvokeOnMainThread(() =>
-        {
-            TableView.ReloadData();
-        });
-
-    });
-}
-```
-    </Step>
-    <Step>
-After setting up the variables and starting Ditto, we then use Ditto's key API to observe changes to the database by creating a live-query in the `setupTaskList()` function. This allows us to set the initial state of the UITableView after the query is immediately run and then subsequently get callbacks for any new data changes that occur locally or that were synced from other devices:
 
 
 ```csharp TasksTableViewController.cs
@@ -603,7 +573,7 @@ This is a best-practice when using Ditto, since it allows your UI to simply reac
     </Step>
     <Step>
 
-Look in the TasksTableViewController.design.cs file and you should see `[Action ("didClickAddTask:")] partial void didClickAddTask (UIKit.UIBarButtonItem sender);`. This is the button we created earlier in Xcode. Now we need to add an action to it.
+Look in the TasksTableViewController.design.cs file and you should see [Action ("didClickAddTask:")] partial void didClickAddTask (UIKit.UIBarButtonItem sender);. This is the button we created earlier in Xcode. Now we need to add an action to it.
 
 
 ```csharp TasksTableViewController.cs
@@ -644,13 +614,13 @@ public void addTask(string text)
 ```
 
 <Info>
-    When we Upsert the new task into the ditto collection then the live query that is observing the collection will be triggered.
+    When we Upsert the new task into the ditto collection then the live query that is observing the collection will be triggered.
 </Info>
     </Step>
 </Steps>
 
 
-### Creating the **TaskTableSource** Class
+### Creating the TaskTableSource Class
 
 <Steps>
     <Step>
@@ -693,45 +663,54 @@ namespace Tasks
     Now we need to get our instance of Ditto and setup the other class variables we will be using.
 
 ```csharp TaskTableSource.cs
-public class TaskTableSource : UITableViewSource
+using System;
+using System.Collections.Generic;
+using Foundation;
+using UIKit;
+using DittoSDK;
+
+namespace Tasks
 {
-    Task[] tasks;
-    NSString cellIdentifier = new NSString("taskCell");
-
-    private DittoCollection collection
+    public class TasksTableSource : UITableViewSource
     {
-        get
+        Task[] tasks;
+        NSString cellIdentifier = new NSString("taskCell");
+
+        private DittoCollection collection
         {
-            return this.ditto.Store.Collection("tasks");
+            get
+            {
+                return this.ditto.Store.Collection("tasks");
+            }
         }
-    }
 
-    private Ditto ditto
-    {
-        get
+        private Ditto ditto
         {
-            var appDelegate = (AppDelegate)UIApplication.SharedApplication.Delegate;
-            return appDelegate.ditto;
+            get
+            {
+                var appDelegate = (AppDelegate)UIApplication.SharedApplication.Delegate;
+                return appDelegate.ditto;
+            }
         }
-    }
-    public TaskTableSource()
-    {
-    }
+        public TaskTableSource()
+        {
+        }
 
-    public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
-    {
-        throw new NotImplementedException();
-    }
+        public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+        {
+            throw new NotImplementedException();
+        }
 
-    public override nint RowsInSection(UITableView tableview, nint section)
-    {
-        throw new NotImplementedException();
+        public override nint RowsInSection(UITableView tableview, nint section)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 ```
     </Step>
     <Step>
-Implement is the `UITableViewSource` inherited method  `RowsInSection`  by checking whether the tasks array is empty. If its not empty then return the number of tasks in the tasks array.
+Implement is the `UITableViewSource` inherited method `RowsInSection` by checking whether the tasks array is empty. If its not empty then return the number of tasks in the tasks array.
 
 
 ```csharp TaskTableSource.cs
@@ -747,7 +726,7 @@ public override nint RowsInSection(UITableView tableview, nint section)
 
     </Step>
     <Step>
-    Implement is the `UITableViewSource` inherited method  `GetCell` by doing the following:
+    Implement is the `UITableViewSource` inherited method `GetCell` by doing the following:
 
 1. Get the cell using the cell identifier.
 2. Within our cell we want a text label and a cell accessory that will be used to check whether the task has been completed or not. We will assign the name of the task to the TextLabel.Text.
@@ -804,7 +783,7 @@ public override UITableViewCell GetCell(UITableView tableView, NSIndexPath index
 ```
     </Step>
     <Step>
-The next thing to add to our `TasksTableSource` is the `updateTasks` method we called earlier.
+The next thing to add to our `TasksTableSource` is the `updateTasks` method we called earlier.
 
 This method will take a list of Tasks and then assign it to our Tasks array that is used for displaying the tasks.
 

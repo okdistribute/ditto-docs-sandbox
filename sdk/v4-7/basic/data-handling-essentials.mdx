@@ -49,7 +49,7 @@ The following snippet provides an example of a basic JSON-encoded document objec
 A single document consists of one or more fields* *that self‑describe the data it encodes; each field is associated with a value:
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/uIoehA_cK_sRrfBsdtrNZ_image.png"/>
+  <img src="/images/v4.7/document-field-structure.png"/>
 </Frame>
 
 
@@ -61,14 +61,14 @@ A single document consists of one or more fields* *that self‑describe the data
 A grouping of related documents is referred to as a *collection*. Think of a collection* *as a *table* in a relational database table* *— but with greater flexibility in terms of the data it can hold — and* *the documents in a collection like table *rows:*
 
 <Frame>
-  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/fcqm-eUpUunzxjkGDX_4y_document-demo-table.png)
+  ![](/images/v4.7/document-collection-table.png)
 </Frame>
 In the following structure, the `location` field property is logically grouped with details about the car, such as its `make`, `year`, and `color`.&
 
 It contains nested fields. also referred to as *subfields*,* *representing both the `coordinates` and the `address` where the car is located:
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/nE76-8SxgOLCjFhcWaVqc_embedded-object.png"/>
+  <img src="/images/v4.7/embedded-object.png"/>
 </Frame>
 
 ## Dedicated Query Language
@@ -113,7 +113,7 @@ As illustrated on the right, each data type includes two components:
 The default data type is `REGISTER` ; you'll use other data types in specific scenarios where appropriate.
 
 <Frame>
-![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/2Q1Om-kNAfoliRa5LCZnW_dql-scalar-ov2.png)
+![](/images/v4.7/dql-scalar-types.png)
 </Frame>
   </Step>
 </Steps>
@@ -226,7 +226,7 @@ The following graphic and corresponding table aim to demonstrate the distinct ca
 </Info>
 
 <Frame>
-  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/atukhQqE57CpdrzzUJE0__image.png)
+  ![](/images/v4.7/data-types-overview.png)
 </Frame>
 
 | **Item** | **Type**         | **Description**                                                                                                                                                                                                                                                                     |
@@ -296,7 +296,7 @@ With these one-time operations, you perform a single action, such as modifying o
 Once invoked, you must wait for the operation to complete before continuing to the next action in your code.
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/HafO31uVbYTqjFexlHKY0_data-flow-local-crud.png"/>
+  <img src="/images/v4.7/data-flow-local-crud.png"/>
 </Frame>
 For example, the following single execution query, once called, uses the `execute` API method and a local `SELECT` query to search within the local Small Peer store for data in a dataset named `cars`:&
 
@@ -656,7 +656,7 @@ Store observers are useful when you want to monitor changes from your local Ditt
 
 
 <Frame>
-  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/pLvheYFA77aH2SBxNQhkY_image.png)
+  ![](/images/v4.7/store-observer-flow.png)
 </Frame>
 
 
@@ -675,14 +675,14 @@ First, you initiate a subscription request from your local Ditto store to the re
 Then, when the data you're subscribed to changes on the remote peer, such as updates, deletions, or insertions, the remote peer automatically syncs the delta changes to your local Ditto store over the mesh.
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/2zd6mcPVLIK19hsHaNGRx_data-flow.png"/>
+  <img src="/images/v4.7/data-flow.png"/>
 </Frame>
 
 
 Combining store observers with your sync subscriptions ensures that you receive updates from remote stores, enabling you to quickly respond in your app:
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/sJkqm6qpAG9T1i5ZQ_02f_data-flow.png"/>
+  <img src="/images/v4.7/data-flow-sync.png"/>
 </Frame>
 
 

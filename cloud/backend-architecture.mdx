@@ -50,7 +50,7 @@ The key characteristics of the Big Peer include:
 As illustrated in the following graphic, the Big Peer is a central point of coordination and data storage in the cluster; Small Peers can sync with the Big Peer to propagate changes across disconnected meshes, and even back to the centralized server — your enterprise cloud or datacenter:
 
 <Frame>
-  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/mL3Vq_GHHBVAtrIthXFCH_bigpeerbackend.png)
+  ![](/images/cloud/backend-architecture/bigpeer-backend.png)
 </Frame>
 | **Component**        | **Description**                                                                                                                                                                                                                                                       |
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -61,7 +61,7 @@ As illustrated in the following graphic, the Big Peer is a central point of coor
 The following graphic provides a high-level overview of the orchestration between the subscription server, transaction log, and distributed database:
 
 <Frame>
-  <img src="https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/c2VeTVzJbY9QLFmd8rnRN_bigpeer-nodes-log-ov.png"/>
+  <img src="/images/cloud/backend-architecture/bigpeer-nodes-log.png"/>
 </Frame>
 
 ## Distributed Database
@@ -173,7 +173,7 @@ We can transition from any configuration to any other, and we do this by slicing
 The graphic below illustrates how this looks.
 
 <Frame>
-  ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/KdBwjW5_hKBhjPyi3qCov_initial-naive-random.png)
+  ![](/images/cloud/backend-architecture/initial-naive-random.png)
 </Frame>
 
 As the image shows, Partition 4 (P4) is made up of slices from P1, P2, and P3, these three slices we call Intervals. They represent, in this case, two disjoint ranges of the keyspace that P4 owns. A replica of P4 has two intervals, whereas P1 has a contiguous range and a single interval.

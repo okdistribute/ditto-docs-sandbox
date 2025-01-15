@@ -490,7 +490,7 @@ Did you follow the [tutorial]()? The tutorial is your best guide for implementin
 The provider name given to the Ditto Client must match a provider name in the Portal (e.g., `my-auth`).
 
 <Frame>
-    ![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/02NhMqZfE5MbFjd8_BHIJ_image.png)
+    ![](/images/support/troubleshooting/error-message-1.png)
 </Frame>
 
 #### Is your AuthClient becoming garbage collected?
@@ -503,10 +503,10 @@ For example:
 namespace Sync {
     public class DittoClient {
         private Ditto ditto;
-+       private DittoAuthDelegate dittoAuthDelegate;
+        private DittoAuthDelegate dittoAuthDelegate;
 
         public DittoClient(string appId, string id, string jwt) {
-+          dittoAuthDelegate = new DittoAuthDelegate(id, jwt);
+           dittoAuthDelegate = new DittoAuthDelegate(id, jwt);
            ditto = new Ditto(identity);
         }
        ...
@@ -653,7 +653,7 @@ conditions change. Your app could create a large accumulation of publishers that
 infinitely grow. Every liveQuery and subscription in ditto must be explicitly
 stopped using the `stop` or `cancel` API. See [snycing data](https://docs.ditto.live/support/troubleshooting) for more information.
 
-## Debugging Blocked Transactions
+### Debugging Blocked Transactions
 
 <Info>
 This section only discusses blocked transactions on **native** platforms (e.g. iOS, Android, Windows, Linux). Ditto in web browsers operates sufficiently differently and isn't covered here.
@@ -698,7 +698,7 @@ If **INFO** level is used, then **INFO**, **WARN**, and **ERROR** messages will 
 If a write transaction is blocked, the device logs will look something like the following. In this example we can see a write transaction was blocked for a total of 150s (or 2.5 minutes).
 
 <Frame>
-![](https://archbee-image-uploads.s3.amazonaws.com/qoRkNxW5fJ81r_NqVpc8C/Nj9w-Qx0FQl4oVKWbPFnR_image.png)
+![](/images/support/troubleshooting/error-message-2.png)
 </Frame>
 
 As time progressed, Ditto complained more and more loudly (starting with **DEBUG** logs before eventually logging at **ERROR** level). Eventually the existing transaction finished and blocked transaction was was able to proceed.
