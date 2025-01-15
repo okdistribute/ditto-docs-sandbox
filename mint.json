@@ -44,6 +44,11 @@
       "mode": "hide"
     }
   },
+  "analytics": {
+    "segment": {
+      "key": "HC6ocxnqvMdcOthlOTGTCySKwSUF9oV1"
+    }
+  },
   "tabs": [
     {
       "name": "Home",
