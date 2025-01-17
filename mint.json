@@ -107,17 +107,9 @@
           "icon": "download",
           "iconType": "solid",
           "pages": [
-            "sdk/latest/install-guides",
+            "sdk/latest/install-guides/install-guides",
             "sdk/latest/install-guides/swift",
-            {
-              "group": "Kotlin",
-              "icon": "code",
-              "iconType": "solid",
-              "version": "v4.9",
-              "pages": [
-                "sdk/latest/install-guides/kotlin"
-              ]
-            },
+            "sdk/latest/install-guides/kotlin",
             "sdk/latest/install-guides/js",
             "sdk/latest/install-guides/nodejs",
             "sdk/latest/install-guides/react-native",
@@ -303,17 +295,9 @@
           "icon": "download",
           "iconType": "solid",
           "pages": [
-            "sdk/v4-8/install-guides",
+            "sdk/v4-8/install-guides/install-guides",
             "sdk/v4-8/install-guides/swift",
-            {
-              "group": "Kotlin",
-              "icon": "code",
-              "iconType": "solid",
-              "version": "v4.8",
-              "pages": [
-                "sdk/v4-8/install-guides/kotlin"
-              ]
-            },
+            "sdk/v4-8/install-guides/kotlin",
             "sdk/v4-8/install-guides/js",
             "sdk/v4-8/install-guides/nodejs",
             "sdk/v4-8/install-guides/react-native",
@@ -502,7 +486,7 @@
           "icon": "download",
           "iconType": "solid",
           "pages": [
-            "sdk/v4-7/install-guides",
+            "sdk/v4-7/install-guides/install-guides",
             "sdk/v4-7/install-guides/swift",
             "sdk/v4-7/install-guides/kotlin",
             "sdk/v4-7/install-guides/js",
@@ -980,7 +964,119 @@
   "redirects": [
     {
       "source": "/ZILK-install-guides",
-      "destination": "/install-guides"
+      "destination": "/sdk/latest/install-guides/install-guides"
+    },
+    {
+      "source": "/about-ditto",
+      "destination": "/home/about-ditto"
+    },
+    {
+      "source": "/dql",
+      "destination": "/dql/dql"
+    },
+    {
+      "source": "/cloud",
+      "destination": "/cloud/overview"
+    },
+    {
+      "source": "/best-practices",
+      "destination": "/best-practices/best-practices"
+    },
+    {
+      "source": "/support",
+      "destination": "/support/contact-us"
+    },
+    {
+      "source": "/install-guides/:slug*",
+      "destination": "/sdk/latest/install-guides/:slug*"
+    },
+    {
+      "source": "/crud/:slug*",
+      "destination": "/sdk/latest/crud/:slug*"
+    },
+    {
+      "source": "/sync/:slug*",
+      "destination": "/sdk/latest/sync/:slug*"
+    },
+    {
+      "source": "/auth-and-authorization/:slug*",
+      "destination": "/sdk/latest/auth-and-authorization/:slug*"
+    },
+    {
+      "source": "/document-model/:slug*",
+      "destination": "/sdk/latest/document-model/:slug*"
+    },
+    {
+      "source": "/data-types/:slug*",
+      "destination": "/sdk/latest/data-types/:slug*"
+    },
+    {
+      "source": "/api-references",
+      "destination": "/sdk/latest/api-reference/api-reference"
+    },
+    {
+      "source": "/release-notes",
+      "destination": "/sdk/latest/release-notes/release-notes"
+    },
+    {
+      "source": "/release-notes/:slug*",
+      "destination": "/sdk/latest/release-notes/:slug*"
+    },
+    {
+      "source": "/compatibility",
+      "destination": "/sdk/latest/compatibility/compatibility"
+    },
+    {
+      "source": "/compatibility/:slug*",
+      "destination": "/sdk/latest/compatibility/:slug*"
+    },
+    {
+      "source": "/v4-8/api-references",
+      "destination": "/sdk/v4-8/api-reference/api-reference"
+    },
+    {
+      "source": "/v4-8/release-notes",
+      "destination": "/sdk/v4-8/release-notes/release-notes"
+    },
+    {
+      "source": "/v4-8/compatibility",
+      "destination": "/sdk/v4-8/compatibility/compatibility"
+    },
+    {
+      "source": "/v4-8/install-guides",
+      "destination": "/sdk/v4-8/install-guides/install-guides"
+    },
+    {
+      "source": "/v4-7/api-references",
+      "destination": "/sdk/v4-7/api-reference/api-reference"
+    },
+    {
+      "source": "/v4-7/release-notes",
+      "destination": "/sdk/v4-7/release-notes/release-notes"
+    },
+    {
+      "source": "/v4-7/compatibility",
+      "destination": "/sdk/v4-7/compatibility/compatibility"
+    },
+    {
+      "source": "/v4-7/install-guides",
+      "destination": "/sdk/v4-7/install-guides/install-guides"
+    },
+    {
+      "source": "/v4-8/:slug*",
+      "destination": "/sdk/v4-8/:slug*"
+    },
+    {
+      "source": "/v4-7/:slug*",
+      "destination": "/sdk/v4-7/:slug*"
+    },
+    {
+      "source": "/v4-6/:slug*",
+      "destination": "/"
+    },
+    {
+      "source": "/v4-5/:slug*",
+      "destination": "/"
     }
   ]
 }
