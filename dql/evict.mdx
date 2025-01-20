@@ -38,7 +38,13 @@ To remove a specific field from a document, use an UPDATE statement to *tombston
 
 ## Removing Data from Big Peer
 
-`EVICT` is not currently available for the Big Peer, although it's in development. To learn more about removing data from your Big Peer instance, see [Writing: HTTP (Legacy)](/cloud/http-api/legacy/writing-http-legacy#remove) .
+`EVICT` can be enabled for Big Peer by request. Please [contact us](/support/contact-us) if you'd like to use this feature.
+
+Note that any data evicted from Big Peer will reappear if it exists in any Small Peer devices connected to Big Peer.
+
+To permanently remove the data, you must first ensure the data is no longer subscribed to, and is already evicted, by any connected Small Peers. See [Developing an Eviction Strategy](#developing-an-eviction-strategy) for more.
+
+Alternatively, data can be tombstoned from Big Peer using the legacy API. See: [Writing: HTTP (Legacy)](/cloud/http-api/legacy/writing-http-legacy#remove).
 
 ## Developing an Eviction Strategy
 
