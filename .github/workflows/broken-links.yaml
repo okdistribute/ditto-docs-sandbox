@@ -1,0 +1,25 @@
+name: Lint Docs Links
+
+on:
+  pull_request:
+    branches:
+      - main # Adjust to the branch your PRs target
+
+jobs:
+  lint-links:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint broken links
+        run: npx mintlify broken-links
