@@ -3,7 +3,7 @@ name: Lint Docs Links
 on:
   pull_request:
     branches:
-      - main # Adjust to the branch your PRs target
+      - main
 
 jobs:
   lint-links:
