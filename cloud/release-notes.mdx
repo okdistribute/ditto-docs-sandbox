@@ -4,405 +4,398 @@ icon: bullhorn
 iconType: solid
 ---
 
-<Update label="v1.39.0 (w/c 9th September 2024)">
-|||
-|--|--|
-|`Fixed`| Fixed a rare issue decompressing attachments during replication |
+<Update label="v1.40.3" description="w/c Jan 13, 2025">
+
+    __Big Peer 1.40 introduces an overhaul of the underlying data structures of Big Peer's store, resulting in
+    substantial improvement to performance and reliability, while unlocking new capabilities for upcoming features.__
+
+    In addition, 1.40 contains a number new improvements and fixes.
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * A new data architecture for Big Peer, improving reliability, performance and unlocking future capabilities
+    * Big Peer evictions are now available as a preview feature. Contact us to enable this feature for your instances
+    * Synchronization protocol enhanced to reduce the amount of redundant data sent from small peers to Big Peers
+    * Bump the minimum supported CRDT version for Big Peer apps to V6
+    * Several improvements to Big Peer reliability and deployment efficacy
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Addresses a rare issue decompressing attachments during replication
+    * Performance optimisations made to document deduplication on the subserver
+    * Device name no longer incorrectly defaults to "ditto" in device table, when a named device first starts syncing
+    * Fixed an issue where HTTP API calls might incorrectly fail when passing a transaction ID as part of the call
+    * Fixes a potential deadlock condition in Big Peer
+    * Align Kafka producer and consumer message sizes to prevent potential backpressure scenarios
+    * Network policy improvements to enable new feature development
+</Update>
+
+<Update label="v1.39.2" description="w/c Oct 14, 2024">
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Networking policy enhancements to support architectural improvements
+</Update>
+
+<Update label="v1.39.0 " description="w/c Sep 5, 2024">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Addresses a rare issue decompressing attachments during replication
 </Update>
 
 <Update label="v1.38.0">
-|||
-|--|--|
-|`Improved`| Improved the API Key validation of the HTTP API to now automatically retry a number of times in case of transient issues, before throwing an error to the caller |
-|`Fixed`| Fixed an issue where HTTP API calls might incorrectly fail when passing a transaction ID as part of the call |
-|`Fixed`| Fixed a failure when executing remote queries that contained non-ASCII characters in the SYNC CONTEXT clause |
-|`Fixed`| Fixed an issue that prevented attachment replication when a large number of documents were also being simultaneously replicated |
-|`Fixed`| Fixed a number of issues related to data convergence during replication in rare scenarios |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improved the API Key validation of the HTTP API to now automatically retry a number of times in case of transient issues, before throwing an error to the caller
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * An issue where HTTP API calls might incorrectly fail when passing a transaction ID as part of the call
+    * A failure when executing remote queries that contained non-ASCII characters in the SYNC CONTEXT clause
+    * An issue that prevented attachment replication when a large number of documents were also being simultaneously replicated
+    * A number of issues related to data convergence during replication in rare scenarios
 </Update>
 
 <Update label="v1.37.0">
-|||
-|--|--|
-|`Improved`| Improved the resource utilization of the HTTP API when executing DQL SELECT queries. |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improved the API Key validation of the HTTP API to now automatically retry a number of times in case of transient issues, before throwing an error to the caller
 </Update>
 
 <Update label="v1.36.0">
-|||
-|--|--|
-|`Added`| DQL INSERT statements run via the HTTP API now support inline object literals. |
-|`Added`| The /api/v4/attachments/{attachment_id} HTTP endpoint now supports HEAD requests to check for attachment's existence. |
-|`Improved`| Improved the performance of subscriptions with limits. |
-|`Improved`| Improved the performance of replication during garbage collection. |
-|`Fixed`| Fixed a failure in replication in cases where there are frequent subscription changes and on-device evictions. |
-|`Fixed`| Fixed an issue which could cause a crash during document merges when using older versions of the SDK. |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * DQL INSERT statements run via the HTTP API now support inline object literals.
+    * The /api/v4/attachments/{attachment_id} HTTP endpoint now supports HEAD requests to check for attachment's existence.
+    * Improved the performance of subscriptions with limits.
+    * Improved the performance of replication during garbage collection.
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fixed a failure in replication in cases where there are frequent subscription changes and on-device evictions.
+    * Fixed an issue which could cause a crash during document merges when using older versions of the SDK.
 </Update>
 
-
 <Update label="v1.35.0">
-|||
-|--|--|
-|`Improved`| Improved query performance for DQL queries that access attachments, through the HTTP data API. |
-|`Improved`| Improved handling of slow WebHook targets by enforcing a 30-second timeout to outgoing WebHook calls, this prevents lockups and other unexpected behavior when using WebHook connections. |
-|`Improved`| Improved replication to avoid resending metadata, resulting in a reduction in overall replication traffic and processing when sync subscriptions change. |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improved query performance for DQL queries that access attachments, through the HTTP data API.
+    * Improved handling of slow WebHook targets by enforcing a 30-second timeout to outgoing WebHook calls, this prevents lockups and other unexpected behavior when using WebHook connections.
+    * Improved replication to avoid resending metadata, resulting in a reduction in overall replication traffic and processing when sync subscriptions change.
 </Update>
 
 <Update label="v1.34.0">
-|||
-|--|--|
-|`Added`| Added support for inline object and array definition to DQL through the HTTP API. |
-|`Added`| Added object_length() and deserialize_json() functions to DQL through the HTTP API. |
-|`Improved`| Improved the error message for cases where the query result is too large. |
-|`Improved`| Removed the /{collection}/distinct_values HTTP endpoint. |
-|`Improved`| Removed support for X-DITTO-CLIENT-ID, X-DITTO-ACTOR-ID, X-HYDRA-CLIENT-ID from the HTTP API. |
-|`Fixed`| Fixed a hang when replicating documents or attachments larger than 64KB. |
-|`Fixed`| Fixed the default HTTP API response format to correctly be application/json if not specified in the request. |
-|`Fixed`| Fixed a rare edge case that could slow down sync when using very small documents. |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Added support for inline object and array definition to DQL through the HTTP API.
+    * Added object_length() and deserialize_json() functions to DQL through the HTTP API.
+    * Improved the error message for cases where the query result is too large.
+    * Removed the /{collection}/distinct_values HTTP endpoint.
+    * Removed support for X-DITTO-CLIENT-ID, X-DITTO-ACTOR-ID, X-HYDRA-CLIENT-ID from the HTTP API.
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fixed a hang when replicating documents or attachments larger than 64KB.
+    * Fixed the default HTTP API response format to correctly be application/json if not specified in the request.
+    * Fixed a rare edge case that could slow down sync when using very small documents.
 </Update>
 
-
 <Update label="v1.33.0">
-|||
-|--|--|
-|`Synchronized version bump release`| No changes. |
+    * Synchronized version bump release – No changes.
 </Update>
 
 <Update label="v1.32.0">
-|||
-|--|--|
-|`Fixed`| Potential crash as a result of a DQL query containing a multi-byte character. (#12324) |
-|`Fixed`| A hang in the transports multiplexer when handling large messages spanning multiple chunks larger than 64KB. (#12428) |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Potential crash as a result of a DQL query containing a multi-byte character. (#12324)
+    * A hang in the transports multiplexer when handling large messages spanning multiple chunks larger than 64KB. (#12428)
 </Update>
 
 <Update label="v1.31.0">
-|||
-|--|--|
-|`Improved`| Attachments now sync independently of documents, improving rainbow connection efficiency (#11156) |
-|`Fixed`| Sync crashes due to missing update files and other unexpected conditions are now handled recoverably (#11952) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Attachments now sync independently of documents, improving rainbow connection efficiency (#11156)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Sync crashes due to missing update files and other unexpected conditions are now handled recoverably (#11952)
 </Update>
 
-
 <Update label="v1.30.0">
-|||
-|--|--|
-|`Fixed`| Resolved legacy query language casting counters and maps with tombstones to the wrong boolean value (#10887) |
-|`Fixed`| Resolved Bytes and Arrays not being always comparable in the legacy query language. (#10887) |
-|`Improved`| Improve performance by avoiding deserializing the entire Document if only part of it is required. (#10887) |
-|`Fixed`| Resolved UST initial polling unbounded error retry. (#11841) |
-|`Improved`| Removed is_connected_to_big_peer field from the Small Peer Info document. (#11883) |
-|`Fixed`| Resolve legacy query language accepting invalid field names. (#11888) |
-|`Added`| Increased the limit on the allowable depth of the Small Peer Info JSON metadata. (#11891) |
-|`Improved`| Attachments are more performant when working with many attachments concurrently |
-|`Fixed`| Resolved HTTP API OpenAI spec that will cause duplicated Authentication header in certain generated clients. (#11936) |
-|`Improved`| Spread work more evenly across Big Peer store writer threads. (#11939) |
-|`Added`| MeshChooser now supports a limited set of runtime configurable values via the mesh_chooser_* system parameters. (#11968) |
-|`Fixed`| A warning message that appears when peers connect is no longer logged (No handle found to notify the shutdown; multiple message handling loops??) (#11977) |
-|`Fixed`| When replicating in mixed meshes from V4 to V3 full state will be sent. (#12029) |
-|`Fixed`| Lowered the log level of some SQLite3 notices that were being unnecessarily logged as warnings. (#12032) |
-|`Fixed`| The Small Peer Info collector no longer gets stuck waiting to upload logs under certain conditions. (#12070) |
-|`Fixed`| Duration parameters can now be set via DQL, whereas before they would fail to type check. (#12070) |
-|`Fixed`| Ensure document cache GC always progresses regardless of configured time slice and load. (#12091) |
-|`Added`| String functions byte_length and char_length. (#12147) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improve performance by avoiding deserializing the entire Document if only part of it is required. (#10887)
+    * Removed is_connected_to_big_peer field from the Small Peer Info document. (#11883)
+    * Increased the limit on the allowable depth of the Small Peer Info JSON metadata. (#11891)
+    * Attachments are more performant when working with many attachments concurrently
+    * Spread work more evenly across Big Peer store writer threads. (#11939)
+    * MeshChooser now supports a limited set of runtime configurable values via the mesh_chooser_* system parameters. (#11968)
+    * String functions byte_length and char_length. (#12147)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Resolved legacy query language casting counters and maps with tombstones to the wrong boolean value (#10887)
+    * Resolved Bytes and Arrays not being always comparable in the legacy query language. (#10887)
+    * Resolved UST initial polling unbounded error retry. (#11841)
+    * Resolve legacy query language accepting invalid field names. (#11888)
+    * Resolved HTTP API OpenAI spec that will cause duplicated Authentication header in certain generated clients. (#11936)
+    * A warning message that appears when peers connect is no longer logged (No handle found to notify the shutdown; multiple message handling loops??) (#11977)
+    * When replicating in mixed meshes from V4 to V3 full state will be sent. (#12029)
+    * Lowered the log level of some SQLite3 notices that were being unnecessarily logged as warnings. (#12032)
+    * The Small Peer Info collector no longer gets stuck waiting to upload logs under certain conditions. (#12070)
+    * Duration parameters can now be set via DQL, whereas before they would fail to type check. (#12070)
+    * Ensure document cache GC always progresses regardless of configured time slice and load. (#12091)
 </Update>
 
 <Update label="v1.29.2">
-|||
-|--|--|
-|`Fixed`| Revert "Fix DocumentCache cache wrong result for Sort + Limit queries. (#9435) |
-|`Fixed`| Query plan for queries using the contains function with an empty array. (#12010) |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Revert "Fix DocumentCache cache wrong result for Sort + Limit queries. (#9435)
+    * Query plan for queries using the contains function with an empty array. (#12010)
 </Update>
 
 <Update label="v1.29.1">
-|||
-|--|--|
-|`Fixed`| Stream-splitter consumer migration applying old offset. (#11985) |
-|`Fixed`| Query plan for queries using the contains function with an empty array. (#12010) |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Stream-splitter consumer migration applying old offset. (#11985)
+    * Query plan for queries using the contains function with an empty array. (#12010)
 </Update>
 
 <Update label="v1.29.0">
-|||
-|--|--|
-|`Improved`| Update stream-splitter to respect Ditto login retry interval and attempts. (#11785) |
-|`Fixed`| Stream-splitter checks for kafka.enabled before spawning user-consumable streams. (#11788) |
-|`Fixed`| Tweak hydra-cdc-heartbeat to avoid stuck consumer. (#11815) |
-|`Fixed`| Application crashes while preparing to syncing data to remote peer. (#11843) |
-|`Fixed`| Fix Subserver caching wrong result for queries with sort and limit. (#9435) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Update stream-splitter to respect Ditto login retry interval and attempts. (#11785)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Stream-splitter checks for kafka.enabled before spawning user-consumable streams. (#11788)
+    * Tweak hydra-cdc-heartbeat to avoid stuck consumer. (#11815)
+    * Application crashes while preparing to syncing data to remote peer. (#11843)
+    * Fix Subserver caching wrong result for queries with sort and limit. (#9435)
 </Update>
 
 <Update label="v1.28.0">
-|||
-|--|--|
-|`Fixed`| DQL queries can now query for the id, len and metadata fields of attachments (#11481) |
-|`Improved`| Improve UST polling resilience in HTTP API and subserver (#11701) |
-|`Fixed`| Do not error in DQL inserts with the DO NOTHING conflict policy (#11730) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improve UST polling resilience in HTTP API and subserver (#11701)
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * DQL queries can now query for the id, len and metadata fields of attachments (#11481)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Do not error in DQL inserts with the DO NOTHING conflict policy (#11730)
 </Update>
 
 <Update label="v1.27.0">
-|||
-|--|--|
-|`Improved`| Synchronization protocol enhanced to prevent accumulation of unsubscribed documents after subscription change, and limits redundant data exchanged when re-synchronizing. (#10440) |
-|`Improved`| Reduce metadata lock contention while applying transactions (Avoid metadata read lock in apply_txns_internal #11654) |
-|`Fixed`| Fix race between applying of transactions and reconfiguration of replicas (#11361) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Synchronization protocol enhanced to prevent accumulation of unsubscribed documents after subscription change, and limits redundant data exchanged when re-synchronizing. (#10440)
+    * Reduce metadata lock contention while applying transactions (Avoid metadata read lock in apply_txns_internal #11654)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix race between applying of transactions and reconfiguration of replicas (#11361)
 </Update>
 
 <Update label="v1.26.0">
-|||
-|--|--|
-|`Fixed`| Legacy query language casting counters and maps with tombstones to the wrong boolean value |
-|`Fixed`| Legacy query language not allowing comparison against attachment objects. |
-|`Fixed`| Bug where certificate request would not check identity data hash with JWT’s |
-|`Fixed`| Bug where the certificate request would fail with big permissions |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Legacy query language casting counters and maps with tombstones to the wrong boolean value
+    * Legacy query language not allowing comparison against attachment objects.
+    * Bug where certificate request would not check identity data hash with JWT’s
+    * Bug where the certificate request would fail with big permissions
 </Update>
 
 <Update label="v1.25.0">
-|||
-|--|--|
-|`Fixed`| An issue where an internal data decoding function could panic on certain inputs (#10376) |
-|`Added`| Improve read query performance of legacy contains([..], _id) syntax (#10987) |
-|`Improved`| Parser error messages emphasize the location of the error and de-emphasize a potential fix. (#11040) |
-|`Fixed`| Return 500 instead of 401 upon internal error while validating API key. (#11178) |
-|`Fixed`| A bug where Link could run into an infinite loop. (#11188) |
-|`Improved`| Reduce HTTP API latency with improved lock map version tracking (#11278) |
-|`Improved`| Improved read query performance for DQL queries using array_contains (#11338) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improve read query performance of legacy contains([..], _id) syntax (#10987)
+    * Parser error messages emphasize the location of the error and de-emphasize a potential fix. (#11040)
+    * Reduce HTTP API latency with improved lock map version tracking (#11278)
+    * Improved read query performance for DQL queries using array_contains (#11338)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * An issue where an internal data decoding function could panic on certain inputs (#10376)
+    * Return 500 instead of 401 upon internal error while validating API key. (#11178)
+    * A bug where Link could run into an infinite loop. (#11188)
 </Update>
 
 <Update label="v1.24.1">
-|||
-|--|--|
-|`Improved`| Make actix-web keep alive timeout configurable for Big Peer (#9578) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Make actix-web keep alive timeout configurable for Big Peer (#9578)
 </Update>
 
 <Update label="v1.24.0">
-|||
-|--|--|
-|`Added`| Preliminary support for runtime configuration using DQL ALTER SYSTEM and SHOW statements (Hook up DQL entrypoint to parameter store #10401) |
-|`Improved`| Peers use latest supported protocol version, even if the application is using backwards-compatible CRDT formats. (Disentangle protocol version from protocol flags #10875) |
-|`Fixed`| Fix deadlock when replicating attachments to Big Peer (Fix AttachmentsPeer deadlock when setting up outbound backoff #11036) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Preliminary support for runtime configuration using DQL ALTER SYSTEM and SHOW statements (Hook up DQL entrypoint to parameter store #10401)
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Peers use latest supported protocol version, even if the application is using backwards-compatible CRDT formats. (Disentangle protocol version from protocol flags #10875)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix deadlock when replicating attachments to Big Peer (Fix AttachmentsPeer deadlock when setting up outbound backoff #11036)
 </Update>
 
 <Update label="v1.23.0">
-|||
-|--|--|
-|`Added`| Improve read query performance on queries with multiple ranges (#10605) |
-|`Fixed`| Fix incorrect DQL literal comparison behavior in big peer planning. This fixes a correctness issue where big peer could return no results when it should return all documents in a collection. This also makes big peer avoid a full scan in certain cases where it should return no results. (#10940) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improve read query performance on queries with multiple ranges (#10605)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix incorrect DQL literal comparison behavior in big peer planning. This fixes a correctness issue where big peer could return no results when it should return all documents in a collection. This also makes big peer avoid a full scan in certain cases where it should return no results. (#10940)
 </Update>
 
 <Update label="v1.22.0">
-|||
-|--|--|
-|`Added`| SDK version/language/platform and device name are now included in the small peer info document. (#10515) |
-|`Improved`| Improved read query performance by pre-filtering non-matching document ids (#10620) |
-|`Improved`| Improve memory usage and performance of Documents (#10736) |
-|`Improved`| Performance by implementing bipartite distance-aware mesh topology (#10632) |
-|`Fixed`| Mesh would choose random connections (#10711) |
-|`Fixed`| Fix `NOT` on non-Boolean panics on big peer (#10762) |
-|`Fixed`| Fixed a bug with Ditto's internal crash handler (#10022) |
-|`Fixed`| Initial logging events now use the same format as all other logs (#10611) |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * SDK version/language/platform and device name are now included in the small peer info document. (#10515)
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Improved read query performance by pre-filtering non-matching document ids (#10620)
+    * Improve memory usage and performance of Documents (#10736)
+    * Performance by implementing bipartite distance-aware mesh topology (#10632)
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Mesh would choose random connections (#10711)
+    * Fix `NOT` on non-Boolean panics on big peer (#10762)
+    * Fixed a bug with Ditto's internal crash handler (#10022)
+    * Initial logging events now use the same format as all other logs (#10611)
 </Update>
 
 <Update label="v1.21.4">
-|||
-|--|--|
-|`Fixed`| Fix hashing bug in Big Peer store node controller |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix hashing bug in Big Peer store node controller
 </Update>
 
 <Update label="v1.21.3">
-|||
-|--|--|
-|`Fixed`| Fix a bug preventing updates to clusters from rolling out properly. |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix a bug preventing updates to clusters from rolling out properly.
 </Update>
 
 <Update label="v1.21.2">
-|||
-|--|--|
-|`Fixed`| Fix bug related to Kafka transaction chunking |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix bug related to Kafka transaction chunking
 </Update>
 
 <Update label="v1.21.1">
-|||
-|--|--|
-|`Fixed`| Improved run-time validation of corrupted attachments being inserted into documents (#10552) |
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Improved run-time validation of corrupted attachments being inserted into documents (#10552)
 </Update>
 
 <Update label="v1.21.0">
-|||
-|--|--|
-|`Synchronized version bump release`| no changes |
+    * Synchronized version bump release – No changes.
 </Update>
 
-<Update label="v1.20.1">
-|||
-|--|--|
-|`Deprecated`| experimental time-series HTTP APIs |
-|`Released`| Mon Oct 30, 2023 |
-|`Fixed`| Big Peer queries matching on nested objects or arrays return the expected documents (#10382) |
-|`Fixed`| Addressed a warning from SQLite that sometimes occurs on startup about a schema change (#10501) |
+<Update label="v1.20.1" description="w/c Oct 30, 2023">
+    <Icon icon="minus" iconType="solid" horizontal /> __Deprecated:__
+    * Deprecated experimental time-series HTTP APIs
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Big Peer queries matching on nested objects or arrays return the expected documents (#10382)
+    * Addressed a warning from SQLite that sometimes occurs on startup about a schema change (#10501)
 </Update>
 
-<Update label="v1.19.0">
-|||
-|--|--|
-|`Released`| Wed Oct 11th 2023, 5:43 pm |
-|`Fixed`| Fixed HTTP API output format for Attachments when using SerializedAs::LatestValues |
-|`Improved`| Remove doc_ids from requery_required message in CDC |
-|`Improved`| Reduced metadata accumulation after eviction by clearing remote summaries |
+<Update label="v1.19.0" description="w/c Oct 9, 2023">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fixed HTTP API output format for Attachments when using SerializedAs::LatestValues
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Remove doc_ids from requery_required message in CDC
+    * Reduced metadata accumulation after eviction by clearing remote summaries
 </Update>
 
-<Update label="v1.18.0">
-|||
-|--|--|
-|`Released`| Thu Sep 21st 2023, 3:40 pm |
-|`Added`| Add attachments support for HTTP API RPC v4 |
+<Update label="v1.18.0" description="w/c Sep 18, 2023">
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Add attachments support for HTTP API RPC v4
 </Update>
 
-<Update label="v1.17.0">
-|||
-|--|--|
-|`Released`| Thu Sep 14th 2023, 3:40 pm |
-|`Improved`| Optimized Big Peer internal data serialization performance. |
-|`Improved`| Optimized the updates of internal system collections when doing writes with the HTTP RPC API. |
-|`Fixed`| Fixed a bug around where queries could return an older version of documents around a server reboot. |
+<Update label="v1.17.0" description="w/c Sep 11, 2023">
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Optimized Big Peer internal data serialization performance.
+    * Optimized the updates of internal system collections when doing writes with the HTTP RPC API.
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fixed a bug around where queries could return an older version of documents around a server reboot.
 </Update>
 
-<Update label="v1.14.0">
-|||
-|--|--|
-|`Released`| Wed Aug 16th 2023, 11:48 a.m. |
-|`Added`| Add RPC V4 HTTP API. |
-|`Improved`| Made the Big Peer more resilient to Kafka broker disconnects |
-|`Improved`| Improve our HTTP API implementation to reduce Timeout related errors |
-|`Added`| Update our OpenAPI specification to include the new count request. |
+<Update label="v1.14.0" description="w/c Aug 14, 2023">
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Add RPC V4 HTTP API.
+    * Update our OpenAPI specification to include the new count request.
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Made the Big Peer more resilient to Kafka broker disconnects
+    * Improve our HTTP API implementation to reduce Timeout related errors
 </Update>
 
-<Update label="v1.12.1">
-|||
-|--|--|
-|`Released`| Thu Jul 27th 2023, 5:22 pm |
-|`Fixed`| Fix bug in Big Peer device certificate CA rotation process |
+<Update label="v1.12.1" description="w/c Jul 24, 2023">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix bug in Big Peer device certificate CA rotation process
+    * Improved performance when multiple peers with distinct permissions work with the same cloud endpoint
 </Update>
 
-<Update label="v1.12.0">
-|||
-|--|--|
-|`Released`| Tue Jul 25th 2023, 5:20 pm |
-|`Improved`| Improved performance when multiple peers with distinct permissions work with the same cloud endpoint |
+<Update label="v1.11.0" description="w/c Jul 17, 2023">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Various fixes and improvements for better reliability, security, and performance
 </Update>
 
-<Update label="v1.11.0">
-|||
-|--|--|
-|`Released`| Wed Jul 19th 2023, 5:27 pm |
-|`Fixed`| Various fixes and improvements for better reliability, security, and performance |
+<Update label="v1.10.0" description="w/c Jul 10, 2023">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements.
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Changed: new serialization format improves efficiency of replication, particularly in the Big Peer
 </Update>
 
-<Update label="v1.10.0">
-|||
-|--|--|
-|`Released`| Thu Jul 13th 2023, 8:27 am |
-|`Fixed`| Minor bug fixes and performance improvements. |
-|`Improved`| Changed: new serialization format improves efficiency of replication, particularly in the Big Peer |
+<Update label="v1.9.1" description="w/c Jul 3, 2023">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix detection of broken stream when there are multiple apps in the transaction log
 </Update>
 
-<Update label="v1.9.1">
-|||
-|--|--|
-|`Released`| Fri Jul 7th 2023, 5:06 am |
-|`Fixed`| Fix detection of broken stream when there are multiple apps in the transaction log |
+<Update label="v1.9.0" description="w/c Jun 26, 2023">
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Initial release of the lazy deserialization optimization for the Big Peer.
+    * Tighten network policies for increased security and stability
 </Update>
 
-<Update label="v1.9.0">
-|||
-|--|--|
-|`Released`| Tue Jun 27th 2023, 1:53 pm |
-|`Added`| Initial release of the lazy deserialization optimization for the Big Peer. |
-|`Improved`| Tighten network policies for increased security and stability |
+<Update label="v0.30.0" description="w/c Aug 21, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix bug where Big Peer would sometimes panic if an SDK peer managed to create multiple Ditto instances with the same persistence directory. We are seeing this error more than we originally hoped. This change makes any occurrence non-fatal until we fix the root cause. There will be another followup change that will re-enable alerting for this event.
 </Update>
 
-<Update label="v0.30.0">
-|||
-|--|--|
-|`Released`| Tue Aug 23rd 2022, 1:27 pm |
-|`Fixed`| Fix bug where Big Peer would sometimes panic if an SDK peer managed to create multiple Ditto instances with the same persistence directory. We are seeing this error more than we originally hoped. This change makes any occurrence non-fatal until we fix the root cause. There will be another followup change that will re-enable alerting for this event. |
+<Update label="v0.29.0" description="w/c Aug 14, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Fix bug where HTTP API upserts would not always be reflected in subsequent find requests.
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Properly consider limit+offset+order_by for active queries
 </Update>
 
-<Update label="v0.29.0">
-|||
-|--|--|
-|`Released`| Thu Aug 18th 2022, 1:27 pm |
-|`Fixed`| Fix bug where HTTP API upserts would not always be reflected in subsequent find requests. |
-|`Improved`| Properly consider limit+offset+order_by for active queries |
+<Update label="v0.28.0" description="w/c Aug 7, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements
 </Update>
 
-<Update label="v0.28.0">
-|||
-|--|--|
-|`Released`| Sun Aug 14th 2022, 1:08 am |
-|`Fixed`| Minor bug fixes and performance improvements |
+<Update label="v0.27.0" description="w/c Jul 31, 2022">
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Supports Ditto SDK through version 2.0.x.
 </Update>
 
-<Update label="v0.27.0">
-|||
-|--|--|
-|`Released`| Wed Aug 3rd 2022, 1:08 am |
-|`Added`| Supports Ditto SDK through version 2.0.x. |
+<Update label="v0.26.0" description="w/c Jul 24, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements
 </Update>
 
-<Update label="v0.26.0">
-|||
-|--|--|
-|`Released`| Mon Aug 1st 2022, 1:08 am |
-|`Fixed`| Minor bug fixes and performance improvements |
+<Update label="v0.25.0" description="w/c Jul 17, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements.
+
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Add collection and document id to RequeryRequired requests as part of the live query WebHook and CDC.
 </Update>
 
-<Update label="v0.25.0">
-|||
-|--|--|
-|`Released`| Sat Jul 23rd 2022, 1:08 am |
-|`Fixed`| Minor bug fixes and performance improvements. |
-|`Added`| Add collection and document id to RequeryRequired requests as part of the live query WebHook and CDC. |
+<Update label="v0.24.0" description="w/c Jul 10, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements
 </Update>
 
-<Update label="v0.24.0">
-|||
-|--|--|
-|`Released`| Tue Jul 12th 2022, 1:08 am |
-|`Fixed`| Minor bug fixes and performance improvements |
+<Update label="v0.23.0" description="w/c Jun 19, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements
 </Update>
 
-<Update label="v0.23.0">
-|||
-|--|--|
-|`Released`| Fri Jun 24th 2022, 1:08 am |
-|`Fixed`| Minor bug fixes and performance improvements |
+<Update label="v0.22.0" description="w/c Jun 5, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements
 </Update>
 
-<Update label="v0.22.0">
-|||
-|--|--|
-|`Released`| Mon Jun 6th 2022, 1:08 am |
-|`Fixed`| Minor bug fixes and performance improvements |
+<Update label="v0.21.0" description="w/c May 22, 2022">
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Minor bug fixes and performance improvements
 </Update>
 
-<Update label="v0.21.0">
-|||
-|--|--|
-|`Released`| Thu May 26th 2022, 1:08 am |
-|`Fixed`| Minor bug fixes and performance improvements |
-</Update>
-
-<Update label="v0.20.0">
-|||
-|--|--|
-|`Released`| Thu May 12th 2022, 1:08 am |
-|`Added`| Supports Ditto SDK through version 1.1.6 |
-|`Added`| Parity between document and timeseries HTTP APIs |
-|`Added`| HTTP API calls that were GET with a body now also accept POST. They will accept both methods and will behave the same no matter which method is used. |
+<Update label="v0.20.0" description="w/c May 8, 2022">
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+        * Supports Ditto SDK through version 1.1.6
+        * Parity between document and timeseries HTTP APIs
+        * HTTP API calls that were GET with a body now also accept POST. They will accept both methods and will behave the same no matter which method is used.
 </Update>
 
 <Update label="v0.17.0">
-|||
-|--|--|
-|`Added`| Supports Ditto SDK through version 1.1.5, including improvements to replication efficiency. |
-|`Fixed`| Adds HTTP API RPC Remove and Update commands: With remove, users may provide a query and delete all matching records. The update command mimics Ditto SDK update behavior and applies a series of updates to all matching documents. This includes: set, increment, and replaceWithCounter. |
-|`Added`| All HTTP API Headers used by Ditto will be prefixed with X-DITTO- X-HYDRA-ENSURE-DELETE is now X-DITTO-ENSURE-DELETE X-HYDRA-CLIENT-ID is now X-DITTO-CLIENT-ID X-HYDRA-ENSURE-INSERT is now X-DITTO-ENSURE-INSERT X-ENSURE-INSERT is now X-DITTO-ENSURE-INSERT |
-|`Fixed`| The old header names are now deprecated. |
+    <Icon icon="plus" iconType="solid" horizontal /> __Added:__
+    * Supports Ditto SDK through version 1.1.5, including improvements to replication efficiency.
+
+    <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
+    * Adds HTTP API RPC Remove and Update commands (remove + update). With remove, users may provide a query and delete all matching records. The update command mimics Ditto SDK update behavior and applies a series of updates to all matching documents.
+    * The old header names are now deprecated (All HTTP API Headers used by Ditto will be prefixed with X-DITTO-...).
 </Update>
