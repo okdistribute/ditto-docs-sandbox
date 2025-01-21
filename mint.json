@@ -214,18 +214,10 @@
       "group": "Security",
       "version": "v4.9",
       "pages": [
-        {
-          "group": "Authentication & Authorization",
-          "version": "v4.9",
-          "icon": "lock",
-          "iconType": "solid",
-          "pages": [
-            "sdk/latest/auth-and-authorization/cloud-authentication",
-            "sdk/latest/auth-and-authorization/shared-key",
-            "sdk/latest/auth-and-authorization/data-authorization",
-            "sdk/latest/auth-and-authorization/certificate-based-security"
-          ]
-        }
+        "sdk/latest/auth-and-authorization/cloud-authentication",
+        "sdk/latest/auth-and-authorization/shared-key",
+        "sdk/latest/auth-and-authorization/data-authorization",
+        "sdk/latest/auth-and-authorization/certificate-based-security"
       ]
     },
     {
@@ -235,7 +227,7 @@
         {
           "group": "API Reference",
           "version": "v4.9",
-          "icon": "book",
+          "icon": "square-code",
           "iconType": "solid",
           "pages": [
             "sdk/latest/api-reference/api-reference",
@@ -252,7 +244,7 @@
         {
           "group": "Release Notes",
           "version": "v4.9",
-          "icon": "bullhorn",
+          "icon": "clipboard-list",
           "iconType": "solid",
           "pages": [
             "sdk/latest/release-notes/release-notes",
@@ -268,7 +260,7 @@
         },
         {
           "group": "Compatibility",
-          "icon": "map",
+          "icon": "badge-check",
           "iconType": "solid",
           "pages": [
             "sdk/latest/compatibility/compatibility",
@@ -401,22 +393,14 @@
       ]
     },
     {
-      "group": "Security",
-      "version": "v4.8",
-      "pages": [
-        {
-          "group": "Authentication & Authorization",
-          "version": "v4.8",
-          "icon": "lock",
-          "iconType": "solid",
-          "pages": [
-            "sdk/v4-8/auth-and-authorization/cloud-authentication",
-            "sdk/v4-8/auth-and-authorization/shared-key",
-            "sdk/v4-8/auth-and-authorization/data-authorization",
-            "sdk/v4-8/auth-and-authorization/certificate-based-security"
-          ]
-        }
-      ]
+        "group": "Security",
+        "version": "v4.8",
+        "pages": [
+          "sdk/v4-8/auth-and-authorization/cloud-authentication",
+          "sdk/v4-8/auth-and-authorization/shared-key",
+          "sdk/v4-8/auth-and-authorization/data-authorization",
+          "sdk/v4-8/auth-and-authorization/certificate-based-security"
+        ]
     },
     {
       "group": "Reference",
@@ -425,7 +409,7 @@
         {
           "group": "API Reference",
           "version": "v4.8",
-          "icon": "book",
+          "icon": "square-code",
           "iconType": "solid",
           "pages": [
             "sdk/v4-8/api-reference/api-reference",
@@ -442,7 +426,7 @@
         {
           "group": "Release Notes",
           "version": "v4.8",
-          "icon": "bullhorn",
+          "icon": "clipboard-list",
           "iconType": "solid",
           "pages": [
             "sdk/v4-8/release-notes/release-notes",
@@ -458,7 +442,7 @@
         },
         {
           "group": "Compatibility",
-          "icon": "map",
+          "icon": "badge-check",
           "iconType": "solid",
           "pages": [
             "sdk/v4-8/compatibility/compatibility",
