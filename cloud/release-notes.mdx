@@ -14,16 +14,14 @@ iconType: solid
     * A new data architecture for Big Peer, improving reliability, performance and unlocking future capabilities
     * Big Peer evictions are now available as a preview feature. Contact us to enable this feature for your instances
     * Synchronization protocol enhanced to reduce the amount of redundant data sent from small peers to Big Peers
-    * Bump the minimum supported CRDT version for Big Peer apps is to V6
-    * Big Peer will store information about authenticated users in the __users collection at login
-    * Introduces profiling across multiple Big Peer components for improved internal observability
+    * Bump the minimum supported CRDT version for Big Peer apps to V6
+    * Several improvements to Big Peer reliability and deployment efficacy
 
     <Icon icon="screwdriver-wrench" iconType="solid" horizontal /> __Fixed:__
     * Addresses a rare issue decompressing attachments during replication
     * Performance optimisations made to document deduplication on the subserver
-    * Fixed an inconsistency with Big Peer readiness where server begins routing traffic too early
     * Device name no longer incorrectly defaults to "ditto" in device table, when a named device first starts syncing
-    * Reduce the number of VersionNotQueryable errors for clusters with MRF configured
+    * Fixed an issue where HTTP API calls might incorrectly fail when passing a transaction ID as part of the call
     * Fixes a potential deadlock condition in Big Peer
     * Align Kafka producer and consumer message sizes to prevent potential backpressure scenarios
     * Network policy improvements to enable new feature development
@@ -32,7 +30,6 @@ iconType: solid
 <Update label="v1.39.2" description="w/c Oct 14, 2024">
     <Icon icon="plus" iconType="solid" horizontal /> __Added:__
     * Networking policy enhancements to support architectural improvements
-    * Internal observability improvements
 </Update>
 
 <Update label="v1.39.0 " description="w/c Sep 5, 2024">
