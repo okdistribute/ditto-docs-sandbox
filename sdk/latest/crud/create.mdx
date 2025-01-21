@@ -14,7 +14,7 @@ Syncing data across the mesh is an entirely separate process from CRUD, involvin
 To insert a document, call the `EXECUTE` API method against the `ditto.store` object and include an `INSERT INTO` query that specifies the document to be inserted.
 
 <Info>
-Ditto does *not* support nesting documents within documents. Instead, opt for a foreign-key relationship by referencing the document ID. For more information, see [Relationships](../data-model/relationships).
+Ditto does *not* support nesting documents within documents. Instead, opt for a foreign-key relationship by referencing the document ID. For more information, see [Relationships](../document-model/relationships).
 </Info>
 
 For example, the following snippet demonstrates how to insert a new document with a single field "color" set to "blue":
