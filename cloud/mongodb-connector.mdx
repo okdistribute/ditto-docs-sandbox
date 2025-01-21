@@ -28,7 +28,7 @@ The MongoDB Connector is provided as a managed service, running alongside the Bi
 </Frame>
 Only data currently stored within the Big Peer will be replicated to/from individual Small Peers (devices), so purpose of the connector is to synchronize data as it changes between MongoDB and the Big Peer.
 
-To do this, the connector listens to changes to documents in both Ditto and MongoDB. When it detects a change to a document it then performs conflict resolution between the two systems and updates the document in the target system with the new value. This conflict resolution mechanism roughly models Ditto's [causal consistency](/v4-8/sync/consistency-models#causal-consistency) , ensuring that changes are not unexpectedly lost when mutations are made to the same documents in both MongoDB and Ditto simultaneously.
+To do this, the connector listens to changes to documents in both Ditto and MongoDB. When it detects a change to a document it then performs conflict resolution between the two systems and updates the document in the target system with the new value. This conflict resolution mechanism roughly models Ditto's [causal consistency](/sdk/latest/sync/consistency-models#causal-consistency), ensuring that changes are not unexpectedly lost when mutations are made to the same documents in both MongoDB and Ditto simultaneously.
 
 Unlike other synchronization systems for MongoDB, Ditto's advanced conflict resolution (based on CRDTs) avoid the need to deploy extra backend services to handle writes and conflicts, just deploy a Big Peer and you have everything you need to integrate with MongoDB.
 
@@ -74,7 +74,7 @@ You need to provide the following information as part of the request:
 
 - `app_id` - The ID of the Ditto app that you wish to set the connector up for
 - `connection_string` - The connection string, including the credentials of the created database user, that should be used to connect to MongoDB
-- `collections` - The object specifying the collections and ID mappings to use for the connector, see [ID mappings](/cloud/mongodb-connector#id-mapping-between-systems) for more details
+- `collections` - The object specifying the collections and ID mappings to use for the connector, see [ID mappings](#id-mapping-between-systems) for more details
 
 An example payload looks as follows:
 
@@ -104,7 +104,7 @@ Both Ditto and MongoDB store their data in the form of JSON-like documents, so a
 
 ### ID Mapping Between Systems
 
-Due to security considerations in a peer-to-peer context, Ditto's permission system (see [Data Authorization](/v4-8/auth-and-authorization/data-authorization)) only has access to the unique and immutable ID field (`_id`). To use permissions effectively, most Ditto applications use objects rather than strings as their `_id`. These sub-fields with the `_id` are then often duplicated in the document's body to facilitate POJO/DTO-like patterns in your application code. For example you may choose to model an order (in a retail system) as follows:
+Due to security considerations in a peer-to-peer context, Ditto's permission system (see [Data Authorization](/sdk/latest/auth-and-authorization/data-authorization)) only has access to the unique and immutable ID field (`_id`). To use permissions effectively, most Ditto applications use objects rather than strings as their `_id`. These sub-fields with the `_id` are then often duplicated in the document's body to facilitate POJO/DTO-like patterns in your application code. For example you may choose to model an order (in a retail system) as follows:
 
 ```json JSON
 {

@@ -14,7 +14,7 @@ Syncing data across the mesh is an entirely separate process from CRUD, involvin
 To insert a document, call the `EXECUTE` API method against the `ditto.store` object and include an `INSERT INTO` query that specifies the document to be inserted.
 
 <Info>
-Ditto does *not* support nesting documents within documents. Instead, opt for a foreign-key relationship by referencing the document ID. For more information, see [Relationships](https://docs.ditto.live/v4-8/document-model/relationships).
+Ditto does *not* support nesting documents within documents. Instead, opt for a foreign-key relationship by referencing the document ID. For more information, see [Relationships](../data-model/relationships).
 </Info>
 
 For example, the following snippet demonstrates how to insert a new document with a single field "color" set to "blue":
@@ -652,12 +652,12 @@ There are two separate steps in the process of creating an attachment:
 <Steps>
 <Step>
 
-Create the attachment in the Ditto store. ([Initiating ATTACHMENT Objects](https://docs.ditto.live/v4-8/crud/create#SmqTL))
+Create the attachment in the Ditto store. ([Initiating ATTACHMENT Objects](#initiating-attachment-objects))
 
 </Step>
 <Step>
 
-Reference the returned attachment token in a document. ([Referencing Attachment Tokens)](https://docs.ditto.live/v4-8/crud/create#_TG5N)
+Reference the returned attachment token in a document. ([Referencing Attachment Tokens](#referencing-attachment-tokens))
 
 </Step>
 </Steps>
@@ -1001,7 +1001,7 @@ json!({
 There are two ways to create a MAP structure within a document:
 
 - In an INSERT operation — Create a new document and nest it with this set of fields.
-- In an UPDATE operation — If the MAP does not exist, create it. (See [UPDATE](https://docs.ditto.live/v4-8/crud/update))
+- In an UPDATE operation — If the MAP does not exist, create it. (See [UPDATE](./update))
 
 To represent a highly complex data structure in a MAP, consider embedding it with an additional MAP. Embedding a MAP within a MAP establishes an additional hierarchy.
 

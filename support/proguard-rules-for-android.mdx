@@ -45,7 +45,7 @@ This rule ensures that all native bindings related to Ditto are preserved and av
 
 **Ditto Blanket Exclusion - Required for Presence**
 
-This rule retains all Ditto classes, which is essential for features like [Presence Viewer](https://docs.ditto.live/sync/using-mesh-presence#jhjKK), and ensures Jackson classes are preserved for proper JSON deserialization.
+This rule retains all Ditto classes, which is essential for features like [Presence Viewer](/sdk/latest/sync/using-mesh-presence#presence-viewer), and ensures Jackson classes are preserved for proper JSON deserialization.
 
 <Card>
 -keep class live.ditto.** \{ *; }
@@ -64,4 +64,4 @@ This rule retains all Ditto classes, which is essential for features like [Prese
 - **Testing:** Always thoroughly test your app in both debug and release modes. Use logging or crash reporting to capture issues during the release phase.
 - **ProGuard Mapping Files:** Generate and keep mapping files during your release builds (minifyEnabled true). They are useful for decoding stack traces and identifying the causes of crashes related to ProGuard
 
-Need additional help? [Contact us!](https://docs.ditto.live/support) Our support team is ready to assist with any further questions.
+Need additional help? [Contact us!](/support/contact-us) Our support team is ready to assist with any further questions.

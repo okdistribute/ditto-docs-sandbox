@@ -88,7 +88,7 @@ ALTER SYSTEM SET REPLICATION_GC_STARTUP_DELAY_SECONDS = 10;
 
 ## Executing SET
 
-Similar to the execution pattern recommended when configuring transports in your app, invoke your statement modifying system configurations immediately after initializing the `ditto` object. (See [Customizing Transports Configurations](<./Customizing Transports Configurations.md>))
+Similar to the execution pattern recommended when configuring transports in your app, invoke your statement modifying system configurations immediately after initializing the `ditto` object. (See [Customizing Transports Configurations](/sdk/v4-8/sync/customizing-transport-configurations))
 
 <Warning>
 Ditto stores configuration settings modified by `ALTER SYSTEM` in memory rather than persisting them to disk.

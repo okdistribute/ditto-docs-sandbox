@@ -20,10 +20,10 @@ The following table provides an overview of the various tasks you can perform wi
 
 | **Task**                                                                               | **Query**            |
 | -------------------------------------------------------------------------------------- | -------------------- |
-| Retrieve current system settings for all configurations. ([Retrieving Values](/v4-7/using-alter-system#4O_0R))       | `SHOW ALL`           |
-| Retrieve current system settings for a specific configuration. ([Retrieving Values](/v4-7/using-alter-system#4O_0R)) | `SHOW`               |
-| Change a specific system setting. ([Modifying Values](/v4-7/using-alter-system#LsAi_))                               | `ALTER SYSTEM SET`   |
-| Reset system settings to default configurations. ([Resetting Values to Default](/v4-7/using-alter-system#vOx5k))     | `ALTER SYSTEM RESET` |
+| Retrieve current system settings for all configurations. ([Retrieving Values](#retrieving-values))       | `SHOW ALL`           |
+| Retrieve current system settings for a specific configuration. ([Retrieving Values](#retrieving-values)) | `SHOW`               |
+| Change a specific system setting. ([Modifying Values](#modifying-values))                               | `ALTER SYSTEM SET`   |
+| Reset system settings to default configurations. ([Resetting Values to Default](#resetting-values-to-default))     | `ALTER SYSTEM RESET` |
 
 ## Retrieving Values
 
@@ -90,7 +90,7 @@ ALTER SYSTEM SET REPLICATION_GC_STARTUP_DELAY_SECONDS = 10;
 
 ### Executing SET
 
-Similar to the execution pattern recommended when configuring transports in your app, invoke your statement modifying system configurations immediately after initializing the `ditto` object. (See [Customizing Transports Configurations](<./Customizing Transports Configurations.md>))
+Similar to the execution pattern recommended when configuring transports in your app, invoke your statement modifying system configurations immediately after initializing the `ditto` object. (See [Customizing Transports Configurations](/sdk/v4-7/sync/customizing-transport-configurations))
 
 <Warning>
 Ditto stores configuration settings modified by `ALTER SYSTEM` in memory rather than persisting them to disk.

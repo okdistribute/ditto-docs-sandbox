@@ -495,18 +495,7 @@
             "sdk/v4-7/install-guides/java",
             "sdk/v4-7/install-guides/c-sharp",
             "sdk/v4-7/install-guides/cpp",
-            "sdk/v4-7/install-guides/rust",
-            {
-              "group": "Flutter",
-              "version": "v4.7",
-              "icon": "flutter",
-              "iconType": "solid",
-              "pages": [
-                "sdk/v4-7/install-guides/flutter",
-                "sdk/v4-7/install-guides/flutter/quick-start",
-                "sdk/v4-7/install-guides/flutter/roadmap"
-              ]
-            }
+            "sdk/v4-7/install-guides/rust"
           ]
         },
         {
@@ -661,8 +650,7 @@
             "sdk/v4-7/release-notes/java",
             "sdk/v4-7/release-notes/c-sharp",
             "sdk/v4-7/release-notes/cpp",
-            "sdk/v4-7/release-notes/rust",
-            "sdk/v4-7/release-notes/flutter"
+            "sdk/v4-7/release-notes/rust"
           ]
         }
       ]

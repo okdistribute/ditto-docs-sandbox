@@ -13,16 +13,16 @@ To install the Ditto SDK and start syncing offline:
 
 <Steps>
   <Step>
-   Confirm that you meet the minimum requirements. ([Prerequisites](https://docs.ditto.live/v4-7/ios/installation#HHTe7))
+   Confirm that you meet the minimum requirements. ([Prerequisites](#prerequisites))
   </Step>
   <Step>
-  Install the necessary dependencies. ([Installing Package Dependencies](/v4-7/install-guides/swift#g0ESg))
+  Install the necessary dependencies. ([Installing Package Dependencies](#installing-package-dependencies))
   </Step>
   <Step>
-Set up your app permissions. ([Configuring Permissions](/v4-7/install-guides/swift#kX-Je))
+Set up your app permissions. ([Configuring Permissions](#configuring-permissions))
   </Step>
   <Step>
-[Authenticate with the Big Peer and then start syncing offline. ([Integrating and Initializing Sync](/v4-7/install-guides/swift#XNaBO))
+[Authenticate with the Big Peer and then start syncing offline. ([Integrating and Initializing Sync](#integrating-and-initializing-sync))
   </Step>
 
 </Steps>
@@ -55,8 +55,8 @@ Using Xcode or CocoaPods, add the necessary dependencies:
       2. Select **dittoswiftpackage** from the list.
       3. Click **Dependency Rule** and select the version of Ditto you want to use:
 
-      - If building a production-level app, see [Developing for Production](/v4-7/install-guides/swift#BPHYO).
-      - If testing Ditto with Apple Vision Pro devices, see [Exploring with visionOS beta](/v4-7/install-guides/swift#tMt7R).
+      - If building a production-level app, see [Developing for Production](#developing-for-production).
+      - If testing Ditto with Apple Vision Pro devices, see [Exploring with visionOS beta](#exploring-with-visionos-beta).
       4. Click **Add Package**.
 
       <Frame>
@@ -98,7 +98,7 @@ In the field on the right, set the version to **4.7.2**.
 Ditto now supports the visionOS platform in beta for our Swift SDK.
 
 <Info>
-For an overview of the Ditto SDK for visionOS, including steps outlining example integration with our demo chat app, [*DittoChat*](https://apps.apple.com/us/app/dittochat/id1450111256 "DittoChat"), see [visionOS on Swift](/v4-7/install-guides/#9eYfPNj_xG4j-R85evDAh).
+For an overview of the Ditto SDK for visionOS, including steps outlining example integration with our demo chat app, [*DittoChat*](https://apps.apple.com/us/app/dittochat/id1450111256 "DittoChat"), see [visionOS on Swift](#visionos-on-swift).
 </Info>
 
 To install the visionOS beta Ditto Swift package, set the **Dependency Rule** to **4.8.0-v** as follows:
@@ -153,11 +153,11 @@ Once you've added Ditto SDK package dependencies:
 <Steps>
   <Step>
 
-Configure your project's Info.plist file to ensure the necessary permissions for Bluetooth Low Energy (LE) and local network services are included. ([Ensuring Privacy Compliance](/v4-7/install-guides/swift#aor0j))
+Configure your project's Info.plist file to ensure the necessary permissions for Bluetooth Low Energy (LE) and local network services are included. ([Ensuring Privacy Compliance](#ensuring-privacy-compliance))
 </Step>
 
 <Step>
-If enabling the Data Protection entitlement, allow access after your end users have unlocked their device for the first time after a system restart. ([Setting Protection Entitlement](/v4-7/install-guides/swift#Fb7Ze))
+If enabling the Data Protection entitlement, allow access after your end users have unlocked their device for the first time after a system restart. ([Setting Protection Entitlement](#setting-protection-entitlement))
 </Step>
 </Steps>
 
@@ -173,7 +173,7 @@ From Xcode, add a new **Custom iOS Target Properties** entry:
 2. In the editor that appears, click **Info** tab.
 3. Right-click any row in the list, and then select **Add Row** from the menu.
 <Info>
-For instructions on configuring permissions for your app, see [Cloud Authentication](/v4-7/auth-and-authorization/cloud-authentication).
+For instructions on configuring permissions for your app, see [Cloud Authentication](/sdk/v4-7/security/authentication).
 </Info>
 
 <Frame>
@@ -236,7 +236,7 @@ Once you've set up your environment, import the Ditto SDK in your codebase and o
 Unless you have a specialized use case, such as a government app, you must connect to the internet at least once before you can sync offline with other peers.
 </Note>
 
-For more information, contact Ditto. (See [Contact Us](/v4-7/install-guides/#n4CiVTbQAL1SmgjNO8aM8))
+For more information, contact Ditto. (See [Contact Us](/support/contact-us))
 
 <Steps>
 <Step>
@@ -248,7 +248,7 @@ From the top-most scope of your app's codebase, add the following to set up auth
 
 Replace YOUR\_APP\_ID and YOUR\_PLAYGROUND\_TOKEN with your access credentials available from the portal.
 <Info>
-For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](/v4-7/install-guides/#U214QhYYMCxbV9jnamRFH)
+For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](/sdk/v4-7/security/authentication)
 </Info>
 
 ```swift Swift

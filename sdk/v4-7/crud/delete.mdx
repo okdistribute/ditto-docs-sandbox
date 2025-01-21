@@ -5,15 +5,15 @@ title: DELETE
 
 This article provides an overview and how-to instructions for deleting documents using the `EVICT` DQL operation.
 
-- [Evict Method](/4.7/crud/delete#-BLNB)
-- [Coordinating Evictions](/4.7/crud/delete#sODGf)
-- [Soft-Delete Pattern](/4.7/crud/delete#bPsqW)
-- [Considerations](/4.7/crud/delete#O9KV-)
+- [Evict Method](#evicting-data)
+- [Coordinating Evictions](#coordinating-evictions)
+- [Soft-Delete Pattern](#soft-delete-pattern)
+- [Considerations](#considerations)
 
 ## Evicting Data
 The EVICT method, once invoked, immediately removes the specified document from the local Ditto store, making it inaccessible by local queries.
 
-For complete DQL syntax, see [EVICT](/4.7/crud/#ksPbI9CsHPdud0iyuow9E).
+For complete DQL syntax, see [EVICT](/dql/evict).
 
 Although the document you evicted is removed from the **local** Ditto store, the document stored within **remote** Ditto stores persists.
 

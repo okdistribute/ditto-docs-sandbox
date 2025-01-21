@@ -5,13 +5,13 @@ icon: rust
 iconType: solid
 ---
 
-- [Prerequisites](/install-guides/rust#STCAQ)
-- [Creating a New Project](/install-guides/rust#1JwfY)
-- [Including Ditto Dependencies](/install-guides/rust#PjmtY)
-- [Verifying Project Setup](/install-guides/rust#tH0Ah)
-- [Organizing Filesystem Structure](/install-guides/rust#EYyu6)
-- [Cross-Compiling with the Ditto SDK](/install-guides/rust#GCpmi)
-- [Troubleshooting](/install-guides/rust#5enEt)
+- [Prerequisites](#prerequisites)
+- [Creating a New Project](#creating-a-new-project)
+- [Including Ditto Dependencies](#including-ditto-dependencies)
+- [Verifying Project Setup](#verifying-project-setup)
+- [Organizing Filesystem Structure](#organizing-filesystem-structure)
+- [Cross-Compiling with the Ditto SDK](#cross-compiling-with-the-ditto-sdk)
+- [Troubleshooting](#troubleshooting)
 
 # Prerequisites
 
@@ -79,7 +79,7 @@ dittolive-ditto = "=4.8.0"
 </Step>
 
 <Step>
-Visit the <a href="https://docs.ditto.live/compatibility/rust" target="_blank">Rust Compatibility Map page</a> to find the Rust Toolchain version you need based on the SDK version you chose. For SDK version 4.8.0, you should use Rust `1.74.1`.
+Visit the <a href="/sdk/v4-8/compatibility/rust" target="_blank">Rust Compatibility Map page</a> to find the Rust Toolchain version you need based on the SDK version you chose. For SDK version 4.8.0, you should use Rust `1.74.1`.
 </Step>
 
 <Step>
@@ -125,8 +125,8 @@ The following table provides an overview of the components that make up your app
 
 | **Component**           | **Best Practice**                                                                                                                                                                                                                                                                                                                                                                                                        |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| AppRoot/AppExecutable   | The executable file for your app that, unless explicitly specified, the Ditto SDK is statically linked to: - All other files and directories should be relative to this location. - Maintain a clear separation between this executable file and other libraries. - If desired, use the Ditto SDK as a separate shared library. (See [Optional Dynamic Linking](https://docs.ditto.live/v4-8/install-guides/rust#eszFD)) |
-| AppRoot/libdittoffi.dll | The Ditto SDK binary library file linking your Cargo for Rust project with Ditto.¹ By default, the Ditto SDK is statically linked to your executable. However, if desired, you can configure your build for dynamic linking by specifying the shared library version of the Ditto SDK. (See [Optional Dynamic Linking](https://docs.ditto.live/v4-8/install-guides/rust#_5OsT))                                          |
+| AppRoot/AppExecutable   | The executable file for your app that, unless explicitly specified, the Ditto SDK is statically linked to: - All other files and directories should be relative to this location. - Maintain a clear separation between this executable file and other libraries. - If desired, use the Ditto SDK as a separate shared library. (See [Optional Dynamic Linking](#setting-up-optional-dynamic-linking)) |
+| AppRoot/libdittoffi.dll | The Ditto SDK binary library file linking your Cargo for Rust project with Ditto.¹ By default, the Ditto SDK is statically linked to your executable. However, if desired, you can configure your build for dynamic linking by specifying the shared library version of the Ditto SDK. (See [Optional Dynamic Linking](#setting-up-optional-dynamic-linking))                                          |
 | AppRoot/ditto_data/     | The base directory designated for Ditto-backed app data stored locally on the end-user device: - Organize all app data within this directory rather than across the entire filesystem for your project. - Maintain a clear and consistent directory structure for your project.                                                                                                                                          |
 
 ¹The path and format of the Ditto SDK binary library file vary by app target. For example, `.dylib` for macOS and `.dll` for Windows. (See [Binary Library Path Formats]())

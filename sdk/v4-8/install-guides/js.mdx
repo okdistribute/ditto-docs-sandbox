@@ -9,18 +9,17 @@ To install the JavaScript SDK:
 
 <Steps>
   <Step>
-    [Prerequisites](/ab-redirect-url?docId=yXSJHOqliSNbLUVUYOcSa&isHosted=true&queryTemplate=&shareableToken=&hostName=docs.ditto.live&docAnchorId=sb-Fz): Confirm that you meet the minimum requirements.
+    [Prerequisites](#prerequisites): Confirm that you meet the minimum requirements.
   </Step>
   <Step>
-  [Install Dependencies](/ab-redirect-url?docId=yXSJHOqliSNbLUVUYOcSa&isHosted=true&queryTemplate=&shareableToken=&hostName=docs.ditto.live&docAnchorId=i_i6q): Add the `ditto` package to your environment.
+  [Install Dependencies](#installing-dependencies): Add the `ditto` package to your environment.
   </Step>
   <Step>
-[Integrate Ditto](/ab-redirect-url?docId=yXSJHOqliSNbLUVUYOcSa&isHosted=true&queryTemplate=&shareableToken=&hostName=docs.ditto.live&docAnchorId=Ajrfc): Import and initialize Ditto in your app.
+  [Integrate Ditto](#integrating-ditto): Import and initialize Ditto in your app.
   </Step>
   <Step>
-[Run Ditto](/ab-redirect-url?docId=yXSJHOqliSNbLUVUYOcSa&isHosted=true&queryTemplate=&shareableToken=&hostName=docs.ditto.live&docAnchorId=s71_W): Authenticate with the Big Peer and start syncing offline.
+  [Run Ditto](#running-ditto): Authenticate with the Big Peer and start syncing offline.
   </Step>
-
 </Steps>
 
 ## Prerequisites
@@ -58,7 +57,7 @@ Import and initialize Ditto, and then provide your access credentials for one-ti
 </Note>
 
 <Info>
-  For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](/ab-redirect-url?docId=U214QhYYMCxbV9jnamRFH&isHosted=true&queryTemplate=&shareableToken=&hostName=docs.ditto.live&docAnchorId=) . For an introduction to authentication in Ditto, see _Security_ > [Cloud Authentication](/ab-redirect-url?docId=D0B4xrfN45yeM15qCYcOb&isHosted=true&queryTemplate=&shareableToken=&hostName=docs.ditto.live&docAnchorId=).
+  For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](/cloud/portal/getting-playground-token-credentials) . For an introduction to authentication in Ditto, see _Security_ > [Cloud Authentication](/sdk/v4-8/auth-and-authorization/cloud-authentication).
 </Info>
 
 ```js js
@@ -93,7 +92,7 @@ node index.js
 
 ## Add a Sync Subscription
 
-Add a _sync subscription_ to receive updates on documents that match its query from connected peers in the [mesh](/ab-redirect-url?docId=DH0VjOd2_OZVncKas9H7x&isHosted=true&queryTemplate=&shareableToken=&hostName=docs.ditto.live&docAnchorId=).
+Add a _sync subscription_ to receive updates on documents that match its query from connected peers in the mesh.
 
 Use `registerSubscription()` in the `ditto.sync` namespace to add a sync subscription:
 

@@ -1,6 +1,6 @@
 ---
 title: ATTACHMENT
-description: "This article provides conceptual information for the `ATTACHMENT` data type. For instructions on how to work with an `ATTACHMENT`, see *CRUD Operations* > [CREATE](/crud/create), [READ](/crud/read), [UPDATE](/crud/update), and [DELETE](/crud/delete)."
+description: "This article provides conceptual information for the `ATTACHMENT` data type. For instructions on how to work with an `ATTACHMENT`, see *CRUD Operations* > [CREATE](../crud/create), [READ](../crud/read), [UPDATE](../crud/update), and [DELETE](../crud/delete)."
 icon: paperclip
 iconType: solid
 ---
@@ -9,9 +9,9 @@ iconType: solid
 
 The `ATTACHMENT` data type lets you link extensive amounts of binary data to a document for on-demand sync, both online or offline, without any conflicts. For instance, you can link and asynchronously sync large files that change infrequently or deeply embedded documents.
 
-When incorporating an attachment into a document, rather than inserting the entire resource-heavy ATTACHMENT object, internally Ditto inserts a pointer object, known as the _attachment token_. (See [ATTACHMENT Object](/data-types/attachment#7uG0P) and [Attachment Token](/data-types/attachment#TOjvP))
+When incorporating an attachment into a document, rather than inserting the entire resource-heavy ATTACHMENT object, internally Ditto inserts a pointer object, known as the _attachment token_. (See [ATTACHMENT Object](#attachment-object) and [Attachment Token](#attachment-token))
 
-Unlike documents that are always accessible and automatically synced according to sync subscriptions, peers do not automatically fetch attachment data associated with a sync subscription. Therefore, before accessing an attachment, you must explicitly fetch it. (See [Syncing ATTACHMENT Objects](/data-types/attachment#_Xi9V))
+Unlike documents that are always accessible and automatically synced according to sync subscriptions, peers do not automatically fetch attachment data associated with a sync subscription. Therefore, before accessing an attachment, you must explicitly fetch it. (See [Syncing ATTACHMENT Objects](#syncing-attachments-objects))
 
 For a realworld usage scenario, see either the demo chat app for iOS or Android in the getditto > [demoapp-chat](https://github.com/getditto/demoapp-chat/tree/main "demoapp-chat") GitHub repository.
 
@@ -20,7 +20,7 @@ For a realworld usage scenario, see either the demo chat app for iOS or Android 
 The ATTACHMENT object, shown on the right, stores your attachment outside the local device, is not directly visible in your code, and consists of _metadata_ and a binary large object (_blob_) store.
 
 - The metadata component is a set of string values providing extra details about the file or complex document, such as name and size, among other identifying information.
-- The blob store is an array of bytes representing your large file or complex document encoded as an ATTACHMENT data type. (See [Blob Store](/data-types/attachment#dNgRq))
+- The blob store is an array of bytes representing your large file or complex document encoded as an ATTACHMENT data type. (See [Blob Store](#blob-store))
 
 <Frame>
     <img src="/images/v4.9/datatype-1.webp"/>
@@ -97,8 +97,8 @@ Here are the attachment token properties you can query to increase the efficienc
 
 | **Field** | **Detail**    | **Description**                                                                                                  |
 | --------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
-| id        | Attachment ID | A cryptographic hash of the attachment's binary contents. (See [Organizing by ID](/data-types/attachment#mehvy)) |
-| len       | Blob Length   | The size of the blob data in terms of length (len) in bytes. (See [Blob Store](/data-types/attachment#dNgRq))    |
+| id        | Attachment ID | A cryptographic hash of the attachment's binary contents. (See [Organizing by ID](#organizing-by-id)) |
+| len       | Blob Length   | The size of the blob data in terms of length (len) in bytes. (See [Blob Store](#blob-store))    |
 | metadata  | Metadata      | Additional information about the attachment, such as its name, type, and so on.                                  |
 
 ## Blob Store
@@ -135,7 +135,7 @@ The garbage collection process running periodically in the background of Small P
 The two components comprising an ATTACHMENT object — metadata stored internally within a document and blob data storing the actual binary data of your attachment — sync in different ways:
 
 - Metadata syncs just as any other document.
-- Blob data syncs with an entirely different protocol than documents; one that is asynchronous and built on top of Ditto's rainbow connection technology and optimizes for large binary data transfer. (See [Mesh Networking 101](/data-types/#nE9AvJ9QBktFCIcbDS5F-))
+- Blob data syncs with an entirely different protocol than documents; one that is asynchronous and built on top of Ditto's rainbow connection technology and optimizes for large binary data transfer. (See [Mesh Networking 101](../sync/concepts/mesh-networking-101))
 
 Attachment blob sync being asynchronous provides three key advantages:
 
@@ -177,11 +177,11 @@ There are two separate steps in the process of creating an attachment:
 
 <Steps>
     <Step>
-        Generate the attachment in the Ditto store. (See [Initiating ATTACHMENT Objects](/crud/create#SmqTL))
+        Generate the attachment in the Ditto store. (See [Initiating ATTACHMENT Objects](../crud/create#initiating-attachments))
     </Step>
     <Step>
-    Reference the attachment token in a document. (See [Referencing Attachment Tokens](/crud/create#_TG5N))
+    Reference the attachment token in a document. (See [Referencing Attachment Tokens](../crud/create#referencing-attachment-tokens))
     </Step>
 </Steps>
 
-To access your attachment data on demand or perform other operations, such as updating or deleting the attachment, first fetch its associated attachment token. (See [Fetching Attachment Tokens](/crud/read#34ZMA))
+To access your attachment data on demand or perform other operations, such as updating or deleting the attachment, first fetch its associated attachment token. (See [Fetching Attachment Tokens](../crud/read#fetching-attachment-tokens))

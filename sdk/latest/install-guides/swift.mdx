@@ -95,7 +95,7 @@ In the field on the right, set the version to **4.7.2**.
 Ditto now supports the visionOS platform in beta for our Swift SDK.
 
 <Info>
-For an overview of the Ditto SDK for visionOS, including steps outlining example integration with our demo chat app, [*DittoChat*](https://apps.apple.com/us/app/dittochat/id1450111256 "DittoChat"), see [visionOS on Swift](install-guides/#9eYfPNj_xG4j-R85evDAh).
+For an overview of the Ditto SDK for visionOS, including steps outlining example integration with our demo chat app, [*DittoChat*](https://apps.apple.com/us/app/dittochat/id1450111256 "DittoChat"), see [visionOS on Swift](#visionos-on-swift).
 </Info>
 
 To install the visionOS beta Ditto Swift package, set the **Dependency Rule** to **4.8.0-v** as follows:
@@ -149,12 +149,12 @@ Once you've added Ditto SDK package dependencies:
 <Steps>
   <Step>
 
-Configure your project's Info.plist file to ensure the necessary permissions for Bluetooth Low Energy (LE) and local network services are included. ([Ensuring Privacy Compliance](install-guides/swift#aor0j))
+Configure your project's Info.plist file to ensure the necessary permissions for Bluetooth Low Energy (LE) and local network services are included. ([Ensuring Privacy Compliance](#ensuring-privacy-compliance))
 
 </Step>
 
 <Step>
-If enabling the Data Protection entitlement, allow access after your end users have unlocked their device for the first time after a system restart. ([Setting Protection Entitlement](install-guides/swift#Fb7Ze))
+If enabling the Data Protection entitlement, allow access after your end users have unlocked their device for the first time after a system restart. ([Setting Protection Entitlement](#setting-protection-entitlement))
 </Step>
 </Steps>
 
@@ -170,7 +170,7 @@ From Xcode, add a new **Custom iOS Target Properties** entry:
 2. In the editor that appears, click **Info** tab.
 3. Right-click any row in the list, and then select **Add Row** from the menu.
 <Info>
-For instructions on configuring permissions for your app, see [Cloud Authentication](auth-and-authorization/cloud-authentication).
+For instructions on configuring permissions for your app, see [Cloud Authentication](../auth-and-authorization/cloud-authentication).
 </Info>
 
 <Frame>
@@ -262,7 +262,7 @@ From the top-most scope of your app's codebase, add the following to set up auth
 Replace YOUR_APP_ID and YOUR_PLAYGROUND_TOKEN with your access credentials available from the portal.
 
 <Info>
-For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](../cloud/portal/getting-playground-token-credentials)
+For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](/cloud/portal/getting-playground-token-credentials)
 </Info>
 
 ```swift Swift

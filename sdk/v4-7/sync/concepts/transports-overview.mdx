@@ -7,7 +7,7 @@ The Ditto peer-to-peer network architecture supports both direct communication b
 This dual approach provides flexibility — your app remains efficient in any network environment and you control when and what routes through a central server.
 
 <Info>
-To enable all transports, call `transportConfig.enablePeerToPeer()`; otherwise, enable them one by one. (See [Customizing Transports Configurations](<./../Advanced Customizations/Customizing Transports Configurations.md>))
+To enable all transports, call `transportConfig.enablePeerToPeer()`; otherwise, enable them one by one. (See [Customizing Transports Configurations](../customizing-transport-configurations))
 </Info>
 
 Following are the various transports Ditto uses to facilitate peer-to-peer communication across peers:
@@ -116,7 +116,7 @@ The following distances, limitations, and capacities are approximations and vary
 
 Caution is advised when handling large binary data, such as a high-resolution image or video exceeding 50 megapixels; a deeply embedded document; or a large document.
 
-Instead of storing files exceeding 250kb directly within a document object, consider using an `ATTACHMENT` instead of a `MAP`. (See [ATTACHMENT](<./../../Data Types/ATTACHMENT.md>))
+Instead of storing files exceeding 250kb directly within a document object, consider using an `ATTACHMENT` instead of a `MAP`. (See [ATTACHMENT](/sdk/v4-7/document-model/data-types/attachment))
 </Warning>
 
 <Info>
@@ -265,4 +265,4 @@ A WebSocket* *is a full-duplex communication protocol that enables a *long-lived
 
 Unlike other transports for peer-to-peer communication, the WebSocket does not come with built-in automatic device discovery capabilities.
 
-So establishing a WebSocket connection between devices over LAN, specify an IP/PORT for a LAN-based WebSocket connection. (See [Initializing LAN-Based WebSocket Connections](/v4-7/sync/customizing-transport-configurations#a5run)﻿)
+So establishing a WebSocket connection between devices over LAN, specify an IP/PORT for a LAN-based WebSocket connection. (See [Initializing LAN-Based WebSocket Connections](/sdk/v4-7/sync/customizing-transport-configurations#a5run)﻿)

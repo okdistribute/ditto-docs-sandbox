@@ -8,13 +8,13 @@ There are two ways to modify documents in DQL:
 <Step>
 `UPDATE`
 
-When executing `UPDATE` to apply changes, only the minimum data necessary to enforce all peers converge on one view of the data sync across the mesh. ([Updating](/v4-7/crud/update#37pqy))
+When executing `UPDATE` to apply changes, only the minimum data necessary to enforce all peers converge on one view of the data sync across the mesh. ([Updating](/sdk/v4-7/crud/update#37pqy))
 </Step>
 
 <Step>
 `INSERT`
 
-While `INSERT` operations modify all provided fields, even if they remain unchanged. ([Inserting to Update](/v4-7/crud/update#CAGqn))
+While `INSERT` operations modify all provided fields, even if they remain unchanged. ([Inserting to Update](/sdk/v4-7/crud/update#CAGqn))
 </Step>
 </Steps>
 
@@ -23,7 +23,7 @@ While `INSERT` operations modify all provided fields, even if they remain unchan
 To optimize performance and reduce unnecessary overhead, apply most updates in your app through the `UPDATE` method instead.
 
 <Info>
-For the full DQL syntax, see *Ditto Query Language *> [UPDATE](/v4-7/crud/update#8kd9FIMNxcDOqely0ZiHs).
+For the full DQL syntax, see *Ditto Query Language *> [UPDATE](/sdk/v4-7/crud/update#8kd9FIMNxcDOqely0ZiHs).
 </Info>
 
 Here is an example of a basic `UPDATE` operation on the `cars` collection:
@@ -105,7 +105,7 @@ Once an `ATTACHMENT` object is created and linked to a document, it becomes immu
 However, you can *indirectly* update attachments by performing an `UPDATE` operation on the document to replace the existing *attachment token* with a different one. The attachment token is the reference pointer linking the document to the attachment's binary data stored separately.
 
 <Info>
-Before you can access an attachment in your app, you must actively fetch it, unlike a document, which is always readily accessible. For instructions, see [READ](/v4-7/crud/read).
+Before you can access an attachment in your app, you must actively fetch it, unlike a document, which is always readily accessible. For instructions, see [READ](/sdk/v4-7/crud/read).
 </Info>
 
 <CodeGroup>
@@ -335,7 +335,7 @@ await ditto.store.execute("""
 The `INSERT` operation provides conflict policy options to override default behavior if a document with the same ID already exists.
 
 <Info>
-For the full DQL syntax, see *Ditto Query Language *> [INSERT](/v4-7/crud/update#oUAljnbafd0Wrz6p2xZCE).
+For the full DQL syntax, see *Ditto Query Language *> [INSERT](/sdk/v4-7/crud/update#oUAljnbafd0Wrz6p2xZCE).
 </Info>
 
 By using the `ON ID CONFLICT DO UPDATE` policy, inserted documents automatically apply updates for all provided fields.

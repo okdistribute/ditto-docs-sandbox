@@ -23,7 +23,7 @@ With just your existing mobile and edge devices, Ditto unlocks,
 
 Please review this guide thoroughly to understand the necessary requirements and changes. By following the outlined steps, your team can successfully migrate to a more robust solution with minimal disruptions.
 
-If you need further assistance at any point, feel free to [reach out to our support team.](https://docs.ditto.live/support/contact-us)
+If you need further assistance at any point, feel free to [reach out to our support team.](/support/contact-us)
 
 
 ## Explore our Compatibility Guides
@@ -36,7 +36,7 @@ Before migrating, it’s important to review the :comment **Compatibility Guide*
     <Card
         title="Explore our Compatibility Guides"
         icon="arrow-right"
-        href="/compatibility"
+        href="/sdk/v4-8/compatibility/compatibility"
         horizontal
     />
 </CardGroup>
@@ -44,7 +44,7 @@ Before migrating, it’s important to review the :comment **Compatibility Guide*
 
 ## Connecting to MongoDB
 
-Ditto lets your apps sync directly between :comment **clients** (Small Peers)** and a  **Big Peer (**<a href="https://docs.ditto.live/cloud" target="_blank">**Cloud Platform**</a>**)** for real-time data sharing, with an offline-first design. This setup reduces the need for constant cloud access and improves performance.
+Ditto lets your apps sync directly between :comment **clients** (Small Peers)** and a  **Big Peer (**<a href="/cloud/overview" target="_blank">**Cloud Platform**</a>**)** for real-time data sharing, with an offline-first design. This setup reduces the need for constant cloud access and improves performance.
 
 This guide will help you replace **Realm** on the client side to start using Ditto’s peer-to-peer syncing right away. The integration between Ditto's Big Peer and MongoDB is enabled by the [MongoDB connector](), which synchronizes data bi-directionally between Ditto and MongoDB.
 
@@ -71,8 +71,8 @@ Before adding Ditto, we advise you remove MongoDB Realm from your project. This 
 
 Now that Realm is removed, it’s time to install Ditto. Follow our installation guides to add Ditto to your project. Be sure to configure the right permissions for your app, like background mode and local network access.
 
-- Visit our [Directory of Install Guides](https://docs.ditto.live/install-guides) for instructions specific to your platform.
-- <a href="https://docs.ditto.live/install-guides/swift#kX-Je" target="_blank">Configure Permissions</a>
+- Visit our [Directory of Install Guides](/sdk/latest/install-guides/install-guides) for instructions specific to your platform.
+- <a href="/sdk/latest/install-guides/swift#configure-permissions" target="_blank">Configure Permissions</a>
 
 ### 4. Initialize Ditto
 
@@ -104,7 +104,7 @@ private val ditto: Ditto? by lazy {
 ```
 </CodeGroup>
 
-Ditto is distributed by default, meaning it will automatically connect to, and sync data across your nearby devices. In order to solely rely on device-to-cloud sync, you can <a href="https://docs.ditto.live/sync/customizing-transport-configurations#OyUOQ" target="_blank">disable local sync</a> by turning off LAN, peer-to-peer Wi-Fi, and Bluetooth transports.
+Ditto is distributed by default, meaning it will automatically connect to, and sync data across your nearby devices. In order to solely rely on device-to-cloud sync, you can <a href="/sync/customizing-transport-configurations#disable-local-sync" target="_blank">disable local sync</a> by turning off LAN, peer-to-peer Wi-Fi, and Bluetooth transports.
 
 ### 5. Update Your Data Models
 
@@ -162,7 +162,7 @@ There are a few conventions with Ditto data models worth considering:
 - Timestamps are strings in ISO 8601 format.
 - Ditto will either return items as `Map<String, Any>` or as a JSON string, which you may consider deserializing as native data types.
 
-We also recommend you make yourself familiar with [REGISTER](https://docs.ditto.live/data-types/register), [MAP](https://docs.ditto.live/data-types/map), and [ATTACHMENT](https://docs.ditto.live/data-types/attachment) data types. Read more about best practices for data modelling with Ditto in [this guide](https://docs.ditto.live/best-practices/3-data-modeling-and-sync-logic).
+We also recommend you make yourself familiar with [REGISTER](/sdk/latest/data-types/register), [MAP](/sdk/latest/data-types/map), and [ATTACHMENT](/sdk/latest/data-types/attachment) data types. Read more about best practices for data modelling with Ditto in [this guide](/best-practices/3-data-modeling-and-sync-logic).
 
 ### 6. Set Up Subscriptions
 
@@ -226,7 +226,7 @@ suspend fun addTodo(title: String) {
 
 Refactor how you retrieve data by leveraging Ditto’s powerful observation capabilities.
 
-When reading data in Ditto, the primary method is to set up an <a href="https://docs.ditto.live/crud/observing-data-changes" target="_blank">**observer**</a> that listens for changes and updates in real-time. This ensures your app automatically reflects the latest data from other peers.
+When reading data in Ditto, the primary method is to set up an <a href="/sdk/latest/crud/observing-data-changes" target="_blank">**observer**</a> that listens for changes and updates in real-time. This ensures your app automatically reflects the latest data from other peers.
 
 **Real-Time Observing**
 
@@ -290,7 +290,7 @@ suspend fun toggleIsComplete(todo: Todo) {
 
 #### **Delete**
 
-In a distributed data system like Ditto, deletion follows a “<a href="https://docs.ditto.live/crud/delete#bPsqW" target="_blank">soft delete</a>” pattern. This means that when you mark an item as deleted, it’s not immediately removed from the collection or local storage. Instead, the item is flagged as deleted to ensure that other devices in the network remain in sync. To fully remove the item and free up space, you’ll need to evict these “soft deleted” items. For more details, see the section on <a href="https://docs.ditto.live/crud/delete#-BLNB" target="_blank">Evictions</a>.
+In a distributed data system like Ditto, deletion follows a “<a href="/sdk/latest/crud/delete#soft-delete-pattern" target="_blank">soft delete</a>” pattern. This means that when you mark an item as deleted, it’s not immediately removed from the collection or local storage. Instead, the item is flagged as deleted to ensure that other devices in the network remain in sync. To fully remove the item and free up space, you’ll need to evict these “soft deleted” items. For more details, see the section on <a href="/sdk/latest/crud/delete#evictions" target="_blank">Evictions</a>.
 
 <CodeGroup>
 ```swift Swift
@@ -320,7 +320,7 @@ suspend fun deleteTodo(todo: Todo) {
 
 ### 8. Ensure your Views Respond to Updates
 
-Your app needs to react to changes in real-time data. Set up <a href="https://docs.ditto.live/crud/observing-data-changes" target="_blank">observers</a> to make sure your UI updates when the data synced through Ditto changes.
+Your app needs to react to changes in real-time data. Set up <a href="/sdk/latest/crud/observing-data-changes" target="_blank">observers</a> to make sure your UI updates when the data synced through Ditto changes.
 
 ### 9. Evictions
 
@@ -328,17 +328,17 @@ In distributed systems, it’s important to manage storage efficiently, especial
 
 To manage storage, Ditto allows you to configure **eviction policies**. This lets you free up space by removing data that is no longer needed or marked as deleted (as described in the **soft delete** section).
 
-For more on evictions and deletion, refer to Ditto’s documentation: [Evictions and Delete](https://docs.ditto.live/crud/delete).
+For more on evictions and deletion, refer to Ditto’s documentation: [Evictions and Delete](/sdk/latest/crud/delete).
 
 ### 10. Authentication and Authorization
 
-A production application must have robust auth system in place. Ditto lets you rebuild your Atlas Device Sync authentication and authorization flow in this document: [Migrating Authentication and Authorization from Atlas Device Sync to Ditto](migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto)
+A production application must have robust auth system in place. Ditto lets you rebuild your Atlas Device Sync authentication and authorization flow in this document: [Migrating Authentication and Authorization from Atlas Device Sync to Ditto](./migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto)
 
 
 ## Additional Resources
 
-- Need assistance? <a href="https://docs.ditto.live/support/contact-us" target="_blank">Reach out to us</a>!
-- Check out our <a href="https://docs.ditto.live/best-practices" target="_blank">Best Practices</a>
+- Need assistance? <a href="/support/contact-us" target="_blank">Reach out to us</a>!
+- Check out our <a href="/best-practices" target="_blank">Best Practices</a>
 - Learn more about our <a href="https://ditto.live/platform/mongodb-connector" target="_blank">MongoDB Connector</a> coming soon.
 
 

@@ -23,7 +23,7 @@ iconType: solid
 
 <AccordionGroup>
 <Accordion title="Which Identity should I use to initialize Ditto?">
-Use Online Playground for development and Online With Authentication for production. (See [Cloud Authentication](https://docs.ditto.live/support/faq#D0B4xrfN45yeM15qCYcOb))
+Use Online Playground for development and Online With Authentication for production. (See [Cloud Authentication](/sdk/latest/auth-and-authorization/cloud-authentication))
 </Accordion>
 <Accordion title="Can I use Ditto with two separate app IDs in the same mobile app?">
 Yes. Use a separate `persistenceDirectory`.
@@ -41,7 +41,7 @@ iOS and Android devices are able to create peer to peer WiFi connections with ea
 iOS and Android devices are able connect with each other over a standard Bluetooth Low Energy (BLE) connection. Ditto supports both Bluetooth 4.x and 5.x protocols seamlessly. Bluetooth 5 devices are able to communicate with each other over a higher bandwidth (an average of 1.8 Megabits per second). If a Bluetooth 5.x device needs to connect with a Bluetooth 4.x device, the devices will connect over a Bluetooth 4.x protocol.
 </Accordion>
 <Accordion title="What are the device and operating system requirements?">
-Ditto offers a large range of devices and OS support for each of our SDKs. For specific support see the compatibilty map for your given language [Directory of Compatibility Maps](https://docs.ditto.live/support/faq#SVSG_auykclo2O4O_sCy4)
+Ditto offers a large range of devices and OS support for each of our SDKs. For specific support see the compatibilty map for your given language [Directory of Compatibility Maps](/sdk/latest/compatibility/compatibility)
 </Accordion>
 <Accordion title="How does Ditto still enable offline data?">
 At the heart of Ditto is a realtime database that takes in JSON-like data structures. That means that even if a device with Ditto is completely disconnected from other devices, it will still have the data stored locally. That means even in a completely offline environment, users will still be able to edit, read, and observe data. When devices reconnect, they will exchange relevant information that was edited when they were offline. You can think of this as a similar behavior to Google Docs or Google Sheets.
@@ -89,7 +89,7 @@ There isn't a size limit to a Ditto document or store. Like other databases, Dit
 No there are no limits to the number of collections. While there is no limit, try to keep the names shorter than 30 characters. The collection names are stored with each document. This is merely a suggestion.
   </Accordion>
   <Accordion title="How much memory does Ditto consume during high load times?">
-Your results may vary depending on the size of your documents and the number of them you are querying. Ditto will temporarily store all queried documents in the memory and convert them to a format that your programming language can understand. However, this process can consume a significant amount of memory if your queries are very broad. You can use [`sort` and `limit` together](https://docs.ditto.live/android/common/concepts/querying#sort)  to capture only the most recent and relevant documents. If you need to deserialize an extensive list of documents, we recommend using the `observeWithNextSignal` function, as it allows your application to better manage memory usage (learn more at [https://docs.ditto.live/ios/quick-tips/avoiding-excessive-memory-consumption](https://docs.ditto.live/ios/quick-tips/avoiding-excessive-memory-consumption)).
+Your results may vary depending on the size of your documents and the number of them you are querying. Ditto will temporarily store all queried documents in the memory and convert them to a format that your programming language can understand. However, this process can consume a significant amount of memory if your queries are very broad. You can use `sort` and `limit` together to capture only the most recent and relevant documents. If you need to deserialize an extensive list of documents, we recommend using the `observeWithNextSignal` function, as it allows your application to better manage memory usage.
 
   </Accordion>
 </AccordionGroup>

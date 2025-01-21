@@ -2,12 +2,12 @@
 title : "Transport Overview"
 ---
 
-The Ditto peer-to-peer network architecture supports both direct communication between Small Peers (device-to-device) and communication by way of a server ([Big Peer](/cloud)) that connects and transmits data between Small Peers (device-to-server-to-device).
+The Ditto peer-to-peer network architecture supports both direct communication between Small Peers (device-to-device) and communication by way of a Big Peerthat connects and transmits data between Small Peers (device-to-cloud-to-device).
 
 This dual approach provides flexibility — your app remains efficient in any network environment and you control when and what routes through a central server.
 
 <Info>
-To enable all transports, call `transportConfig.enablePeerToPeer()`; otherwise, enable them one by one. (See [Customizing Transports Configurations](/sync/customizing-transport-configurations))
+To enable all transports, call `transportConfig.enablePeerToPeer()`; otherwise, enable them one by one. (See [Customizing Transports Configurations](../customizing-transport-configurations))
 </Info>
 
 Following are the various transports Ditto uses to facilitate peer-to-peer communication across peers:
@@ -121,9 +121,9 @@ The following distances, limitations, and capacities are approximations and vary
 <Warning>
 **Syncing large documents can significantly impact network performance:**
 
-Caution is advised when handling large binary data, such as a high-resolution image or video exceeding 50 megapixels; a deeply embedded document; or a large document.
+Caution is advised when handling large binary data, such as a high-resolution image or video; a deeply embedded document; or a large document.
 
-Instead of storing files exceeding 250kb directly within a document object, consider using an `ATTACHMENT` instead of a `MAP`. (See [ATTACHMENT](/data-types/attachment.mdx))
+Instead of storing files exceeding 250kb directly within a document object, consider using an `ATTACHMENT` instead. (See [ATTACHMENT](../../data-types/attachment))
 </Warning>
 
 <Info>

@@ -10,26 +10,23 @@ iconType: solid
 
 </Info>
 <Info>
-For a complete overview of the platforms, transports, and devices the JavaScript SDK supports, select **JavaScript Web** from the [Directory of Compatibility Maps](/v4-7/compatibility)﻿.
+For a complete overview of the platforms, transports, and devices the JavaScript SDK supports, select **JavaScript Web** from the [Directory of Compatibility Maps](/sdk/v4-7/compatibility/compatibility).
 
-</Info>
-<Info>
-If you're using Node.js and want instructions on how to create a task app, see the [Prebuilt Task App](/v4-7/#2zFhnXmxPoCrO4HTyGN2E)﻿ and the [Basic Task App](/v4-7/#tNFB5QLlMjktMDuHnztOm)﻿ tutorial.
 </Info>
 To install the JavaScript SDK:
 
 <Steps>
   <Step>
-    ﻿[Prerequisites](/v4-7/javascript-installing#sb-Fz)﻿: Confirm that you meet the minimum requirements.
+    [Prerequisites](#prerequisites): Confirm that you meet the minimum requirements.
   </Step>
   <Step>
-  ﻿[Install Dependencies](/v4-7/javascript-installing#i_i6q)﻿: Add the `ditto` package to your environment.
+    [Install Dependencies](#installing-dependencies): Add the `ditto` package to your environment.
   </Step>
   <Step>
-﻿[Integrate Ditto](/v4-7/javascript-installing#Ajrfc)﻿: Import and initialize Ditto in your app.
+    [Integrate Ditto](#integrating-ditto): Import and initialize Ditto in your app.
   </Step>
   <Step>
-﻿[Run Ditto](/v4-7/javascript-installing#s71_W)﻿: Authenticate with the Big Peer and start syncing offline.
+    [Run Ditto](#running-ditto): Authenticate with the Big Peer and start syncing offline.
   </Step>
 
 </Steps>
@@ -74,7 +71,7 @@ Import and initialize Ditto, and then provide your access credentials for one-ti
 </Note>
 
 <Info>
-  For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials(/v4-7/get-started/sync-credentials)﻿ . For an introduction to authentication in Ditto, see _Security_ > [Cloud Authentication](/v4-7/security/authentication)﻿.
+  For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials(/sdk/v4-7/get-started/sync-credentials)﻿ . For an introduction to authentication in Ditto, see _Security_ > [Cloud Authentication](/sdk/v4-7/security/authentication)﻿.
 </Info>
 
 ```js js
@@ -109,7 +106,7 @@ node index.js
 
 ## Add a Sync Subscription
 
-Add a _sync subscription_ to receive updates on documents that match its query from connected peers in the [mesh](/v4-7/basic/mesh-networking-101)﻿.
+Add a _sync subscription_ to receive updates on documents that match its query from connected peers in the [mesh](/sdk/v4-7/basic/mesh-networking-101).
 
 Use `registerSubscription()` in the `ditto.sync` namespace to add a sync subscription:
 
@@ -147,9 +144,6 @@ main()
 
 Now that your app is ready to receive updates to documents from other peers, you might want to react to those changes as soon as they happen. For this you can use the `registerObserver()` method on `ditto.store`. The passed in callback closure is invoked by Ditto everytime it registers new changes to documents matching the query.
 
-<Info>
-  For a step-by-step demonstration of how to create a basic task app, see the [Basic Task App](/v4-7/javascript-installing) tutorial.
-</Info>
 ```JS JS
 import { init, Ditto } from '@dittolive/ditto'
 

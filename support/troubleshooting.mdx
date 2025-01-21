@@ -201,7 +201,7 @@ See if the following fixes your issue:
 [DEBUG] 2023-08-03T17:36:35.046Z: failed to connect to peer; error = Connect failed because a TLS stream couldn't be established: invalid peer certificate contents: invalid peer certificate: UnknownIssuer; remote_peer = MulticastRemotePeer(id: 10, announce Q2RLCGEYdpLwjFditto)
 ```
 
-If you see the above message, your device's locally cached certificate is invalid. The device needs to call `ditto.auth.logout()` and reconnect to the Internet to get a new certificate. Alternatively, you can clear the local cache by reinstalling the mobile application or clearing the local persistence directory.[**​**](https://docs.ditto.live/ios/common/troubleshooting#outdated-certificate)
+If you see the above message, your device's locally cached certificate is invalid. The device needs to call `ditto.auth.logout()` and reconnect to the Internet to get a new certificate. Alternatively, you can clear the local cache by reinstalling the mobile application or clearing the local persistence directory.
 
 #### Authentication server unavailable
 
@@ -479,13 +479,13 @@ Did you follow the [tutorial]()? The tutorial is your best guide for implementin
 ### Common mistakes
 
 1. `authenticationExpiringSoon` and `authenticationRequired` both need to be
-   implemented according to the [sample code](https://docs.ditto.live/support/troubleshooting).
+   implemented according to the [sample code](/support/troubleshooting).
 2. Since callback objects are only invoked when Ditto initializes and the client authentication certificate expires, do not create subscriptions inside callbacks.
 3. Keep a strong reference to the AuthClient for the duration of the Ditto object, otherwise the auth handler will become garbage collected at an inappropriate time.
 </Warning>
 
 
-**Verify that your webhook provider name is **[**correctly copied in the Ditto portal**](https://docs.ditto.live/support/troubleshooting)**.**
+**Verify that your webhook provider name is **[**correctly copied in the Ditto portal**](/support/troubleshooting)**.**
 
 The provider name given to the Ditto Client must match a provider name in the Portal (e.g., `my-auth`).
 
@@ -518,13 +518,13 @@ namespace Sync {
 
 If you are unable to see connections over particular transports, first ensure you are following the SDK Setup guide for your language.
 <CardGroup>
- <Card title="Swift" icon="square-1" href="https://docs.ditto.live/support/troubleshooting#AOQCVpFWoPfeRJ-yNN6XF" iconType="solid" horizontal/>
+ <Card title="Swift" icon="square-1" href="/sdk/latest/install-guides/swift#configure-permissions" iconType="solid" horizontal/>
 
- <Card title="Kotlin" icon="square-2" href="https://docs.ditto.live/support/troubleshooting#ES2xJNhuX53ABacyyBd6r" iconType="solid" horizontal/>
+ <Card title="Kotlin" icon="square-2" href="/sdk/latest/install-guides/kotlin#configure-permissions" iconType="solid" horizontal/>
 
-<Card title="JavaScript Web | Node.js | React Native" icon="https://docs.ditto.live/support/troubleshooting#k-dnSQ3kspeBc21VASdSu" iconType="solid" horizontal/>
+<Card title="JavaScript Web | Node.js | React Native" icon="square-3" href="/sdk/latest/install-guides/javascript#configure-permissions" iconType="solid" horizontal/>
 
-<Card title="Bluetooth on Linux" icon="square-4" href="https://docs.ditto.live/support/troubleshooting#GPnhy_1_KdnqAHpHCOXFi" iconType="solid" horizontal/>
+<Card title="Bluetooth on Linux" icon="square-4" href="/best-practices/how-to/bluetooth-on-linux" iconType="solid" horizontal/>
 
 </CardGroup>
 
@@ -617,23 +617,23 @@ namespace Sync {
 
 1. Turn Use Location on
 2. Turn Bluetooth Scanning on
-3. Are permissions set correctly? From [SDK Setup Guides](https://docs.ditto.live/support/troubleshooting#QhVIwDWAiVofdUG_u5zoV), refer to the installation article for your language)
+3. Are permissions set correctly? From [SDK Setup Guides](/sdk/latest/install-guides/install-guides), refer to the installation article for your language
 4. Go to your OS-level permissions for Bluetooth and clear the app permissions for your application.
 5. Delete the app, install it again, and open it. Does it ask for Bluetooth permissions?
 6. Android only: are you calling `ditto.refreshPermissions()`?
 
 ### Apple Wireless Direct Link, P2P-Wifi, Wifi Aware
 
-1. Are permissions set correctly? (From [SDK Setup Guides](https://docs.ditto.live/support/troubleshooting#QhVIwDWAiVofdUG_u5zoV), refer to the installation article for your language)
+1. Are permissions set correctly? (From [SDK Setup Guides](/sdk/latest/install-guides/install-guides), refer to the installation article for your language)
 2. Go to your OS-level permissions and clear the app permissions for your application.
 3. Delete the app, install it again, and open it. Does it ask for location permissions?
 4. If you are using a custom `TransportConfig`, make sure you have enabled all peer-to-peer transports using `enableAllPeerToPeer()`.
 
 ### Local Area Network (LAN)
 
-1. Are permissions set correctly? From [SDK Setup Guides](https://docs.ditto.live/support/troubleshooting#QhVIwDWAiVofdUG_u5zoV), refer to the installation article for your language)
+1. Are permissions set correctly? From [SDK Setup Guides](/sdk/latest/install-guides/install-guides), refer to the installation article for your language)
 2. Are both devices connected to the same WiFi network?
-3. Check your router settings and see [LAN Optimizations](https://docs.ditto.live/support/troubleshooting#bNU17T7dncLapGgfX32a6).
+3. Check your router settings and see Lan Optimizations
 4. If your device has VPN enabled, then peers can fail to communicate. Ensure that your VPN supports UDP multicasting.
 
 ## Synchronization seems slow, or comes to a halt over time
@@ -651,7 +651,7 @@ may be occurring.
 A common issue we see in reactive apps is a failure to dispose of resources as
 conditions change. Your app could create a large accumulation of publishers that
 infinitely grow. Every liveQuery and subscription in ditto must be explicitly
-stopped using the `stop` or `cancel` API. See [snycing data](https://docs.ditto.live/support/troubleshooting) for more information.
+stopped using the `stop` or `cancel` API. See [syncing data](/sdk/latest/sync/syncing-data) for more information.
 
 ### Debugging Blocked Transactions
 

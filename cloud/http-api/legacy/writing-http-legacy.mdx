@@ -4,12 +4,12 @@ description: "Ditto provides a robust query engine that allows you to perform va
 icon: feather
 iconType: solid
 ---
- For an overview, see *Ditto Basics *> [CRUD Fundamentals](/v4-7/crud/create).
+ For an overview, see *Ditto Basics *> [CRUD Fundamentals](/sdk/latest/crud/create).
 
 Use the `write` command to `upsert`, `update`, and `remove` documents from the Big Peer.
 
 <Warning>
-  Do *not *include a `find` query within a `write` command in a single operation. Instead, perform each as separate API calls. For instructions, see [Performing Find and Write Operations](/cloud/legacy/).
+  Do *not *include a `find` query within a `write` command in a single operation. Instead, perform each as separate API calls. For instructions, see [Performing Find and Write Operations](/cloud/http-api/legacy/legacy-querying-http).
 </Warning>
 
 
@@ -20,8 +20,7 @@ Once changes are made to the Big Peer, those changes then propagate to all Small
 To access Ditto's HTTP API, direct your write requests to the following URL endpoint, making sure to replace `{app_id}` with the ID Ditto generated when you created your app in the portal.
 
 <Info>
-For instructions on how to get your app ID, see [Get Started](/cloud/http-api/legacy/writing-http-legacy).
-
+For instructions on how to get your app ID, see [Get Started](/cloud/http-api/getting-started).
 </Info>
 
 
@@ -37,7 +36,7 @@ The following snippet demonstrates how to use the `curl` command to perform a co
 In this example, a `friends` key contains a `register` of the `array` type, alongside `orderCount` which functions as a `counter`.
 
 <Info>
-For more information about `registers` and `counters`, see the *Platform Manual* > [Data Types (TEMP)](/cloud/http-api/legacy/writing-http-legacy).
+For more information about `registers` and `counters`, see the *Platform Manual* > [Data Types](/sdk/latest/data-types/register).
 </Info>
 
 ```curl cURL

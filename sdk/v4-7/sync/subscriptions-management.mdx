@@ -9,9 +9,9 @@ DQL sync subscriptions are supported for devices on version 4.5 or later.
 Devices on Ditto versions 4.4 or earlier are supported, however, they do not sync data through DQL subscriptions.
 </Warning>
 
-- To get your active `subscriptions`, call the subscriptions method on the `ditto.sync` namespace. ([Retrieving Subscriptions](https://docs.ditto.live/v4-7/sync/subscriptions-management#J8rYE))
-- To cancel a subscription, call `cancel` on its subscription object you instantiated when setting up your subscription. ([Canceling Subscriptions](https://docs.ditto.live/v4-7/sync/subscriptions-management#aVT0-)﻿)
-- To confirm cancelation, call the i`sCancelled` field on the subscription object. ([Canceling Subscriptions](https://docs.ditto.live/v4-7/sync/subscriptions-management#aVT0-)﻿)
+- To get your active `subscriptions`, call the subscriptions method on the `ditto.sync` namespace. ([Retrieving Subscriptions](#retrieving-subscriptions))
+- To cancel a subscription, call `cancel` on its subscription object you instantiated when setting up your subscription. ([Canceling Subscriptions](#canceling-subscriptions))
+- To confirm cancelation, call the `isCancelled` field on the subscription object. ([Canceling Subscriptions](#canceling-subscriptions))
 
 ## Creating Subscriptions
 
