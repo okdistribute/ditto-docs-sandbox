@@ -30,73 +30,7 @@ Only data currently stored within the Big Peer will be replicated to/from indivi
 
 To do this, the connector listens to changes to documents in both Ditto and MongoDB. When it detects a change to a document it then performs conflict resolution between the two systems and updates the document in the target system with the new value. This conflict resolution mechanism roughly models Ditto's [causal consistency](/sdk/latest/sync/consistency-models#causal-consistency), ensuring that changes are not unexpectedly lost when mutations are made to the same documents in both MongoDB and Ditto simultaneously.
 
-Unlike other synchronization systems for MongoDB, Ditto's advanced conflict resolution (based on CRDTs) avoid the need to deploy extra backend services to handle writes and conflicts, just deploy a Big Peer and you have everything you need to integrate with MongoDB.
-
-## Setting Up the Connector
-
-To setup the connector, you first must carry out some steps within your MongoDB cluster, then configure the connector via API to launch the connector.
-
-### Pre-requisites
-
-You need to have a MongoDB cluster already setup, the minimum supported version for the connector is currently MongoDB 7.0.13 and MongoDB 8.0.0.
-
-You need to follow a number of steps to ensure that MongoDB is ready to be used with the connector.
-
-#### Create MongoDB Database
-
-If your target database doesn't currently exist, then you must first create this within MongoDB. No special configuration is required for the created database. An existing database can be used if one exists.
-
-#### Create MongoDB Collections
-
-All collections you wish to synchronize with Ditto must exist within MongoDB before setting up the connector. Each of these synchronized collections must have `changeStreamPreAndPostImages` set to `true`. This setting allows the connector to ensure causal consistency between both systems, and the connector will not start if this is not set for all collections.
-
-When creating new collections, pass `changeStreamPreAndPostImages: true` to your creation command. For pre-existing collections, you can modify this configuration using `collMod`.
-
-If you are using pre-existing collections, existing data in these collections will not be synchronized unless they are modified after the connector has been setup.
-
-#### Create a MongoDB Database User
-
-The connector authenticates to MongoDB using the username and password of a database user. We recommend creating a dedicated database user for the connector to use within MongoDB.
-
-At a minimum the database user will require the  `readWrite` permission for the specific database that you're looking to synchronize with Ditto.
-
-#### Add Ditto IPs to MongoDB Allowlist
-
-When configuring the connector, you will have a set of three IPs returned that represent the egress IPs of your Big Peer. You need to add these three IPs to the allowlist of your MongoDB cluster to allow the connector to access the cluster correctly.
-
-Note that these IPs may differ between Ditto apps depending on the underlying Big Peer that is hosting the app.
-
-### Configuring the Connector
-
-The connector is configured using the `/v1/mongodb/link` API provided by Ditto's cloud service.
-
-You need to provide the following information as part of the request:
-
-- `app_id` - The ID of the Ditto app that you wish to set the connector up for
-- `connection_string` - The connection string, including the credentials of the created database user, that should be used to connect to MongoDB
-- `collections` - The object specifying the collections and ID mappings to use for the connector, see [ID mappings](#id-mapping-between-systems) for more details
-
-An example payload looks as follows:
-
-```json JSON
-{
-    "app_id": "1bff513e-4755-4b48-bbab-55c305f0b3d9",
-    "connection_string": "mongodb+srv://<username>:<password>@beyondthebasics.abcde.mongodb.net/test",
-    "collections": {
-        "collection1": {
-            "fields": [
-                "field1",
-                "field2"
-            ]
-        },
-        "collection2": {
-            "fields": [
-                "_id"
-            ]
-        }
-    }
-}
-```
+Unlike other synchronization systems for MongoDB, Ditto's advanced conflict resolution (based on CRDTs) avoids the need to deploy extra backend services to handle writes and conflicts, just deploy a Big Peer and you have everything you need to integrate with MongoDB.
 
 ## Data Modelling Considerations
 
@@ -124,7 +58,9 @@ IDs in MongoDB, on the other hand, are commonly `ObjectIds`, essentially UUIDs w
 
 The MongoDB Connector automatically bridges this difference in IDs, so that both systems can converge, even if their primary keys differ. It does this through the "ID Mapping" process, based on the configuration that you provide to the connector.
 
+<Warning>
 Fields used in the id mapping must be **immutable and always present** to achieve convergence between the two systems. If these requirements are not met, it will result in undefined behavior, such as duplicate Ditto documents with different IDs, or failure to synchronize the document between MongoDB and Ditto.
+</Warning>
 
 There are 3 modes for the ID mapping:
 
@@ -134,18 +70,22 @@ There are 3 modes for the ID mapping:
 
 #### 1:1 ID
 
-This mode is used if the only field mapped for a given collection is `_id`. In that case the ID fields used between Ditto and MongoDB will be identical.
+This mode is used if you select the "Match IDs" option, which will use the `_id` field in the ID mapping. 
+In that case the ID fields used between Ditto and MongoDB will be identical.
 
 However, some restrictions apply here:
 
 - `NULL` cannot be present in the ID
 - Arrays cannot be present in the ID
-- No object fields within the ID can start with a `$`
-- BSON types in the \_id that aren’t direct Ditto JSON types (e.g. Decimal or DateTime) aren't currently supported as they cannot be automatically mapped between systems
+- The ID cannot be an object
 
 #### Single Document Field
 
-This mode is used if only a single (non `_id`) field is specified in the field mapping.
+This mode is used if only a single field is specified in the field mapping.
+<Note>
+You cannot use the `_id` field itself in this mode.
+You must only refer to top-level fields in the document, nested fields are not supported.
+</Note>
 
 In this mode, all generated Ditto IDs will be set to the value of the selected field.
 For example, with a field mapping of just the `orderId` field and the following MongoDB document:
@@ -162,7 +102,6 @@ For example, with a field mapping of just the `orderId` field and the following 
     ]
 }
 ```
-
 
 The connector would insert the following document into Ditto:
 
@@ -182,7 +121,10 @@ The connector would insert the following document into Ditto:
 #### Multiple Document Fields
 
 When the ID mapping contains multiple fields, like the restaurants collection in the example above, the Ditto ID will become an object with the specified fields and corresponding values from the document. Note that the Id Mapping cannot refer to the \_id field itself in this case.
-
+<Note>
+You cannot use the `_id` field itself in this mode.
+You must only refer to top-level fields in the document, nested fields are not supported.
+</Note>
 For example, with a field mapping of the `location` and `orderId` fields and the following MongoDB document:
 
 
@@ -243,7 +185,134 @@ The full set of mappings are listed below:
 | Timestamp             | number (epoch timestamp)                                                                                                                                     |
 | Decimal128            | string                                                                                                                                                       |
 
+<Note>
+All BSON datatypes that are not listed above will not be replicated between Ditto and MongoDB.
+</Note>
 When replicating data from MongoDB to Ditto, the connector will store metadata allowing the connector to retain the mapping between datatypes when writing the same document back to MongoDB. In the case that a document is created within Ditto, the document will be inserted into MongoDB using only the basic JSON datatypes.
+
+
+## Setting Up the Connector
+
+To setup the connector, you first must carry out some steps within your MongoDB cluster, then configure the connector via API to launch the connector.
+
+### Pre-requisites
+
+You need to have a MongoDB cluster already setup, the minimum supported version for the connector is currently MongoDB 7.0.13 and MongoDB 8.0.0.
+
+You need to follow a number of steps to ensure that MongoDB is ready to be used with the connector.
+
+#### Create MongoDB Database
+
+If your target database doesn't currently exist, then you must first create this within MongoDB. No special configuration is required for the created database. An existing database can be used if one exists.
+
+#### Create MongoDB Collections
+
+All collections you wish to synchronize with Ditto must exist within MongoDB before setting up the connector. Each of these synchronized collections must have `changeStreamPreAndPostImages` set to `true`. This setting allows the connector to ensure causal consistency between both systems, and the connector will not start if this is not set for all collections.
+
+When creating new collections, pass `changeStreamPreAndPostImages: true` to your creation command. For pre-existing collections, you can modify this configuration using `collMod`.
+See [Enable Change Stream Pre and Post Images](https://www.mongodb.com/docs/manual/change-streams/#enable-change-stream-pre-and-post-images).
+For example, to edit an existing collection called `orders`, you can run the following command:
+
+```bash
+db.runCommand({ collMod: "orders", changeStreamPreAndPostImages: true })
+```
+
+If you are using pre-existing collections, existing data in these collections will not be synchronized unless they are modified after the connector has been setup.
+
+#### Create a MongoDB Database User
+
+The connector authenticates to MongoDB using the username and password of a database user. We recommend creating a dedicated database user for the connector to use within MongoDB.
+
+At a minimum the database user will require the  `readWrite` permission for the specific database that you're looking to synchronize with Ditto. See [Configure MongoDB Database Users](https://www.mongodb.com/docs/atlas/security-add-mongodb-users).
+
+#### Add Ditto IPs to MongoDB Allowlist
+
+The Big Peer uses the following 3 IPs for interacting with external services such as MongoDB:
+
+```
+18.246.126.150
+35.162.177.41
+44.231.220.176
+```
+
+You need to add these three IPs to the allowlist of your MongoDB cluster to allow the connector to access the cluster correctly, see [Add IPs to MongoDB Allowlist](https://docs.mongodb.com/atlas/security/ip-access-list/).
+
+### Configuring the Connector
+
+<Note>
+To get access to the MongoDB Connector UI, you'll need to contact Ditto to have your organization enrolled.
+</Note>
+
+The connector is configured using the Ditto Portal.
+You can find the MongoDB Connector UI in the Ditto Portal, under `Settings` > `MongoDB Connector`.
+
+![](/images/cloud/mongodb-connector/full-form.png)
+
+#### Step-by-Step Guide
+<Steps>
+<Step>
+Fill in the database field, with the MongoDB database that you wish to synchronize with Ditto.
+</Step>
+<Step>
+Fill in the connection string field, with the connection string of the MongoDB database that you wish to synchronize with Ditto.
+You find this connection string in the MongoDB Atlas UI, under the `Connect` button for your cluster, ensuring that you use the credentials of the database user that you created in the prerequisites.
+While the password is passed into the Ditto Portal as part of the connection string, it is stored securely in Ditto's systems and is not accessible to Ditto staff.
+</Step>
+<Step>
+Fill in the ID mapping field, with the ID mapping that you wish to use for the connector.
+
+You can add new collections to the connector by clicking the `Add Collection` button, entering the collection name, then selecting how you would like your IDs mapped.
+
+If you select the `Match IDs` option, then the ID fields used between Ditto and MongoDB will be identical.
+![](/images/cloud/mongodb-connector/match-ids.png)
+If you select the `Map fields to Ditto ID` option, then you will need to add all of the fields that you wish to map to the Ditto ID.
+![](/images/cloud/mongodb-connector/map-fields.png)
+
+Once done, click the `Add collection` button to add the collection to the connector configuration, repeat this step for each collection you wish to synchronize with Ditto.
+<Warning>
+ID Mapping is a critical part of configuring the connector, please makes sure you read the [ID Mapping](/cloud/mongodb-connector#id-mapping-between-systems) section carefully and configure as necessary for your use case.
+</Warning>
+</Step>
+<Step>
+Once all of the fields have been added, click the `Save` button to create the connector.
+</Step>
+<Step>
+Once the connector has been created, you will be able to see the status of the connector in the Ditto Portal.
+It will first show as `Pending` while the connector is being created, then once it is ready it will show as `Running`.
+In case of an error, the connector will show as `Failed`, and you will be able to see the error message in the Ditto Portal, see also [Troubleshooting Connectivity](#troubleshooting-connectivity).
+</Step>
+</Steps>
+
+#### Troubleshooting Connectivity
+
+When the connector starts up, it will perform a number of checks to ensure that it is able to connect to MongoDB and that the configuration is correct.
+
+If any of these checks fail, the connector will show as `Failed`, and you will be able to see a more detailed error message in the Ditto Portal.
+
+These checks are as follows:
+- Ensure that the MongoDB connection string is reachable
+- Ensure that the MongoDB database user has the correct permissions
+- Ensure that the MongoDB cluster has the correct IP addresses added to the allowlist
+- Ensure that the MongoDB database exists
+- Ensure that the MongoDB collections exist
+- Ensure that the MongoDB collections have `changeStreamPreAndPostImages` set to `true`
+- Ensure that it can create all of the necessary [metadata collections](#internal-metadata)
+
+Below are the error messages that you may encounter, and the remediation steps you can take to resolve them.
+Remember that if you need to modify the configuration of a running connector, you must delete the connector and create it again with the new configuration.
+
+| Error Message | Remediation |
+|:--------------|:-------------|
+| `Connection string provided is invalid.` | Delete the connector and try again, ensuring that the connection string is correct. |
+| `Failed to connect to MongoDB` | • Ensure that the MongoDB cluster has the correct IP addresses added to the allowlist (see [Add Ditto IPs to MongoDB Allowlist](#add-ditto-ips-to-mongodb-allowlist))<br/>• Ensure that the MongoDB database user exists and has the correct permissions (see [Create a MongoDB Database User](#create-a-mongodb-database-user)) |
+| `Failed to list database names` | Ensure that the MongoDB database user has the correct permissions (see [Create a MongoDB Database User](#create-a-mongodb-database-user)) |
+| `Failed to list collections` | Ensure that the MongoDB database user has the correct permissions (see [Create a MongoDB Database User](#create-a-mongodb-database-user)) |
+| `Database <name> not found` | Ensure that the MongoDB database exists (see [Create MongoDB Database](#create-mongodb-database)) |
+| `Collection <name> not found` | Ensure that the MongoDB collection exists (see [Create MongoDB Collections](#create-mongodb-collections)) |
+| `Collection <name> must be configured with changeStreamPreAndPostImages enabled` | Ensure that the MongoDB collection has `changeStreamPreAndPostImages` set to `true` (see [Create MongoDB Collections](#create-mongodb-collections)) |
+| `Collection <name> cannot be a capped collection` | Ensure that the MongoDB collection is not a capped collection (see [Create MongoDB Collections](#create-mongodb-collections)) |
+| `Collection <name> cannot be created` | Ensure that the MongoDB database user has the correct permissions (see [Create a MongoDB Database User](#create-a-mongodb-database-user)) |
+| `Something went wrong` | An unknown error occurred, please [contact Ditto support](/support/contact-support) for assistance. |
 
 ## Internal Metadata
 
@@ -251,8 +320,8 @@ In order to provide consistency across the two systems, the connector uses some 
 
 Specifically this metadata tracks:
 
-- Current MongoDB sessions, to avoid circular writes between the two systems. This is stored in the `__ditto_connector_sessions` internal collection within your MongoDB database
-- Documents that failed to synchronize from Ditto to MongoDB (for example they may have been rejected due to schema validation issues). These are stored in the `__ditto_unsynced_documents` internal collection within your MongoDB database
+- Current MongoDB sessions, to avoid circular writes between the two systems. This is stored in the `__ditto_connector_sessions` internal collection within your MongoDB database. These are periodically cleaned up by the connector when the sessions are no longer needed.
+- Documents that failed to synchronize from Ditto to MongoDB (for example they may have been rejected due to schema validation issues). These are stored in the `__ditto_unsynced_documents` internal collection within your MongoDB database. These documents serve as a record for you to know which documents have failed to synchronize, and can be used to manually resync the documents. This collection is not automatically cleaned up by the connector, you can choose to delete the documents in this collection if you no longer need to keep track of these documents.
 - BSON field mappings for documents, currently stored as a metadata field (prefixed with `_` within the Ditto document)
 
 ## Current Limitations
@@ -264,11 +333,11 @@ Notably there are some key limitations with the connector, that will be addresse
 - The connector reads from MongoDB change streams and so only performs *ongoing* replication between Ditto and MongoDB. If you need to copy existing data over from MongoDB to Ditto you can do the following:
   1. Create a new database in your MongoDB cluster
   2. Add the necessary collections to your database
-  3. Setup the integration within Ditto, ensuring it is running
+  3. Setup the connector within Ditto, ensuring it is running
   4. Copy the data across from the existing database to the new database so that the connector will synchronize the data into Ditto
 - The connector only supports the use of the `REGISTER` datatype within Ditto. Other datatypes such as `MAP` are not synchronized by the MongoDB connector
 - Filtering of data to synchronize with MongoDB is done at the collection level, filtering data within a collection to synchronize is not possible
 - Connection to a MongoDB Atlas cluster is routed via the internet rather than private networking options. You should add the 3 provided IPs during the setup process to your Atlas Project's allowlist to allow the connector to connect to the cluster
-- It is not possible to change the configuration (e.g. add or remove a collection, change password) from a running connector. You must delete the connector then create it again with the new configuration
-- Richer BSON datatypes are not used by the connector when documents or fields are added on the DItto side, only JSON types will be used
+- It is not possible to change the configuration (e.g. add or remove a collection, change password) of a running connector. You must delete the connector then create it again with the new configuration
+- Richer BSON datatypes are not used by the connector when documents or fields are added on the DItto side, only JSON types will be used. In the future the connector will provide the ability for users to specify the datatypes they wish to use for their documents.
 
