@@ -214,7 +214,7 @@ See [Enable Change Stream Pre and Post Images](https://www.mongodb.com/docs/manu
 For example, to edit an existing collection called `orders`, you can run the following command:
 
 ```bash
-db.runCommand({ collMod: "orders", changeStreamPreAndPostImages: true })
+db.runCommand({ collMod: "orders", changeStreamPreAndPostImages: {"enabled":true} })
 ```
 
 If you are using pre-existing collections, existing data in these collections will not be synchronized unless they are modified after the connector has been setup.
