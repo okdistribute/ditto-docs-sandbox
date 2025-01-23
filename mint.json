@@ -49,6 +49,9 @@
       "key": "HC6ocxnqvMdcOthlOTGTCySKwSUF9oV1"
     }
   },
+  "feedback": {
+    "thumbsRating": true
+  },
   "tabs": [
     {
       "name": "Home",
@@ -393,14 +396,14 @@
       ]
     },
     {
-        "group": "Security",
-        "version": "v4.8",
-        "pages": [
-          "sdk/v4-8/auth-and-authorization/cloud-authentication",
-          "sdk/v4-8/auth-and-authorization/shared-key",
-          "sdk/v4-8/auth-and-authorization/data-authorization",
-          "sdk/v4-8/auth-and-authorization/certificate-based-security"
-        ]
+      "group": "Security",
+      "version": "v4.8",
+      "pages": [
+        "sdk/v4-8/auth-and-authorization/cloud-authentication",
+        "sdk/v4-8/auth-and-authorization/shared-key",
+        "sdk/v4-8/auth-and-authorization/data-authorization",
+        "sdk/v4-8/auth-and-authorization/certificate-based-security"
+      ]
     },
     {
       "group": "Reference",
