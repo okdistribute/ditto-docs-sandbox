@@ -16,7 +16,7 @@ DOCUMENTS ([document1]),([document2]), ([document3]), ...
 
 
 <Info>
-In Ditto, excluding fields from your payload doesn't remove the existing data from the system.&##x20;
+In Ditto, excluding fields from your payload doesn't remove the existing data from the system.
 
 To remove a specific field from a document, use an explicit UPDATE statement and `tombstone` that field. (See [UPDATE](/dql/update))
 
@@ -427,7 +427,7 @@ await ditto.execute("""
 
 ## INSERT with ID Conflict Handling
 
-By default, the INSERT operation throws an error if an existing document with the same ID exists in the local Ditto store.  &##x20;
+By default, the INSERT operation throws an error if an existing document with the same ID exists in the local Ditto store.
 
 However, Ditto allows some flexibility by allowing you to choose between ignoring the conflict (`DO NOTHING`) or updating existing documents (`DO UPDATE`) when a conflict occurs during an INSERT operation:
 
@@ -554,7 +554,7 @@ await ditto.execute("""
 
 ## INSERT with INITIAL DOCUMENTS
 
-INSERT allows you to set specific documents as default data using the INITIAL DOCUMENTS action.&##x20;
+INSERT allows you to set specific documents as default data using the INITIAL DOCUMENTS action.
 
 *Initial documents* are the documents inserted at the beginning of time and are viewed by all peers as the same INSERT operation. This allows multiple peers to independently initialize the same default data *safely*, so regardless of the individual peer's starting point.
 

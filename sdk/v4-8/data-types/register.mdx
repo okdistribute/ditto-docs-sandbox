@@ -38,9 +38,9 @@ WHERE _id = '123'
 
 ### Limitations to Arrays
 
-Unlike typical `arrays`, the multiple elements within an `array` scalar subtype function collectively as a single `REGISTER` with last-write-wins merge behavior. An `array` scalar subtype is an ordered collection of items represented using any primitive JSON‑compatible data type enclosed within square brackets (\[ ]). 
+Unlike typical `arrays`, the multiple elements within an `array` scalar subtype function collectively as a single `REGISTER` with last-write-wins merge behavior. An `array` scalar subtype is an ordered collection of items represented using any primitive JSON‑compatible data type enclosed within square brackets (\[ ]).
 
-The `array` scalar subtype, while great at managing unordered operations, such as a GPS coordinate where both latitude and longitude values change together, as follows, maintaining a strict order could potentially lead to data inconsistencies at merge.
+The `array` scalar subtype is great at managing unordered operations, such as in the example below representing a GPS coordinate where both latitude and longitude values change together. However, attempting to maintain a strict order could potentially lead to data inconsistencies at merge, due to merges considering the entire `array` as a single unit.
 
 ```json JSON
 "location": {
@@ -49,7 +49,7 @@ The `array` scalar subtype, while great at managing unordered operations, such a
 }
 ```
 
-Considering this, when managing collections of data that have concurrent editors, opt for a `MAP` instead, which effectively functions as a set, more commonly known as an *associative array. *For more information, see [MAP](/sdk/v4-8/data-types/map).
+Considering this, when managing collections of data that have concurrent editors, opt for a `MAP` instead, which effectively functions as a set, more commonly known as an *associative array*. For more information, see [MAP](/sdk/v4-8/data-types/map).
 
 ## Last-Write-Wins Merge Strategy
 
@@ -68,7 +68,7 @@ For example, the following code, once executed, results in the field `color` bei
 ```sql DQL
 UPDATE cars
 SET
-  color = 'black'
+  color = 'blue'
 WHERE _id = '123abc'
 ```
 
