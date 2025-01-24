@@ -1,0 +1,235 @@
+---
+title: Ditto Forge
+description: "Get started building apps with Ditto in minutes. Ditto Forge allows you to focus on what's unique to your business, while we take care of the rest."
+icon: gauge
+iconType: solid
+---
+
+<Warning>
+Ditto Forge for iOS is currently in private preview and is likely to evolve further, prior to its full release.
+
+You can sign up for the [Ditto Forge](https://ditto.live/platform/mongodb-connector) waitlist to request access to the preview!
+</Warning>
+
+Ditto Forge defines the structure of your app, organizing Ditto objects such as
+collections, fields, queries, and views without writing a single line of code.
+
+In this tutorial we will teach you how to:
+- **Structure your data:** fields, relationships, inputs, and labels.
+- **Integrate and design:** lists, notifications, dashboards, authentication, and customizations.
+- **Distribute your app:** via the App Store, your MDM, or integrated into an existing Swift iOS application.
+
+## Getting started
+
+
+<Steps>
+<Step>
+Sign up or log in to the <a href="https://portal.ditto.live/" target="_blank">Ditto portal</a>.
+</Step>
+<Step>
+Open the Ditto database that you want to use with Forge.
+</Step>
+<Step>
+Click “App Builder ↗️” on the top-right of the screen.
+</Step>
+<Step>
+Join the <a href="https://testflight.apple.com/join/Hmk6Cat9" target="_blank">Apple TestFlight Beta Group</a> and install the iOS app. 
+</Step>
+<Step>
+Ensure your device is iOS 16.0+ or higher and you have WiFi enabled. 
+</Step>
+<Step>
+In the iOS app, click “Scan” at the bottom and scan the QR Code in the portal.
+</Step>
+</Steps>
+
+You now have created your first Ditto Forge application.
+
+## Data
+
+In the Data tab, you define the data schema of your enterprise records. Forge
+enables relational database management, using a schema-based model that allows
+both unstructured and structured data to coexist. Data in your Ditto database
+that does not conform to your structured schema will not appear in Forge apps.
+This enables the best of both worlds: the enterprise stability of SQL alongside
+the flexible speed of a document database.
+
+### Data Source
+
+A data source is a structured schema definition of fields in a Ditto collection,
+similar to a table in SQL. Similarly, a field is like a column in SQL, but it’s
+more flexible because:
+
+- Not all documents in the collection need to have the same fields.  
+- Fields can store simple values like text or numbers, or more complex ones like
+relationships, arrays, or nested objects.
+
+<Warning>Data that does not conform to the schema definition will not appear
+in the Ditto Forge app.</Warning>
+
+<Steps>
+<Step>
+Click “Data” at the top of the screen
+</Step>
+<Step>
+Click the + plus button at the top of “Data Sources” on the left sidebar.
+</Step>
+<Step>
+Pick a name for your data source, for example, “Teams”
+</Step>
+<Step>
+You should see your new data source appear.
+</Step>
+</Steps>
+
+Three fields are required with every new data source:
+  - **Created By**: Relationship to the Users collection.
+  - **Created At**: ISO 8601 datetime, marking when a document was created.
+  - **Name**: String user-facing representation of the document. 
+
+### Relationship Field
+
+A relationship field allows one collection to map to another. A field can have
+a type, such as Text, Email, Number, Select, or Relation. We will create a
+relation between Users and Teams. We will allow users to be assigned to a
+team. 
+
+![Create team](/images/cloud/portal/create-team.gif)
+
+<Warning>
+Forge only supports one-to-one and one-to-many relationships today. Many-to-many relationships will be supported in the future.
+</Warning>
+
+<Steps>
+<Step>
+Click “Users” on the left hand side of the Data tab
+</Step>
+<Step>
+Add a field to users table by clicking the plus button on the far right of the screen
+</Step>
+<Step>
+You will be presented with a form. Enter in the form details as shown on the right.
+</Step>
+<Step>
+**Type: Relation** allows you to map this field to the new data source you created, “Teams”
+</Step>
+<Step>
+**Display as: Name** will show the name of the team when displaying or selecting the field in the app.
+</Step>
+</Steps>
+
+### Select Field
+
+A single select field can only contain one value from a specific list of allowed options.
+
+Think of a dropdown menu where you choose a work order status: Options: *Open*, *In progress*, *Closed*. You can pick only one status at a time.
+
+![Add option](/images/cloud/portal/add-option.gif)
+
+<Steps>
+<Step>
+Open the Data Source for "Work Orders" on the left hand side. 
+</Step>
+<Step>
+Click "Edit" under the Status column 
+</Step>
+<Step>
+Add an option for “Cancelled” 
+</Step>
+</Steps>
+
+## Design 
+
+### Add a page
+
+A page in the mobile app displays data in a rich user interface that can be customized based on your particular use case, industry, and business logic.
+
+<Steps>
+<Step>
+Click the plus button on the top left of the screen
+</Step>
+<Step>
+Select a name and an icon for your page
+</Step>
+<Step>
+Select the data source
+</Step>
+</Steps>
+
+### Field Visibility
+
+In the app designer you can always customize and reorganize the data you see in the app.
+
+Let's change the visibility of some fields. 
+
+<Steps>
+<Step>
+Open the Builder and click the Design tab at the top
+</Step>
+<Step>
+On the right hand side, Click the dropdown beside "Fields: 4 Visible" to see which fields are currently visible in the app.
+![Hide fields](/images/cloud/portal/hide-fields.png)
+</Step>
+<Step>
+Make "Asset" visible by toggling it on. 
+</Step>
+<Step>
+You should see the iOS app as well as the design preview in the builder update immediately. Verify that that the Asset field is now visible with the name of the Asset, for example “Kitchen Faucet” 
+</Step>
+</Steps>
+
+
+### Filters
+
+A filter is a way to create queries to your data that automatically update when
+data changes. These filters drive the creation of Ditto subscriptions
+and observers. 
+
+![Filters](/images/cloud/portal/filters.gif)
+
+<Steps>
+<Step>
+First let’s modify our existing filter to only show items assigned to the current user.
+</Step>
+<Step>
+On the right hand side under "Filter views" click "Add filter view"
+</Step>
+<Step>
+Change the name of the filter to “Mine”
+</Step>
+<Step>
+Add filters for `Assigned to` Is Current User and `Status` is not Closed
+</Step>
+<Step>
+In the iOS app, you should see there are no work orders. This is expected, because none of them are assigned to the current user.
+</Step>
+</Steps>
+
+
+
+
+## Troubleshooting
+
+### Ensure you are connected to WiFi
+
+The iOS app needs to connect to the Internet at least once every 7 days to
+renew security credentials. Once connected, the app can go offline again
+for another 7 days. This can be configured by upgrading to an authenticated
+version of Ditto.
+
+### Clear the database state 
+
+Open DQL Editor and issue the following commands one by one in the editor. Each command should be issued separately, since DQL does not support multi-line queries
+
+```
+TOMBSTONE FROM users
+TOMBSTONE FROM assets
+TOMBSTONE FROM work_orders
+TOMBSTONE FROM __projects
+TOMBSTONE FROM __project_pages
+TOMBSTONE FROM __data_schema
+```
+
+### Open a support ticket
+
+E-mail us at [support@ditto.live](mailto:support@ditto.live) if you are stuck. We are here to help!
