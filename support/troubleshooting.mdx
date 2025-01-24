@@ -729,16 +729,16 @@ An application might block its own write transactions by performing multiple wri
 ```swift Swift
 // Thread/Queue 1 (starts first):
 {
-   // Somewhere in the app, a long running write transaction exists
-   ditto.store["people"].findByID(docID).update { mutableDoc in
-    // Most update tasks are quick, but a developer might
-    // doing something slow within the update block:
-    let apiData = getDataFromASlowExternalAPICall() // <-- !!!!
+    // Somewhere in the app, a long running write transaction exists
+    ditto.store["people"].findByID(docID).update { mutableDoc in
+        // Most update tasks are quick, but a developer might
+        // doing something slow within the update block:
+        let apiData = getDataFromASlowExternalAPICall() // <-- !!!!
 
-    mutableDoc?["age"] = apiData.age
-    mutableDoc?["ownedCars"].set(DittoCounter())
-    mutableDoc?["ownedCars"].counter?.increment(by: apiData.count)
-   }
+        mutableDoc?["age"] = apiData.age
+        mutableDoc?["ownedCars"].set(DittoCounter())
+        mutableDoc?["ownedCars"].counter?.increment(by: apiData.count)
+    }
 }
 
 // Thread/Queue 2 (starts second):
@@ -749,12 +749,41 @@ An application might block its own write transactions by performing multiple wri
     // This will block until the "people" update block above completes.
     let docID = try! ditto.store["settings"].upsert([
         "_id": "abc123",
-    "preference": 31,
+        "preference": 31,
     ])
 }
 ```
 
 ```kotlin Kotlin
+// Thread/Queue 1 (starts first):
+{
+    // Somewhere in the app, a long running write transaction exists
+    ditto.store["people"].findById(docId).update { mutableDoc ->
+        // Most update tasks are quick, but a developer might
+        // doing something slow within the update block:
+        val apiData = getDataFromASlowExternalAPICall() // <-- !!!!
+
+        mutableDoc?.let { doc ->
+            doc["age"] = apiData.age
+            doc["ownedCars"].set(DittoCounter())
+            doc["ownedCars"].counter?.increment(amount = apiData.count)
+        }
+    }
+}
+
+// Thread/Queue 2 (starts second):
+{
+    // Somewhere else in the app, concurrently (e.g. background thread or queue)
+    // another write transaction tries to update a document.
+    //
+    // This will block until the "people" update block above completes.
+    val docId = try! ditto.store["settings"].upsert(
+        mapOf(
+            "_id" to "abc123",
+            "preference" to 31,
+        )
+    )
+}
 ```
 </CodeGroup>
 
