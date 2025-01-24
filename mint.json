@@ -962,6 +962,10 @@
       "destination": "/support/contact-us"
     },
     {
+      "source": "/changelog",
+      "destination": "/sdk/latest/release-notes/release-notes"
+    },
+    {
       "source": "/install-guides/:slug*",
       "destination": "/sdk/latest/install-guides/:slug*"
     },
