@@ -5,6 +5,8 @@ icon: code
 iconType: solid
 ---
 
+import KotlinConnect from "/snippets/connect-examples/playground/kotlin-playground.mdx"
+
 # Prerequisites
 
 Following are the minimum requirements that must be met before attempting to install Ditto.
@@ -199,25 +201,11 @@ To ensure your app maintains a single Ditto instance throughout its lifetime and
 
 </Warning>
 
-```kotlin Kotlin
-try {
-    DittoLogger.minimumLogLevel = DittoLogLevel.DEBUG
-    val androidDependencies = DefaultAndroidDittoDependencies(applicationContext)
-    val identity = DittoIdentity.OnlinePlayground(
-        androidDependencies,
-        appId = "YOUR_APP_ID",
-        token = "YOUR_PLAYGROUND_TOKEN"
-    )
-    ditto = Ditto(androidDependencies, identity)
-    ditto.startSync()
-} catch (e: DittoError) {
-    Log.e("Ditto error", e.message!!)
-}
-```
+<KotlinConnect />
 
 </Step>
 
 <Step>
-Replace `YOUR_APP_ID` and `YOUR_PLAYGROUND_TOKEN` with your access credentials available from the portal. (See [Getting Playground Token Credentials](/cloud/portal/getting-playground-token-credentials) )
+Replace `YOUR_APP_ID` and `YOUR_PLAYGROUND_TOKEN` with your access credentials available from the portal. (See [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details) )
 </Step>
 </Steps>

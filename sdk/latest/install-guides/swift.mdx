@@ -5,6 +5,8 @@ icon: swift
 iconType: solid
 ---
 
+import SwiftConnect from "/snippets/connect-examples/playground/swift-playground.mdx"
+
 To install the Ditto SDK and start syncing offline:
 
 <Steps>
@@ -262,12 +264,10 @@ From the top-most scope of your app's codebase, add the following to set up auth
 Replace YOUR_APP_ID and YOUR_PLAYGROUND_TOKEN with your access credentials available from the portal.
 
 <Info>
-For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](/cloud/portal/getting-playground-token-credentials)
+For instructions on how to obtain your access credentials, see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details)
 </Info>
 
-```swift Swift
-let ditto = Ditto(identity: .onlinePlayground( appID: "YOUR\_APP\_ID", token: "YOUR\_PLAYGROUND\_TOKEN" )) do { try ditto.startSync() } catch (let err) { print(err.localizedDescription) }
-```
+<SwiftConnect />
 
 </Step>
 </Steps>

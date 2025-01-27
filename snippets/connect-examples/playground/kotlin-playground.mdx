@@ -1,0 +1,27 @@
+```kotlin Kotlin
+try {
+    val androidDependencies = DefaultAndroidDittoDependencies(applicationContext)
+    val identity =
+        DittoIdentity.OnlinePlayground(
+            dependencies = androidDependencies,
+            appId = "REPLACE_ME_WITH_YOUR_APP_ID",
+            token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN",
+            customAuthURL =
+                "REPLACE_ME_WITH_YOUR_AUTH_URL", // This is required to be set to false to use the correct URLs
+            enableDittoCloudSync = false
+        )
+
+    ditto = Ditto(androidDependencies, identity)
+
+    val transportConfig = DittoTransportConfig()
+    transportConfig.connect.tcpServers.add("REPLACE_ME_WITH_YOUR_WEBSOCKET_URL")
+    // Optionally enable all P2P transports if using P2P Sync
+    // Do not call this if only using Ditto Cloud Sync
+    transportConfig.enableAllPeerToPeer()
+
+    ditto.transportConfig = transportConfig
+    ditto.startSync()
+} catch (e: DittoError) {
+    Log.e("Ditto error", e.message!!)
+}
+```

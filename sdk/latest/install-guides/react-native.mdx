@@ -5,6 +5,8 @@ icon: react
 iconType: solid
 ---
 
+import JsConnect from "/snippets/connect-examples/playground/js-playground.mdx"
+
 - [Bare React Native Support](#bare-react-native-support)
 - [Prerequisites](#prerequisites)
 - [Integrating Ditto](#integrating-ditto)
@@ -351,17 +353,7 @@ For more information, see [Cloud Authentication](../auth-and-authorization/cloud
 
 Use an online playground identity for development. You can find authentication details for your app on the <a href="https://portal.ditto.live" target="_blank">Ditto Portal.</a> Use these to set up your identity:
 
-<CodeGroup>
-```javascript JS
-import type {Identity} from '@dittolive/ditto';
-
-const identity = {
-  type: 'onlinePlayground',
-  appID: '<your-app-id>',
-  token: '<your-online-playground-token>',
-};
-```
-</CodeGroup>
+<JsConnect />
 
 ### onlineWithAuthentication
 

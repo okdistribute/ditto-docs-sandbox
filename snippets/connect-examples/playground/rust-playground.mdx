@@ -1,0 +1,31 @@
+```rust Rust
+let app_id = AppId::from_env("REPLACE_ME_WITH_YOUR_APP_ID")?;
+let playground_token = std::env::var("REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN")?;
+// This is required to be set to false to use the correct URLs
+let cloud_sync = false; 
+let custom_auth_url = String::from("REPLACE_ME_WITH_YOUR_AUTH_URL");
+
+// Initialize Ditto
+let ditto = Ditto::builder()
+    .with_root(Arc::new(PersistentRoot::from_current_exe()?))
+    .with_identity(|ditto_root| {
+        identity::OnlinePlayground::new(
+            ditto_root,
+            app_id,
+            playground_token,
+            cloud_sync,
+            custom_auth_url,
+        )
+    })?
+    .build()?;
+
+let mut config = TransportConfig::new();
+config
+    .connect
+    .websocket_urls
+    .insert(String::from("wss://REPLACE_ME_WITH_YOUR_WEBSOCKET_URL"));
+config.enable_all_peer_to_peer();
+ditto.set_transport_config(config);
+ditto.start_sync()?;
+
+```

@@ -5,6 +5,8 @@ icon: js
 iconType: solid
 ---
 
+import JsConnect from "/snippets/connect-examples/playground/js-playground.mdx"
+
 To install the JavaScript SDK:
 
 <Steps>
@@ -58,30 +60,10 @@ Import and initialize Ditto, and then provide your access credentials for one-ti
 </Note>
 
 <Info>
-  For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials](/cloud/portal/getting-playground-token-credentials) . For an introduction to authentication in Ditto, see _Security_ > [Cloud Authentication](../auth-and-authorization/cloud-authentication).
+  For instructions on how to obtain your access credentials, see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details) . For an introduction to authentication in Ditto, see _Security_ > [Cloud Authentication](../auth-and-authorization/cloud-authentication).
 </Info>
 
-```js JS
-import { init, Ditto } from "@dittolive/ditto";
-
-let ditto;
-async function main() {
-  await init()
-  ditto = new Ditto({
-    type: "onlinePlayground",
-    appID: "YOUR_APP_ID",
-    token: "YOUR_PLAYGROUND_TOKEN"
-  })
-
-  // Enable mutating DQL statements and ensure you only sync with peers using version 4.0 or higher of the Ditto SDK:
-  await ditto.disableSyncWithV3()
-
-  // Initialize the sync process:
-  ditto.startSync()
-}
-
-main()
-```
+<JsConnect />
 
 ## Running Ditto
 
@@ -98,33 +80,11 @@ Add a _sync subscription_ to receive updates on documents that match its query f
 Use `registerSubscription()` in the `ditto.sync` namespace to add a sync subscription:
 
 ```JS JS
-import { init, Ditto } from '@dittolive/ditto'
-
-let ditto
-
-async function main () {
-  await init()
-
-  ditto = new Ditto({
-    type: "onlinePlayground",
-    appID: "YOUR_APP_ID",
-    token: "YOUR_PLAYGROUND_TOKEN"
-  })
-
-  // Enable mutating DQL statements and ensure you only sync with peers using version 4.0 or higher of the Ditto SDK:
-  await ditto.disableSyncWithV3()
-
-  // Initialize the sync process:
-  ditto.startSync()
-
-  // Add a sync subscription:
-  ditto.sync.registerSubscription(`
-    SELECT *
-    FROM tasks
-    WHERE isDeleted = false`)
-}
-
-main()
+// Add a sync subscription:
+ditto.sync.registerSubscription(`
+  SELECT *
+  FROM tasks
+  WHERE isDeleted = false`)
 ```
 
 ## Listening to Changes
@@ -132,53 +92,25 @@ main()
 Now that your app is ready to receive updates to documents from other peers, you might want to react to those changes as soon as they happen. For this you can use the `registerObserver()` method on `ditto.store`. The passed in callback closure is invoked by Ditto everytime it registers new changes to documents matching the query.
 
 ```JS JS
-import { init, Ditto } from '@dittolive/ditto'
-
-let ditto
-
-async function main () {
-  await init()
-
-  ditto = new Ditto({
-    type: "onlinePlayground",
-    appID: "YOUR_APP_ID",
-    token: "YOUR_PLAYGROUND_TOKEN"
-  })
-
-  // Enable mutating DQL statements and ensure you only sync with peers using version 4.0 or higher of the Ditto SDK:
-  await ditto.disableSyncWithV3()
-
-  // Initialize the sync process:
-  ditto.startSync()
-
-  // Add a sync subscription:
-  ditto.sync.registerSubscription(`
-    SELECT *
-    FROM tasks
-    WHERE isDeleted = false`)
-
-  // Add a store observer:
-  ditto.store.registerObserver(`
-    SELECT *
-    FROM tasks
-    WHERE isDeleted = false`,
-    (result) => {
-      console.log(`Tasks have been updated: ${result.items}`)
-    }
-  )
-
-  const newTask = {
-    isCompleted: false,
-    isDeleted: false,
-    body: "Hello world!"
+// Add a store observer:
+ditto.store.registerObserver(`
+  SELECT *
+  FROM tasks
+  WHERE isDeleted = false`,
+  (result) => {
+    console.log(`Tasks have been updated: ${result.items}`)
   }
+)
 
-  // Insert a new document:
-  await ditto.store.execute(`
-    INSERT INTO tasks
-    DOCUMENTS (:newTask)`,
-    { newTask })
+const newTask = {
+  isCompleted: false,
+  isDeleted: false,
+  body: "Hello world!"
 }
 
-main()
+// Insert a new document:
+await ditto.store.execute(`
+  INSERT INTO tasks
+  DOCUMENTS (:newTask)`,
+  { newTask })
 ```

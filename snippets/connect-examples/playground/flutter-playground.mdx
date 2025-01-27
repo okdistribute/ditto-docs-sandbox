@@ -1,0 +1,20 @@
+```dart Dart
+final identity = await OnlinePlaygroundIdentity.create(
+    appId: "REPLACE_ME_WITH_YOUR_APP_ID",
+    token: "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN",
+    customAuthUrl: "REPLACE_ME_WITH_YOUR_AUTH_URL",
+    enableDittoCloudSync: false // This is required to be set to false to use the correct URLs
+);
+final ditto = await Ditto.open(identity);
+
+final connect = Connect(webSocketUrls: {"wss://REPLACE_ME_WITH_YOUR_WEBSOCKET_URL"});
+
+// Optionally enable all P2P transports if using P2P Sync
+// Do not call this if only using Ditto Cloud Sync
+final peerToPeer = PeerToPeer.all();
+
+final transportConfig = TransportConfig(peerToPeer: peerToPeer, connect: connect);
+ditto.setTransportConfig(transportConfig);
+
+await ditto.startSync();
+```

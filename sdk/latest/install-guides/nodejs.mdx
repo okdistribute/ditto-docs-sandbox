@@ -5,6 +5,8 @@ icon: node
 iconType: solid
 ---
 
+import JsConnect from "/snippets/connect-examples/playground/js-playground.mdx"
+
 ## Prerequisites
 
 Before you can install Ditto, you must have the following:
@@ -46,11 +48,9 @@ To install Ditto in your environment, install and set up Ditto, and authenticate
   </Step>
 
   <Step>
-  In line 14 of the index.ts file, replace 'YOUR\_APP\_ID' and 'YOUR\_TOKEN' with your app ID and playground token. (See [Getting Playground Token Credentials](/cloud/portal/getting-playground-token-credentials))
-  ```TypeScript TypeScript
-  // replace YOUR_APP_ID and YOUR_TOKEN with p
-  ditto = new Ditto({ type: 'onlinePlayground', appID: 'YOUR_APP_ID', token: 'YOUR_TOKEN' })
-  ```
+  In line 14 of the index.ts file, replace 'YOUR\_APP\_ID' and 'YOUR\_TOKEN' with your app ID and playground token. (See [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
+
+  <JsConnect />
   </Step>
 
   <Step>

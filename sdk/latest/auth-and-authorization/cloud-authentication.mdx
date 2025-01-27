@@ -5,6 +5,8 @@ icon: cloud
 iconType: solid
 ---
 
+import PlaygroundConnectExamples from "/snippets/connect-examples/playground/playground-connect-examples.mdx"
+
 Ditto's security relies on digital identities for peer-to-peer authentication and access control permissions and privileges. Each instance of Ditto running in your app must prove its identity to other peers before it is allowed to sync.
 
 The following table provides an overview of authentication in Ditto:
@@ -49,47 +51,9 @@ To explore Ditto without the commitment, authenticate using the playground ident
     If you want to use Ditto in an air-gapped environment that is entirely offline or on‑premise, contact Ditto Customer Engineering. (See [Contact Us](/support/contact-us))
     </Step>
     <Step>
-    From the [portal](https://portal.ditto.live/ "portal"), create your app and get your access credentials required for peer-to-peer offline sync. (See [Getting Playground Token Credentials](../../../cloud/portal/getting-playground-token-credentials))
+    From the [portal](https://portal.ditto.live/ "portal"), create your app and get your access credentials required for peer-to-peer offline sync. (See [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
 
-    <CodeGroup>
-    ```swift Swift
-    DittoLogger.minimumLogLevel = .debug
-    let ditto = Ditto(identity: .onlinePlayground(
-        appID: "REPLACE_ME_WITH_YOUR_APP_ID",
-        token: "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN"
-    ))
-    do {
-      try ditto.startSync()
-    } catch (let err) {
-      print(err.localizedDescription)
-    }
-    ```
-
-    ```java Java   
-    try {
-        val androidDependencies = DefaultAndroidDittoDependencies(context)
-        val identity = DittoIdentity.OnlinePlayground(
-            androidDependencies,
-            appId = "REPLACE_ME_WITH_YOUR_APP_ID",
-            token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN"
-        )
-        DittoLogger.minimumLogLevel = DittoLogLevel.DEBUG
-        ditto = Ditto(androidDependencies, identity)
-        ditto.startSync()
-    } catch (e: DittoError) {
-        Log.e("Ditto error", e.message!!)
-    }
-    ```
-
-    ```js JS
-    import { init, Ditto, Logger } from "@dittolive/ditto"
-    Logger.minimumLogLevel = 'Debug'
-    const identity: Identity = { type: 'onlinePlayground', appID: 'REPLACE_ME_WITH_YOUR_APP_ID', token: 'REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN' }
-    const path = './your-ditto-application-data-path'
-    const ditto = new Ditto(identity, path)
-    ditto.startSync()
-    ```
-    </CodeGroup>
+   <PlaygroundConnectExamples />
   </Step>
 </Steps>
 

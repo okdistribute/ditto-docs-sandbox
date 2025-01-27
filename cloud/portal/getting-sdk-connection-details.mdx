@@ -1,0 +1,28 @@
+---
+title: Getting SDK Connection Details
+mode: wide
+icon: link
+iconType: solid
+---
+import PlaygroundConnectExamples from "/snippets/connect-examples/playground-connect-examples.mdx"
+
+To retrieve your SDK connection details ensure you have first:
+
+1. Created A Ditto Portal Account - [Creating a Ditto Account](/cloud/portal/creating-a-ditto-account)
+2. Created A Ditto App - [Creating a New App](/cloud/portal/creating-a-new-app)
+
+After you've created your app, select it from the list.
+
+On the `Connect` tab, you will see the following details under `Big peer connection information`:
+- App ID - The unique identifier for your app.
+- Auth URL - This is the URL you will need to pass to your SDK to authenticate.
+- Websocket URL - This is the URL you will need to pass to your SDK to initiate replication via Websocket to the Big Peer.
+
+On the `Connect` tab, under `Authentication Mode`, if you are still using the default authentication settings, you will also see the `Online Playground Authentication Token`.
+This token is used to authenticate your SDK to the Big Peer. It allows you to explore Ditto platform features and functionality without the hassle of setting up your own authentication mechanism.
+
+## Connecting an SDK
+
+Below are some examples of how to connect an SDK to the Big Peer:
+
+<PlaygroundConnectExamples />

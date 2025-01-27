@@ -4,6 +4,8 @@ description: You can integrate the Ditto SDK into Kotlin projects to develop for
 icon: java
 iconType: solid
 ---
+import JavaConnect from "/snippets/connect-examples/playground/java-playground.mdx"
+
 ## Prerequisites
 
 Following are the minimum requirements that must be met before attempting to install Ditto.
@@ -191,29 +193,14 @@ Add Ditto to your application  by placing it in your `Application.onCreate` meth
 To ensure your app maintains a single Ditto instance throughout its lifetime and prevents it from going out of scope or getting garbage collected, place Ditto in the Application-level `Context` instead of the `Context` from any activity where you initially instantiated the Ditto instance.
 </Warning>
 
-```java Java
-DittoLogger.setMinimumLogLevel(DittoLogLevel.DEBUG);
-DittoDependencies androidDependencies = new DefaultAndroidDittoDependencies(this.context);
-DittoIdentity identity = new DittoIdentity.OnlinePlayground(
-    androidDependencies,
-    "YOUR_APP_ID",
-    "YOUR_PLAYGROUND_TOKEN"
-);
-Ditto ditto = new Ditto(androidDependencies, identity);
-
-try {
-    ditto.startSync();
-} catch(DittoError e) {
-    //handle error
-}
-```
+<JavaConnect />
 </Step>
 
 <Step>
 Replace `YOUR_APP_ID` and `YOUR_PLAYGROUND_TOKEN` with your access credentials available in the portal.
 
 <Info>
-For instructions on how to obtain your access credentials, see [Getting Playground Token Credentials]().
+For instructions on how to obtain your access credentials, see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details).
 </Info>
 </Step>
 </Steps>

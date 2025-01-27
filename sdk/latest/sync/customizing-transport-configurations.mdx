@@ -2,6 +2,8 @@
 title: Customizing Transport Configurations
 ---
 
+import PlaygroundExamples from "/snippets/connect-examples/playground/playground-connect-examples.mdx"
+
 This article provides instructions on explicitly configuring your Ditto instance to listen for connections on a specific port and to connect to remote instances using a host (IP) and port.
 
 <Info>
@@ -177,120 +179,7 @@ Call the `startSync` method on your Ditto instance to initiate sync with the con
 
 ## Syncing with Big Peer
 
-<CodeGroup>
-
-```swift Swift
-
-let ditto = Ditto(identity: .onlinePlayground(
-    appID: "REPLACE_ME_WITH_YOUR_APP_ID",
-    token: "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN",
-    // Set to false to disable syncing with the cloud
-    enableDittoCloudSync: true
-))
-do {
-  try ditto.startSync()
-} catch (let err) {
-  print(err.localizedDescription)
-}
-```
-
-```kotlin Kotlin
-val config = DittoTransportConfig()
-
-//Enable all peer to peer transports
-config.enableAllPeerToPeer()
-
-//Or enable/disable each transport separately
-//BluetoothLe
-config.peerToPeer.bluetoothLe.enabled = true
-//Local Area Network
-config.peerToPeer.lan.enabled = true
-//Wifi Aware
-config.peerToPeer.wifiAware.enabled = true
-
-ditto.transportConfig = config
-
-ditto.startSync()
-```
-
-```javascript JavaScript
-const identity: Identity = {
-  type: 'onlinePlayground',
-  appID: 'REPLACE_ME_WITH_YOUR_APP_ID',
-  token: 'REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN',
-  // Set to false to disable syncing with the cloud
-  enableDittoCloudSync: true,
-}
-const path = './your-ditto-application-data-path'
-const ditto = new Ditto(identity, path)
-ditto.startSync()
-```
-
-```java Java
-DittoIdentity identity = new DittoIdentity.OnlinePlayground(androidDependencies,
-        "REPLACE_ME_WITH_YOUR_APP_ID",
-        "YOUR_PLAYGROUND_TOKEN_HERE",
-        // Set to false to disable syncing with the cloud
-        true);
-
-Ditto ditto = new Ditto(androidDependencies, identity);
-
-try {
-    ditto.startSync();
-} catch(DittoError e) {
-    //handle error
-}
-```
-
-```csharp C#
-try
-{
-    var ditto = new Ditto(DittoIdentity.OnlinePlayground(
-        appId: "REPLACE_ME_WITH_YOUR_APP_ID",
-        token: "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN",
-        // Set to false to disable syncing with the cloud
-        enableDittoCloudSync: true), path);
-
-    ditto.StartSync();
-}
-catch (DittoException ex)
-{
-    Console.WriteLine($"Ditto Error {ex.Message}");
-}
-```
-
-```cpp C++
-auto identity = ditto::Identity::OnlinePlayground(
-  "REPLACE_ME_WITH_YOUR_APP_ID",
-  "YOUR_PLAYGROUND_TOKEN_HERE",
-  // Set to false to disable syncing with the cloud
-  true);
-
-ditto::Ditto ditto(identity);
-
-ditto.start_sync();
-```
-
-```rust Rust
-// Not supported.
-```
-
-```dart Dart
-final identity = await OnlinePlaygroundIdentity.create(
-  appID: 'REPLACE_ME_WITH_YOUR_APP_ID',
-  token: 'REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN',
-  // Set to false to disable syncing with the cloud
-  enableDittoCloudSync: true,
-);
-
-final ditto = await Ditto.open(
-  identity: identity,
-  persistenceDirectory: persistenceDirectory,
-);
-await ditto.startSync();
-```
-
-</CodeGroup>
+<PlaygroundExamples />
 
 ## Connecting to Remote Small Peers
 
@@ -650,6 +539,7 @@ config.setAllPeerToPeerEnabled(true)
 config.listen.tcp.isEnabled = true
 config.listen.tcp.interfaceIP = '0.0.0.0'
 config.listen.tcp.port = 4000
+}
 
 // 3. Connect explicitly to remote devices
 ditto.setTransportConfig(config)
