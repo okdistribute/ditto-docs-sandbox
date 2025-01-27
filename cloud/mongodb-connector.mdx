@@ -10,14 +10,12 @@ With the <a href="https://www.mongodb.com/docs/atlas/app-services/sync/device-sy
 </Info>
 
 
-<Warning>
-The MongoDB Connector is currently in private preview and is likely to evolve further, prior to its full release.
+<Info>
+The MongoDB Connector is currently in public preview and is available to all paying Ditto customers and prospects engaged with Ditto.
+It has been thoroughly tested, can handle in excess of 5000 writes per second, and is ready for wide-scale use. The remainder of the preview period will be focused on adding quality-of-life features to the connector and its configuration.
 
-You can sign up for the [MongoDB Connector](https://ditto.live/platform/mongodb-connector) waitlist to request access to the preview!
-
-</Warning>
-
-
+The [MongoDB Connector page](https://ditto.live/platform/mongodb-connector) has further details.
+</Info>
 
 ## How It Works
 
@@ -335,9 +333,7 @@ Notably there are some key limitations with the connector, that will be addresse
   2. Add the necessary collections to your database
   3. Setup the connector within Ditto, ensuring it is running
   4. Copy the data across from the existing database to the new database so that the connector will synchronize the data into Ditto
-- The connector only supports the use of the `REGISTER` datatype within Ditto. Other datatypes such as `MAP` are not synchronized by the MongoDB connector
-- Filtering of data to synchronize with MongoDB is done at the collection level, filtering data within a collection to synchronize is not possible
-- Connection to a MongoDB Atlas cluster is routed via the internet rather than private networking options. You should add the 3 provided IPs during the setup process to your Atlas Project's allowlist to allow the connector to connect to the cluster
 - It is not possible to change the configuration (e.g. add or remove a collection, change password) of a running connector. You must delete the connector then create it again with the new configuration
-- Richer BSON datatypes are not used by the connector when documents or fields are added on the DItto side, only JSON types will be used. In the future the connector will provide the ability for users to specify the datatypes they wish to use for their documents.
-
+- The connector only supports the use of the `REGISTER` datatype within Ditto. Other datatypes such as `MAP` are not synchronized by the MongoDB connector
+- Filtering of data to synchronize with MongoDB is done at the collection level, specifying a more granular filter of data to synchronize is not possible
+- Richer BSON datatypes are not used by the connector when new documents or fields are added on the Ditto side, only JSON types will be used. Datatypes for fields created within MongoDB will be retained correctly.In the future the connector will provide the ability for users to specify the datatypes/schema they wish to use for their documents.
