@@ -30,7 +30,7 @@ If you need further assistance at any point, feel free to [reach out to our supp
 
 Ditto works across a wide range of platforms, programming languages, and device types, allowing for flexible real-time syncing in many environments. Whether you’re building for iOS, Android, or desktop environments, or integrating across devices using different transport methods like Bluetooth or Wi-Fi, Ditto supports it.
 
-Before migrating, it’s important to review the :comment **Compatibility Guide** to ensure you’re familiar with all the platforms and languages we support. This will help you understand the various options available for your project and ensure your app can take full advantage of Ditto’s peer-to-peer capabilities.
+Before migrating, it’s important to review the **Compatibility Guide** to ensure you’re familiar with all the platforms and languages we support. This will help you understand the various options available for your project and ensure your app can take full advantage of Ditto’s peer-to-peer capabilities.
 
 <CardGroup>
     <Card
@@ -44,7 +44,7 @@ Before migrating, it’s important to review the :comment **Compatibility Guide*
 
 ## Connecting to MongoDB
 
-Ditto lets your apps sync directly between :comment **clients** (Small Peers)** and a  **Big Peer (**<a href="/cloud/overview" target="_blank">**Cloud Platform**</a>**)** for real-time data sharing, with an offline-first design. This setup reduces the need for constant cloud access and improves performance.
+Ditto lets your apps sync directly between **clients (Small Peers)** and a  **Big Peer (**<a href="/cloud/overview" target="_blank">**Cloud Platform**</a>**)** for real-time data sharing, with an offline-first design. This setup reduces the need for constant cloud access and improves performance.
 
 This guide will help you replace **Realm** on the client side to start using Ditto’s peer-to-peer syncing right away. The integration between Ditto's Big Peer and MongoDB is enabled by the [MongoDB connector](), which synchronizes data bi-directionally between Ditto and MongoDB.
 
@@ -65,7 +65,7 @@ To get started with Ditto, sign up for an account and create a new project in th
 
 Before adding Ditto, we advise you remove MongoDB Realm from your project. This includes uninstalling the Realm SDK and clearing out any Realm-related code and dependencies. Removing Realm at this stage will let you identify all parts of your codebase touching Realm that will need to be migrated to Ditto with the compiler.
 
-:comment[It is also possible to postpone this until later in the process, and effectively run Realm and Ditto in parallel, if desired]
+[It is also possible to postpone this until later in the process, and effectively run Realm and Ditto in parallel, if desired]
 
 ### 3. Install Ditto
 
