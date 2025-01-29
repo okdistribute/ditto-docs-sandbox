@@ -205,11 +205,11 @@ println!("{}", result.mutated_document_ids()[0].to_string())
 
 ```dart Dart
 final result = await ditto.store.execute(
-"INSERT INTO cars DOCUMENTS (:doc1),(:doc2)",
-arguments: {
-"doc1": {"color": 'blue'},
-"doc2": {"color": 'red'},
-},
+  "INSERT INTO cars DOCUMENTS (:doc1),(:doc2)",
+  arguments: {
+    "doc1": {"color": 'blue'},
+    "doc2": {"color": 'red'},
+  },
 );
 ```
 
@@ -336,10 +336,10 @@ println!("{}", result.mutated_document_ids()[0].to_string())
 
 ```dart Dart
 final result = await ditto.store.execute(
-"INSERT INTO cars DOCUMENTS (:newCar)",
-arguments: {
-  "newCar": {"color": 'blue'},
-},
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  arguments: {
+    "newCar": {"color": 'blue'},
+  },
 );
 
 
@@ -470,10 +470,10 @@ print(result.mutatedDocumentIDs.first);
 
 ```dart Dart
 final result = await ditto.store.execute(
-"INSERT INTO cars DOCUMENTS (:newCar)",
-arguments: {
-"newCar": {"\_id":"123","color": 'blue'},
-},
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  arguments: {
+    "newCar": {"\_id":"123","color": 'blue'},
+  },
 );
 
 // "123"
@@ -630,13 +630,13 @@ std::cout << result.mutated_document_ids()[0].to_string();
 
 ```dart Dart
 final result = await ditto.store.execute(
-"INSERT INTO cars DOCUMENTS (:newCar)",
-arguments: {
-"newCar": {
-"\_id": {"vin": "123", "make": "Toyota"},
-"color": 'blue'
-},
-},
+  "INSERT INTO cars DOCUMENTS (:newCar)",
+  arguments: {
+    "newCar": {
+      "\_id": {"vin": "123", "make": "Toyota"},
+      "color": 'blue',
+    },
+  },
 );
 
 // "{vin: "123", make: "Toyota"}"
@@ -732,7 +732,7 @@ let new_attachment = peer_a
 ```
 
 ```dart Dart
-final newAttachment = await ditto.store.newAttachment(filePathOrData);
+final newAttachment = ditto.store.newAttachment("/path/to/my/file.pdf");
 ```
 
 </CodeGroup>
@@ -794,7 +794,10 @@ let user_data = HashMap::from_iter([
 ```
 
 ```dart Dart
-// Coming soon
+final attachment = ditto.store.newAttachment(
+  "/path/to/my/file.pdf",
+  {"name": "name_of_file"},
+);
 ```
 
 </CodeGroup>
@@ -869,7 +872,13 @@ var newAttachmentWithMetadata = await Ditto.Store.NewAttachmentAsync(filePath, m
 ```
 
 ```dart Dart
-// Coming Soon
+final attachment = ditto.store.newAttachment(
+  filePath,
+  {
+    "name": "japan.npg",
+    "description": "This is an image of a sunset in Japan.",
+  },
+);
 ```
 
 </CodeGroup>
@@ -991,7 +1000,18 @@ json!({
 ```
 
 ```dart Dart
-// Coming Soon
+final document = {
+  "_id": "123",
+  "my_attachment": attachment,
+};
+
+final query = "INSERT INTO COLLECTION cars (my_attachment ATTACHMENT) DOCUMENTS (:document)";
+final insertArguments = {"document": document};
+
+final result = await ditto.store.execute(
+  query, 
+  arguments: insertArguments,
+);
 ```
 
 </CodeGroup>
@@ -1165,17 +1185,17 @@ args);
 
 ```dart Dart
 final newCar = {
-"\_id": "123",
-"properties": {
-"color": 'blue',
-"mileage": 3000,
-},
+  "\_id": "123",
+  "properties": {
+    "color": 'blue',
+    "mileage": 3000,
+  },
 };
 
 await ditto.store.execute("""
-INSERT INTO COLLECTION cars (properties MAP)
-DOCUMENTS (:newCar)""",
-arguments: {"newCar": newCar},
+  INSERT INTO COLLECTION cars (properties MAP)
+  DOCUMENTS (:newCar)""",
+  arguments: {"newCar": newCar},
 );
 ```
 

@@ -125,14 +125,14 @@ Future<void> main() async {
     ].request();
 
     // Initialize Ditto with your Ditto AppId and Playground Token
-    final identity = await OnlinePlaygroundIdentity.create(
+    final identity = OnlinePlaygroundIdentity(
       appId: "YOUR_APP_ID", // Replace with your specific id
       token: "YOUR_PLAYGROUND_TOKEN", // Replace with your specific token
     );
     final ditto = await Ditto.open(identity);
 
     // Start Ditto Sync
-    await ditto.startSync();
+    ditto.startSync();
 
     runApp(MyApp(ditto: ditto));
 }
@@ -181,8 +181,8 @@ FloatingActionButton(
 To observe changes in the data store, register an observer. This example sets up an observer to listen for changes in the `items` collection:
 
 ```dart Dart
-Future<void> observeData() async {
-  final observer = await ditto.store.registerObserver(
+void observeData() {
+  final observer = ditto.store.registerObserver(
     "SELECT * FROM items",
     onChange: (event) {
 	    // Handle data changed event
@@ -221,7 +221,7 @@ To keep your data in sync across devices and with the Ditto Cloud (Big Peer), yo
 To start sync on the device you need to call `startSync`. This enables this device to sync data with other peers including the Ditto Cloud.
 
 ```dart Dart
-await ditto.startSync();
+ditto.startSync();
 ```
 
 ### Registering a Subscription
@@ -229,8 +229,8 @@ await ditto.startSync();
 Register a subscription to a collection to keep the data in sync. Below is an example of how to register a subscription to the `items` collection:
 
 ```dart Dart
-Future<void> syncData() async {
-  await ditto.sync.registerSubscription("SELECT * FROM items");
+void syncData() {
+  ditto.sync.registerSubscription("SELECT * FROM items");
 }
 ```
 

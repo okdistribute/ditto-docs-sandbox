@@ -179,6 +179,8 @@ ditto.presence.connectionRequestHandler = (request) async {
   print(connectionRequest.peerKeyString)
   print(connectionRequest.connectionType)
   print(connectionRequest.peerMetadata)
+
+  return ConnectionRequestAuthorization.allow;
 };
 ```
 </CodeGroup>

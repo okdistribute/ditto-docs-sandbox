@@ -56,7 +56,7 @@ let subscription =
 ```
 
 ```dart Dart
-await ditto.sync.registerSubscription("SELECT * FROM cars");
+ditto.sync.registerSubscription("SELECT * FROM cars");
 ```
 
 </CodeGroup>
@@ -128,7 +128,7 @@ ditto.sync().register_subscription(
 ```
 
 ```dart Dart
-await ditto.sync.registerSubscription("""
+ditto.sync.registerSubscription("""
   SELECT *
   FROM cars
   WHERE color = :color""",
@@ -217,7 +217,7 @@ subscription.Cancel();
 ```
 
 ```dart Dart
-await subscription.cancel()
+subscription.cancel()
 ```
 
 </CodeGroup>

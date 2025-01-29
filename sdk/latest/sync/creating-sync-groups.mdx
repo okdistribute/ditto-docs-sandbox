@@ -88,8 +88,8 @@ ditto.start_sync()?;
 final config = TransportConfig()
   ..global.syncGroup = 1234;
 
-await ditto.setTransportConfig(config);
-await ditto.startSync();
+ditto.transportConfig = config;
+ditto.startSync();
 ```
 </CodeGroup>
 

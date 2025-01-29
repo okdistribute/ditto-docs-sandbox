@@ -55,7 +55,7 @@ auto result = ditto.get_store().execute("SELECT * FROM cars");
 ```
 
 ```dart Dart
-auto result = ditto.get_store().execute("SELECT * FROM cars");
+final result = await ditto.store.execute("SELECT * FROM cars");
 ```
 
 </CodeGroup>
@@ -142,7 +142,8 @@ let result = ditto.store().execute(
 ```dart Dart
 final result = await ditto.store.execute(
   "SELECT * FROM cars WHERE color = :color",
-  arguments: {"color": "blue"});
+  arguments: {"color": "blue"},
+);
 ```
 
 </CodeGroup>

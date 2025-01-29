@@ -94,7 +94,7 @@ let presenceGraph = ditto.presence().graph()
 ```
 
 ```dart Dart
-final presenceGraph = await ditto.presence.graph;
+final presenceGraph = ditto.presence.graph;
 ```
 
 </CodeGroup>
@@ -166,7 +166,7 @@ let presenceObserver = ditto.presence().observe(move |_graph| {
 ```
 
 ```dart Dart
-final presenceObserver = await ditto.presence.observe((graph) {
+final presenceObserver = ditto.presence.observe((graph) {
   // observe changes to the presence graph
 });
 ```
@@ -213,8 +213,7 @@ ditto.presence().graph().local_peer.peer_key_string
 ```
 
 ```dart Dart
-final graph = await ditto.presence.graph;
-graph.localPeer.peerKeyString
+ditto.presence.graph.localPeer.peerKeyString
 ```
 </CodeGroup>
 
@@ -272,8 +271,8 @@ let peer_key_string = &first_peer.peer_key_string;
 ```
 
 ```dart Dart
-final graph = await ditto.presence.graph;
-final firstPeer = graph.remotePeers[0];
+final remotePeers = ditto.presence.graph.remotePeers;
+final firstPeer = remotePeers[0];
 final peerKeyString = firstPeer.peerKeyString;
 ```
 </CodeGroup>
@@ -358,10 +357,10 @@ ditto.presence().set_peer_metadata(&metadata)?;
 
 ```dart Dart
 // Setting via Object
-await ditto.presence.setPeerMetadata({ "location": "inside" })
+ditto.presence.peerMetadata = {"location": "inside"};
 
 // Setting via JSON String
-await ditto.presence.setPeerMetadataJsonString('{"location": "inside"}')
+ditto.presence.peerMetadataJsonString = '{"location": "inside"}';
 ```
 </CodeGroup>
 
@@ -432,7 +431,7 @@ ditto.presence().graph().local_peer.peer_metadata
 ditto.presence.peerMetadata
 
 // Reading from the presence graph
-(await ditto.presence.graph).localPeer.peerMetadata
+ditto.presence.graph.localPeer.peerMetadata
 ```
 </CodeGroup>
 
@@ -492,8 +491,8 @@ let peer_metadata = &first_peer.peer_metadata;
 ```
 
 ```dart Dart
-final graph = await ditto.presence.graph;
-final firstPeer = graph.remotePeers[0];
+final remotePeers = ditto.presence.graph.remotePeers;
+final firstPeer = remotePeers[0];
 final metadata = firstPeer.peerMetadata;
 ```
 </CodeGroup>
@@ -571,6 +570,7 @@ ditto.presence().graph().local_peer.identity_service_metadata
 ```
 
 ```dart Dart
+ditto.presence.graph.localPeer.identityServiceMetadata
 // Coming Soon
 ```
 </CodeGroup>
@@ -631,7 +631,10 @@ let peer_metadata = &first_peer.identity_service_metadata;
 ```
 
 ```dart Dart
-// Coming Soon
+final remotePeers = ditto.presence.graph.remotePeers;
+final firstPeer = remotePeers[0];
+
+final peerMetadata = firstPeer.identityServiceMetadata;
 ```
 </CodeGroup>
 

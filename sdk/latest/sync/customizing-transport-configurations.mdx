@@ -153,8 +153,8 @@ final config = TransportConfig()
   ..peerToPeer.lan.isEnabled = true
   ..peerToPeer.awdl.isEnabled = true;
 
-await ditto.setTransportConfig(config);
-await ditto.startSync();
+ditto.transportConfig = config;
+ditto.startSync();
 ```
 
 </CodeGroup>
@@ -282,8 +282,8 @@ final config = TransportConfig()
   ..connect.websocketURLs.push('wss://135.1.5.5:12345')
   ..connect.websocketURLs.push('wss://185.1.5.5:12345');
 
-await ditto.setTransportConfig(config);
-await ditto.startSync();
+ditto.transportConfig = config;
+ditto.startSync();
 ```
 
 </CodeGroup>
@@ -367,8 +367,8 @@ ditto.start_sync()?;
 ```dart Dart
 final config = TransportConfig()
  ..connect.websocketURLs.push('ws://127.0.0.1');
-await ditto.setTransportConfig(config);
-await ditto.startSync();
+ditto.transportConfig = config;
+ditto.startSync();
 ```
 
 </CodeGroup>
@@ -478,8 +478,8 @@ final config = TransportConfig()
   ..listen.tcp.interfaceIP = '0.0.0.0'
   ..listen.tcp.port = 4000;
 
-await ditto.setTransportConfig(config);
-await ditto.startSync();
+ditto.transportConfig = config;
+ditto.startSync();
 ```
 
 </CodeGroup>
@@ -645,8 +645,8 @@ final config = TransportConfig()
   ..listen.tcp.port = 4000;
 
 // 3. Connect explicitly to remote devices
-await ditto.setTransportConfig(config);
-await ditto.startSync();
+ditto.transportConfig = config;
+ditto.startSync();
 ```
 
 </CodeGroup>

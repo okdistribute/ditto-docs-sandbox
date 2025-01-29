@@ -651,18 +651,18 @@ args);
 
 ```dart Dart
 final newDocument = {
-"_id": "123",
-"top_map": {
-  "nested_map": {
-    "color": "blue",
+  "_id": "123",
+  "top_map": {
+    "nested_map": {
+      "color": "blue",
+    },
   },
-},
 };
 
 await ditto.store.execute("""
-INSERT INTO COLLECTION your_collection_name (top_map MAP(nested_map MAP))
-DOCUMENTS (:newDocument)""",
-arguments: {"newDocument": newDocument},
+  INSERT INTO COLLECTION your_collection_name (top_map MAP(nested_map MAP))
+  DOCUMENTS (:newDocument)""",
+  arguments: {"newDocument": newDocument},
 );
 ```
 

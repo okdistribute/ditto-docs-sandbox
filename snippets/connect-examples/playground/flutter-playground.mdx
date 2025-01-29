@@ -1,5 +1,5 @@
 ```dart Dart
-final identity = await OnlinePlaygroundIdentity.create(
+final identity = OnlinePlaygroundIdentity(
     appId: "REPLACE_ME_WITH_YOUR_APP_ID",
     token: "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN",
     customAuthUrl: "REPLACE_ME_WITH_YOUR_AUTH_URL",
@@ -13,8 +13,6 @@ final connect = Connect(webSocketUrls: {"wss://REPLACE_ME_WITH_YOUR_WEBSOCKET_UR
 // Do not call this if only using Ditto Cloud Sync
 final peerToPeer = PeerToPeer.all();
 
-final transportConfig = TransportConfig(peerToPeer: peerToPeer, connect: connect);
-ditto.setTransportConfig(transportConfig);
-
-await ditto.startSync();
+ditto.transportConfig = TransportConfig(peerToPeer: peerToPeer, connect: connect);
+ditto.startSync();
 ```

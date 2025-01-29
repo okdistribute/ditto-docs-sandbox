@@ -58,7 +58,7 @@ ditto.small_peer_info().set_enabled(false)
 ```
 
 ```dart Dart
-// Coming Soon
+ditto.smallPeerInfo.isEnabled = false;
 ```
 </CodeGroup>
 
@@ -101,7 +101,7 @@ ditto.small_peer_info().set_enabled(true)
 ```
 
 ```dart Dart
-// Coming Soon
+ditto.smallPeerInfo.isEnabled = true;
 ```
 </CodeGroup>
     </Step>
@@ -134,11 +134,11 @@ ditto.get_small_peer_info().sync_scope(), SyncScope::BigPeerOnly
 ```
 
 ```rust Rust
-ditto.small_peer_info()..set_sync_scope(DittoSmallPeerInfoSyncScope::BigPeerOnly);
+ditto.small_peer_info().set_sync_scope(DittoSmallPeerInfoSyncScope::BigPeerOnly);
 ```
 
 ```dart Dart
-// Coming Soon
+ditto.smallPeerInfo.syncScope = SmallPeerInfoSyncScope.bigPeerOnly;
 ```
 </CodeGroup>
     </Step>
@@ -190,7 +190,7 @@ ditto.set_device_name("your device name");
 ```
 
 ```dart Dart
-// Coming Soon
+ditto.deviceName = "your device name";
 ```
 </CodeGroup>
 
@@ -327,7 +327,20 @@ ditto.get_small_peer_info().set_metadata_json_string(json_string);
 ```
 
 ```dart Dart
-// Coming Soon
+final metadata = {
+  "app_version": "1.0.0",
+  "device_id": "abc123",
+};
+
+// Set the object directly
+ditto.smallPeerInfo.peerMetadata = metadata;
+
+// or
+
+final jsonString = jsonEncode(metadata);
+
+// Set with a JSON serialized payload
+ditto.smallPeerInfo.peerMetadataJsonString = jsonString;
 ```
 </CodeGroup>
 
