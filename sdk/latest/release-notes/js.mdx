@@ -20,8 +20,9 @@ iconType: solid
 
 <Update label="4.9.2 Version Release" description="Release Date: Dec 19, 2024">
 *No JavaScript Specific Changes*
+</Update>
 
-# 4.9.1 Version Release*Release Date: Dec 13, 2024*
+<Update label="4.9.1 Version Release" description="Release Date: Dec 13, 2024">
 
 ## 4.9.1 JavaScript & React Native Specific Changes
 <Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Enhanced the efficiency of our memory management processes on React Native. (#15126)
@@ -69,7 +70,9 @@ iconType: solid
 
 
 
-## 4.9.0 Logging Clarity ImprovementsThis release comes with a number of logging clarity improvements. The goal of these changes are to make Ditto logs more consumable and actionable for end users. While there are wide ranging changes one of the principal goals of this work is to make our INFO level logs contain the right information to understand the state and health of the Ditto SDK.
+## 4.9.0 Logging Clarity Improvements
+
+This release comes with a number of logging clarity improvements. The goal of these changes are to make Ditto logs more consumable and actionable for end users. While there are wide ranging changes one of the principal goals of this work is to make our INFO level logs contain the right information to understand the state and health of the Ditto SDK.
 
 - More information is included when physical connections start and end (such as the type of connection and the remote peer’s key)
 - Devices that try to connect to themselves now say “device has connected to itself” instead of an error about the remote site ID being the same as the local peer
@@ -90,7 +93,9 @@ iconType: solid
 - “starting compression and export” is now followed by a “completed export” log at the same level
 - Successful SQLite WAL recovery logs were further lowered from INFO to DEBUG
 
-## 4.9.0 Common Changes<Icon icon="plus"iconType="solid" horizontal /> **Added:** regexp\_like function in DQL. (#12129)
+## 4.9.0 Common Changes
+
+<Icon icon="plus"iconType="solid" horizontal /> **Added:** regexp\_like function in DQL. (#12129)
 
 <Icon icon="plus"iconType="solid" horizontal /> **Added:** peer\_metadata and identity\_service\_metadata to the small peer info document (#12477)
 

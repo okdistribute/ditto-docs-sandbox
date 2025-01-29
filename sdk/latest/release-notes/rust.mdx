@@ -28,7 +28,9 @@ iconType: solid
 
 </Update>
 <Update label="4.9.0 Version Release" description="Release Date: Nov 21, 2024">
-## 4.9.0 Rust Specific ChangesThe 4.9.0 Rust release has come with a collection of API changes designed to align the Rust SDK with the standards of our other SDK. These changes were done to align naming conventions as well as to regorganice the module to make it more consistent with other SDKs.
+## 4.9.0 Rust Specific Changes
+
+The 4.9.0 Rust release has come with a collection of API changes designed to align the Rust SDK with the standards of our other SDK. These changes were done to align naming conventions as well as to regorganice the module to make it more consistent with other SDKs.
 
 These API changes include a number of depreciated APIs. For insteances where APIs are depreciated you'll find replacement APIs provided.
 
@@ -58,17 +60,15 @@ All changes are backwards compatable.
 
 - Use ditto.app\_id()
 
+### Module Reorganization
 
-
-### Module Reorganization***Added a dedicated*** presence ***module for the Presence API***
+***Added a dedicated*** presence ***module for the Presence API***
 
 <Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: dittolive\_ditto::transport::\{Peer, Presence, PresenceGraph, PresenceObserver, PresenceOs, Connection, ConnectionType} (#13645).
 
 - use dittolive\_ditto::presence::\{Peer, Presence, PresenceGraph, PresenceObserver, PresenceOs, Connection, ConnectionType}
 
 <Icon icon="plus"iconType="solid" horizontal /> **Added**: dittolive\_ditto::presence::\{ConnectionRequest, ConnectionRequestAuthorization} (previously only available via prelude) (#13645)
-
-
 
 ***Flattened store module, improved store docs***
 
@@ -128,7 +128,9 @@ All changes are backwards compatable.
 
 <Icon icon="triangle-exclamation"iconType="solid" horizontal /> **Deprecated**: SiteId, use ditto.presence().graph().local\_peer.peer\_key\_string instead
 
-## 4.9.0 Logging Clarity ImprovementsThis release comes with a number of logging clarity improvements. The goal of these changes are to make Ditto logs more consumable and actionable for end users. While there are wide ranging changes one of the principal goals of this work is to make our INFO level logs contain the right information to understand the state and health of the Ditto SDK.
+## 4.9.0 Logging Clarity Improvements
+
+This release comes with a number of logging clarity improvements. The goal of these changes are to make Ditto logs more consumable and actionable for end users. While there are wide ranging changes one of the principal goals of this work is to make our INFO level logs contain the right information to understand the state and health of the Ditto SDK.
 
 - More information is included when physical connections start and end (such as the type of connection and the remote peer’s key)
 - Devices that try to connect to themselves now say “device has connected to itself” instead of an error about the remote site ID being the same as the local peer
