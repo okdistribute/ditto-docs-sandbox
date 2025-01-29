@@ -950,6 +950,10 @@
       "destination": "/dql/dql"
     },
     {
+      "source": "/big-peer",
+      "destination": "/cloud/overview"
+    },
+    {
       "source": "/cloud",
       "destination": "/cloud/overview"
     },
@@ -1024,6 +1028,10 @@
     {
       "source": "/v4-8/install-guides",
       "destination": "/sdk/v4-8/install-guides/install-guides"
+    },
+    {
+      "source": "/4-8/big-peer",
+      "destination": "/cloud/overview"
     },
     {
       "source": "/v4-7/api-references",
