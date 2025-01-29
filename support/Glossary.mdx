@@ -21,8 +21,6 @@ A logical container, referred to as a *namespace*, that holds all the data assoc
 
 Small Peers are limited to utilizing one Application concurrently, a specification included in the Identity. On the other hand, the Big Peer can support multiple Applications simultaneously. Application IDs consist of strings, with lower-case UUIDs being the prevalent choice.
 
-application. A Small Peer can use only one Application at a time, which is specified as part of the Identity. The Big Peer can service multiple Applications at a time. Application IDs are strings, almost always a lower-case UUID.
-
 ### attachment
 
 The Ditto component which deals with storing large binary files for users (associated with a document as an attachment). Attachments are referenced by documents but must be explicitly downloaded. Attachments use a different transfer mechanism from regular replication.
