@@ -1030,6 +1030,10 @@
       "destination": "/sdk/v4-8/install-guides/install-guides"
     },
     {
+      "source": "/v4-5/big-peer",
+      "destination": "/cloud/overview"
+    },
+    {
       "source": "/v4-8/big-peer",
       "destination": "/cloud/overview"
     },
