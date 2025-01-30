@@ -49,7 +49,7 @@ https://grafana.com/docs/writers-toolkit/write/
 
 Simply clone this repo and edit the content in your favorite IDE. Or, make the change directly in Github.
 
-You'll need to raise a pull request, which will automatically request approval from [CX/PM](https://github.com/orgs/getditto/teams/docs-mergers).
+You'll need to raise a pull request, which will automatically request approval from the relevant subject matter experts [CX/PM](https://github.com/orgs/getditto/teams/docs-mergers).
 
 When making changes to versioned SDK content, consider whether a change is needed on any prior versions also. The 
 versions are organised into their own directories.

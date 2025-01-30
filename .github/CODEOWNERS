@@ -1,0 +1,35 @@
+#
+# .github/CODEOWNERS
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+
+# Docs Global Default
+* @getditto/docs-mergers
+
+# Docs Site Configuration
+mint.json @getditto/product
+
+# Cloud
+/cloud/ @TMWilds
+
+# CX
+/best-practices/                    @getditto/customer-experience
+/support/                           @getditto/customer-experience
+/best-practices/example-projects/   @getditto/dittotools
+
+# DQL
+/dql/ @mattcarabine
+
+# SDKs
+/sdk/                   @skylerjokiel
+/sdk/**/c-sharp.**      @busec0 @phatblat @skylerjokiel
+/sdk/**/cpp**           @kristopherjohnson @danielhenrymantilla @hamchapman @skylerjokiel
+/sdk/**/flutter**       @cameron1024 @teodorciuraru @skylerjokiel
+/sdk/**/java**          @phatblat @skylerjokiel
+/sdk/**/js**            @pvditto @teodorciuraru @konstantinbe @skylerjokiel
+/sdk/**/kotlin**        @phatblat @skylerjokiel
+/sdk/**/nodejs**        @pvditto @teodorciuraru @konstantinbe @skylerjokiel
+/sdk/**/react-native**  @pvditto @teodorciuraru @konstantinbe @skylerjokiel
+/sdk/**/rust**          @danielhenrymantilla @hamchapman @nicholastmosher @skylerjokiel
+/sdk/**/swift**         @konstantinbe @phatblat @skylerjokiel
+/sdk/**/sdk-size**      @getditto/sdk-engineers @skylerjokiel
