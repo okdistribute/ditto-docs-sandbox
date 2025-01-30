@@ -1,6 +1,6 @@
 ---
 title: C++
-description: "You can integrate the Ditto SDK into C++ projects to develop for Linux and iOS platforms.."
+description: "You can integrate the Ditto SDK into C++ projects to develop for Linux and Android platforms."
 icon: code
 iconType: solid
 ---
@@ -27,11 +27,11 @@ Download `Ditto.tar.gz` and unpack an archive containing the `libditto.a` static
 
 <CodeGroup>
 ```linux x86_64
-curl -O https://software.ditto.live/cpp-linux-x86_64/Ditto/4.8.2/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
+curl -O https://software.ditto.live/cpp-linux-x86_64/Ditto/4.9.3/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
 ```
 
 ```linux aarch64
-curl -O https://software.ditto.live/cpp-linux-aarch64/Ditto/4.8.2/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
+curl -O https://software.ditto.live/cpp-linux-aarch64/Ditto/4.9.3/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
 ```
 </CodeGroup>
 
@@ -54,18 +54,6 @@ For instructions on adding cross-platform Bluetooth Low Energy (LE) capabilities
 # Your main code entry point is in ./src/main.cpp
 
 g++ -std=c++17 ./src/main.cpp -I ./sdk -lditto -ldl -lrt -pthread -L ./sdk -o dist/main;
-
- # Once executed, your output will be available at: ./dist/main
-```
-
-```ios iOS
-#This command assumes:
-# You have unzipped the Ditto.tar.gz in a relative directory ./sdk/
-# Your main code entry point is in ./src/main.cpp
-
-g++ -std=c++17 ./src/main.cpp -I ./sdk -lditto -ldl -framework Security,CoreFoundation,CoreBluetooth,ObjC -pthread -L ./sdk -o dist/main;
-
-# Note: By adding the "-framework Security,CoreFoundation,CoreBluetooth,ObjC.," you enable the C++ SDK to leverage iOS peer-to-peer networks.
 
  # Once executed, your output will be available at: ./dist/main
 ```
@@ -98,7 +86,7 @@ Synchronize your project with the Gradle file by clicking **File** \> **Sync Pro
 Add the Ditto SDK to your app’s build.gradle file in the dependencies block with the appropriate version:
 
 ```build.gradle
-implementation "live.ditto:ditto-cpp:4.8.2"
+implementation "live.ditto:ditto-cpp:4.9.3"
 ```
 
 To ensure that your app links properly with the shared objects in the SDK, and that your app has debugging symbols for the SDK, add these rules to your android packagingOptions block:
