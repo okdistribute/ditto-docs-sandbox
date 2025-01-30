@@ -5,23 +5,24 @@ icon: code
 iconType: solid
 ---
 
+# Installing the C++ SDK
+
 ## Linux
 
 To install the C++ SDK:
 
 <Steps>
 <Step>
-Fetch and extract the Ditto package. ([Downloading and Unpacking Ditto]())
+Fetch and extract the Ditto package. ([Downloading and Unpacking Ditto](#downloading-and-unpacking-ditto))
 </Step>
 
 <Step>
-Configure your app to link to the Ditto static library. ([Linking to Ditto]())
+Configure your app to link to the Ditto library. ([Linking to Ditto](#linking-to-ditto))
 </Step>
 </Steps>
 
-# Downloading and Unpacking Ditto
 
-## Linux
+### Downloading and Unpacking Ditto
 
 Download `Ditto.tar.gz` and unpack an archive containing the `libditto.a` static library and `Ditto` header:
 
@@ -36,13 +37,12 @@ curl -O https://software.ditto.live/cpp-linux-aarch64/Ditto/4.9.3/dist/Ditto.tar
 </CodeGroup>
 
 
-
-# Linking to Ditto
+### Linking to Ditto
 
 Add `-lditto` as a compilation step in the `main.cpp` source file:
 
 <Info>
-For instructions on adding cross-platform Bluetooth Low Energy (LE) capabilities, see [Bluetooth on Linux]().
+For instructions on adding cross-platform Bluetooth Low Energy (LE) capabilities, see [Bluetooth on Linux](best-practices/how-to/bluetooth-on-linux#bluetooth-on-linux).
 
 *BlueZ* is the official Bluetooth protocol stack implementation for Linux systems to communicate with other Bluetooth-enabled platforms.
 </Info>
@@ -70,10 +70,12 @@ Include the Maven Central repository in your Gradle file, and then synchronize i
 
 <Steps>
 <Step>
-From your project-level build.gradle file located in the app's root directory, ensure the mavenCentral() repository is included in the repositories section:
+From your project-level build.gradle file located in the app's root directory, ensure the `mavenCentral()` repository is included in the `repositories` section:
 
 ```gradle Gradle
-allprojects { repositories { mavenCentral() } }
+allprojects {
+  repositories { mavenCentral() }
+}
 ```
 </Step>
 
@@ -89,15 +91,19 @@ Add the Ditto SDK to your app’s build.gradle file in the dependencies block wi
 implementation "live.ditto:ditto-cpp:4.9.3"
 ```
 
-To ensure that your app links properly with the shared objects in the SDK, and that your app has debugging symbols for the SDK, add these rules to your android packagingOptions block:
+To ensure that your app links properly with the shared objects in the SDK, and that your app has debugging symbols for the SDK, add these rules to your `android` `packagingOptions` block:
 
 ```build.gradle
-
-jniLibs { useLegacyPackaging = true keepDebugSymbols.add("\*\*/\*.so") } pickFirst 'lib/x86/libc++\_shared.so' pickFirst 'lib/x86\_64/libc++\_shared.so' pickFirst 'lib/armeabi-v7a/libc++\_shared.so' pickFirst 'lib/arm64-v8a/libc++\_shared.so' pickFirst 'lib/x86/libditto.so' pickFirst 'lib/x86\_64/libditto.so' pickFirst 'lib/armeabi-v7a/libditto.so' pickFirst 'lib/arm64-v8a/libditto.so'
+        jniLibs {
+            useLegacyPackaging = true
+            keepDebugSymbols.add("**/*.so")
+            pickFirsts.add("lib/**/libditto.so")
+            pickFirsts.add("lib/**/libc++_shared.so")
+        }
 ```
 
 ## Setting Android Context
-The C++ SDK for Android requires that the app call Ditto::set\_android\_context(JNIEnv\* env, jobject context) with an application context object after creating an instance of the C++ Ditto class. This context is required by the SDK on Android to access system resources such as network interfaces and files.
+The C++ SDK for Android requires that the app call `Ditto::set_android_context(JNIEnv* env, jobject context)` with an application context object after creating an instance of the C++ `Ditto` class. This context is required by the SDK on Android to access system resources such as network interfaces and files.
 
 ## Configuring Permissions
 The Android operating system limits access to some device functionality for end-user control and privacy. In order to use this functionality, configure your app to declare and request permissions from end users at runtime:
@@ -118,11 +124,32 @@ The Ditto SDK's AndroidManifest.xml includes all of the necessary permissions fo
 
 ```AndroidManifest.xml
 
-<!-- Required for Bluetooth --> <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" /> <uses-permission android:name="android.permission.BLUETOOTH\_ADMIN" android:maxSdkVersion="30" /> <uses-permission android:name="android.permission.BLUETOOTH\_ADVERTISE" tools:targetApi="31" /> <uses-permission android:name="android.permission.BLUETOOTH\_CONNECT" tools:targetApi="31" /> <uses-permission android:name="android.permission.BLUETOOTH\_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="31" /> <uses-permission android:name="android.permission.ACCESS\_COARSE\_LOCATION" android:maxSdkVersion="28" /> <!-- Required for WiFi Aware --> <uses-permission android:name="android.permission.ACCESS\_WIFI\_STATE" /> <uses-permission android:name="android.permission.CHANGE\_WIFI\_STATE" /> <uses-permission android:name="android.permission.ACCESS\_NETWORK\_STATE" /> <uses-permission android:name="android.permission.CHANGE\_NETWORK\_STATE" /> <uses-permission android:name="android.permission.NEARBY\_WIFI\_DEVICES" android:usesPermissionFlags="neverForLocation" tools:targetApi="33" /> <uses-permission android:name="android.permission.ACCESS\_FINE\_LOCATION" android:maxSdkVersion="32" /> <!-- Required for WiFi Aware, TCP, UDP, and WebSockets --> <uses-permission android:name="android.permission.INTERNET" /> <!-- Required for mDNS discovery --> <uses-permission android:name="android.permission.CHANGE\_WIFI\_MULTICAST\_STATE" />
-```
-Some of these permissions have an android:maxSdkVersion attribute which means they are not used on devices running newer versions of Android. This is a best practice to respect users' privacy when those permissions are not necessary.
+<!-- Required for Bluetooth -->
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="31" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="31" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="31" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="28" />
 
-However, some apps may still need to use one or more of the above permissions across more versions of Android. This can be accomplished by overriding the permission configuration in your app's AndroidManifest.xml
+<!-- Required for WiFi Aware -->
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" tools:targetApi="33" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="32" />
+
+<!-- Required for WiFi Aware, TCP, UDP, and WebSockets -->
+<uses-permission android:name="android.permission.INTERNET" />
+
+<!-- Required for mDNS discovery -->
+<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+```
+
+Some of these permissions have an `android:maxSdkVersion` attribute which means they are not used on devices running newer versions of Android. This is a best practice to respect users' privacy when those permissions are not necessary.
+
+However, some apps may still need to use one or more of the above permissions across more versions of Android. This can be accomplished by overriding the permission configuration in your app's `AndroidManifest.xml`.
 
 To override any of these permission limitations in your app, do the following:
 
@@ -134,10 +161,11 @@ Open the AndroidManifest.xml located in the app/src/main directory of your proje
 Within the same `manifest` tag, just before the `application` tag, add the relevant permissions you want to configure (location example):
 
 ```AndroidManifest.xml
-<uses-permission android:name="android.permission.ACCESS\_FINE\_LOCATION" tools:remove="android:maxSdkVersion" /> <uses-permission android:name="android.permission.ACCESS\_COARSE\_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:remove="android:maxSdkVersion" />
 ```
 
-Note the additional tools:remove attribute. This tells the manifest merger to selectively remove the android:maxSdkVersion behavior from the associated permissions, changing them to apply to all Android versions.
+Note the additional `tools:remove` attribute. This tells the manifest merger to selectively remove the `android:maxSdkVersion` behavior from the associated permissions, changing them to apply to all Android versions.
 </Step>
 </Steps>
 
@@ -146,20 +174,27 @@ For more information, see the official [Permissions on Android](https://develope
 </Note>
 
 ## Requesting Permissions at Runtime
-At runtime, your app can call the C++ Ditto::missing\_permissions() function to get a list of permissions required by Ditto that are missing, and your app can request them.
+At runtime, your app can call the C++ `Ditto::missing_permissions()` function to get a list of permissions required by Ditto that are missing, and your app can request them.
 
-## Importing Ditto
+## Importing and Initializing Ditto
 
-From the source code of your app, using `#include <Ditto.h>`,  import Ditto and provide your access credentials:
+From the source code of your app, using `#include <Ditto.h>`, use the `ditto` namespace, and provide your access credentials:
 
 ```cpp C++
+#include <Ditto.h>
+using namespace ditto;
+
 auto identity =
     Identity::OnlinePlayground("YOUR_APP_ID", "PLAYGROUND_TOKEN", true);
 try {
   Ditto ditto = Ditto(identity, dir);
   ditto.set_minimum_log_level(LogLevel::debug);
+
+  // This is necessary if using DQL
+  ditto.disable_sync_with_v3();
+
   ditto.start_sync();
 } catch (const DittoError &err) {
+  // display or log error
 }
 ```
-
