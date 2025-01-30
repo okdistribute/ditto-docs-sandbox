@@ -253,8 +253,14 @@ Fill in the database field, with the MongoDB database that you wish to synchroni
 </Step>
 <Step>
 Fill in the connection string field, with the connection string of the MongoDB database that you wish to synchronize with Ditto.
-You find this connection string in the MongoDB Atlas UI, under the `Connect` button for your cluster, ensuring that you use the credentials of the database user that you created in the prerequisites.
+You can find this connection string in the MongoDB Atlas UI, under the `Connect` button for your cluster, ensuring that you use the credentials of the database user that you created in the prerequisites.
+
+The connection string must be supplied in the format `mongodb+srv://<username>:<password>@<cluster>.mongodb.net/`. 
+For example to connect to the cluster with the URL `my_cluster.mongodb.net`, using the username `my_user` with a password of `my_password`, you would provide `mongodb+srv://my_user:my_password@my_cluster.mongodb.net/`. 
+Non-SRV-based connection strings cannot be used with the MongoDB connector.
+<Note>
 While the password is passed into the Ditto Portal as part of the connection string, it is stored securely in Ditto's systems and is not accessible to Ditto staff.
+</Note>
 </Step>
 <Step>
 Fill in the ID mapping field, with the ID mapping that you wish to use for the connector.
