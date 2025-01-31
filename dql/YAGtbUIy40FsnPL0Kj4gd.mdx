@@ -384,6 +384,14 @@ await ditto.store.execute(`
 
 ### Deleting Documents
 
+There are several ways to delete data in Ditto, and you can find more detail about them [here](/sdk/latest/crud/delete).
+
+<Warning>
+Removing documents with the below method creates a "tombstone" record which is replicated to indicate something was deleted. This tombstone cannot be removed later, so we recommend only doing this for documents which are no longer present on any small peers.
+
+In the future, this will be replaced by a `DELETE` command which handles system-wide deletes more cleanly.
+</Warning>
+
 <CardGroup>
   <Card title="Legacy">
 ```javascript JS
@@ -394,8 +402,9 @@ await ditto.store
 ```
   </Card>
   <Card title="DQL">
-```javascript JS
-// Not Supported (use EVICT)
+```SQL DQL
+-- Only available in Big Peer
+TOMBSTONE FROM cars WHERE color == "blue"
 ```
   </Card>
 </CardGroup>
