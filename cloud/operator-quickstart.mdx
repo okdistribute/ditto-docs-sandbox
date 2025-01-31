@@ -1,0 +1,536 @@
+---
+title: Ditto Operator - Public Preview
+---
+
+# Introduction
+
+The Ditto Operator allows you to deploy Big Peer, Ditto's cloud sync engine and data integration platform, to your own self-hosted Kubernetes environment.
+
+Ditto Operator simplifies the configuration of the various components that form Big Peer, allowing you to focus on developing applications that get you connected to the cloud.
+
+<Warning>
+    The Ditto Operator is currently in Public Preview, and intended only for testing and evaluation purposes. It is not suitable for use in production.
+
+    While representative of the product we are building, we expect changes and cannot guarantee an upgrade path between versions during this preview phase.
+
+    Important caveats for this release are:
+        * The Operator makes use of a "Dummy Auth" Webhook, meaning there is no HTTP API or device authentication available out of the box, all connected devices are granted full permission
+        * There is no app creation or management. Instead, apps are created implicitly when connecting to the Big Peer. Ensure that the App ID you provide is consistent when accessing data from SDKs or the HTTP API
+</Warning>
+
+## Table of Contents
+
+- [Prerequisites]
+- [Installing Certificate Manager]
+- [Installing Ingress Nginx]
+- [Installing Strimzi and Kafka]
+- [Installing the Ditto Operator]
+- [Installing the Dummy Auth Webhook]
+- [Deploying a Big Peer]
+- [Running the Cars App]
+- [Using the HTTP API]
+- [Uninstallation using Helm]
+- [Limitations and Caveats]
+- [Appendix A: Creating a local `kind` cluster]
+
+## Prerequisites
+
+
+A few prequisites need to be running before you install the Operator and deploy Big Peer.
+
+### Kubernetes Environment
+
+The following steps assume you have a Kubernetes cluster, on at least version 1.31.
+
+If you're looking to try the Operator locally, we recommend using [kind], a tool for running Kubernetes locally using Docker.
+
+<Accordion title="Example Kind Config">
+Here's an example configuration you can use, which will expose the Big Peer Ingress on your local device, allowing you to follow the steps later in this guide:
+```bash
+cat <<'EOF' | kind create cluster --config -
+---
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+kubeadmConfigPatches:
+  - |
+    kind: ClusterConfiguration
+    metadata:
+      name: config
+    etcd:
+      local:
+        extraArgs:
+          unsafe-no-fsync: "true"
+    networking:
+      serviceSubnet: 10.0.0.0/16
+nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP
+EOF
+```
+</Accordion>
+
+### Tools
+You'll also need to have [kubectl] and [helm] installed and have the appropriate [KUBECONFIG] `current-context` set.
+
+### Installing Certificate Manager
+
+The Ditto Operator uses [cert-manager] to issue various auth-related certificates. You can install [cert-manager] into the target cluster using:
+
+```bash
+helm install cert-manager cert-manager    \
+    --repo https://charts.jetstack.io     \
+    --namespace cert-manager              \
+    --create-namespace                    \
+    --set 'crds.enabled=true'             \
+    --set 'startupapicheck.enabled=false' \
+    --set 'prometheus.enabled=false'
+```
+
+### Installing Ingress Nginx
+
+The Ditto Operator uses [ingress-nginx] to route traffic into the various Big Peer services.
+
+> Note: any ingress manager is supported in theory, but [ingress-nginx] specific annotations are added for consistent-hashing.
+
+#### Option 1: Installing on non-kind clusters
+
+If you are not installing the [ingress-nginx] in a `kind` cluster, you can simply run:
+
+```bash
+helm install ingress-nginx ingress-nginx              \
+    --repo https://kubernetes.github.io/ingress-nginx \
+    --namespace nginx                                 \
+    --create-namespace
+```
+
+#### Option 2: Installing on a kind cluster
+
+If you opted to use Kind to run the cluster locally, should run the following command:
+
+```bash
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+```
+
+### Installing Strimzi and Kafka
+
+A running Kafka cluster is required as an internal dependency for various Big Peer components.
+
+You can install [strimzi], a Kakfa Operator, into the target cluster using:
+
+```bash
+helm install strimzi strimzi-kafka-operator \
+    --repo https://strimzi.io/charts        \
+    --namespace kafka                       \
+    --create-namespace
+```
+
+Declare a Kafka cluster (configured with [KRaft]) and some required configuration using:
+```bash
+cat <<'EOF' | kubectl apply -f -
+---
+# Create a kakfa cluster managed by strimzi.
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: upsilon
+  namespace: kafka
+  annotations:
+    strimzi.io/kraft: enabled
+    strimzi.io/node-pools: enabled
+spec:
+  kafka:
+    version: "3.8.0"
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+    config:
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
+      default.replication.factor: 1
+      min.insync.replicas: 1
+  entityOperator:
+    topicOperator: {}
+    userOperator: null
+
+---
+# Create a node pool for the kafka cluster.
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: upsilon
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: upsilon
+spec:
+  replicas: 1
+  roles:
+    - controller
+    - broker
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        type: persistent-claim
+        size: 5Gi
+        deleteClaim: false
+        kraftMetadata: shared
+
+---
+# Create the transaction.log kafka topic used by the Big Peer.
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: example.transaction.log
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: upsilon
+spec:
+  partitions: 1
+  replicas: 1
+  config:
+    cleanup.policy: delete
+    max.message.bytes: 104857600
+EOF
+```
+
+### Installing the Ditto Operator
+
+With all [prerequisites] taken care of, the latest stable version of the Ditto Operator can be installed using the [helm] [chart] and image located at `oci://quay.io/ditto-external/ditto-operator`:
+
+```bash
+helm install ditto-operator                   \
+  oci://quay.io/ditto-external/ditto-operator \
+  --namespace ditto                           \
+  --create-namespace
+```
+
+This installs the Operator into a newly created `ditto` namespace. All further steps will refer to this namespace.
+
+<Info>
+    Various configuration options are available in the [chart]'s values.yaml. You can view them with `helm show values oci://quay.io/ditto-external/ditto-operator`.
+
+    These values can be overriden using [helm]'s `--set` syntax. Further documentation for these values, and what they do, is coming soon.
+</Info>
+
+
+You can now verify the Ditto Operator is installed and running with:
+
+```bash
+kubectl logs -f deployment/ditto-operator --namespace ditto
+```
+
+The various Ditto-related CRDs (Custom Resource Definitions) that were installed by the [chart] can be viewed using:
+
+```bash
+kubectl api-resources | grep ditto.live
+```
+
+Which will return output similar to:
+
+```
+NAME                       APIVERSION            NAMESPACED   KIND
+bigpeers                   ditto.live/v1alpha1   true         BigPeer
+bigpeerapps                ditto.live/v1alpha1   true         BigPeerApp
+bigpeerstores              ditto.live/v1alpha1   true         BigPeerStore
+bigpeersubscriptions       ditto.live/v1alpha1   true         BigPeerSubscription
+```
+
+### Deploying the Dummy Auth Webhook
+
+The [Dummy Auth Webhook] is required by the example Big Peer for authenticating the HTTP API, and for device auth purposes.
+
+```bash
+cat <<'EOF' | kubectl apply -f -
+---
+# Create a deployment for the Dummy Auth Webhook.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-auth-webhook
+  namespace: ditto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummy-auth-webhook
+  template:
+    metadata:
+      labels:
+        app: dummy-auth-webhook
+    spec:
+      containers:
+        - name: dummy-auth-webhook
+          image: quay.io/ditto-external/big-peer-auth-webhook:1.39.2
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+
+---
+# Create a service the Big Peer will use to connect to the Dummy Auth Webhook.
+apiVersion: v1
+kind: Service
+metadata:
+  name: dummy-auth-webhook
+  namespace: ditto
+spec:
+  selector:
+    app: dummy-auth-webhook
+  ports:
+    - port: 80
+      targetPort: 5000
+EOF
+```
+
+## Deploying a Big Peer
+
+Here's a minimal example to deploy Big Peer:
+
+```bash
+cat <<'EOF' | kubectl apply -f -
+---
+# Create the Big Peer deployment.
+apiVersion: ditto.live/v1alpha1
+kind: BigPeer
+metadata:
+  name: example
+  namespace: ditto
+spec:
+  version: 1.40.3
+  network:
+    hostname: localhost
+  auth:
+    providers:
+      dummyProvider:
+        type: tokenWebhook
+        webhookUrl: http://dummy-auth-webhook.ditto.svc.cluster.local/validate_token
+  transactions:
+    kafka:
+      bootstrapHost: upsilon-kafka-bootstrap.kafka.svc.cluster.local:9092
+      topicName: example.transaction.log
+EOF
+```
+<Info>
+    The `bootstrapHost` points to the `upsilon` cluster name in the `.kafka.svc.cluster.local` namespace.
+    The cluster name, namespace, and `topicName`, were all defined in the [Installing Strimzi and Kafka] section.
+
+    The Operator can manage more than one Big Peer. If you choose to deploy another, ensure you:
+    * Define a unique `metadata.name`
+    * Create a new Kafka topic (see [Installing Strimzi and Kafka]), and update the `transactions.kafka.topicName`
+</Info>
+
+
+If the `BigPeer` was applied successfully, the various components of the Big Peer can be observed by running:
+
+```bash
+kubectl get pods -l ditto.live/big-peer=example --namespace ditto
+```
+
+Which will match all running pods with the above `BigPeer`'s `metadata.name`, which is `"example"` in this case:
+
+```
+NAMESPACE  NAME                                                   READY  STATUS   RESTARTS  AGE
+ditto      ditto-example-api-0                                    1/1    Running  0         1m20s
+ditto      ditto-example-store-14d2fe44-0                         1/1    Running  0         1m19s
+ditto      ditto-example-store-6a5d568b-0                         1/1    Running  0         1m19s
+ditto      ditto-example-subscription-a475c814-7b459bfddb-brpr4   1/1    Running  0         1m20s*
+```
+
+For reference, here's a full example of the Big Peer configuration options:
+<Accordion title="Full BigPeer example deployment">
+    ```yaml
+    apiVersion: ditto.live/v1alpha1
+    kind: BigPeer
+    metadata:
+      name: example
+    spec:
+      version: 1.40.3
+      image:
+        namePrefix: quay.io/ditto-external/
+        pullPolicy: IfNotPresent
+        pullSecrets:
+        - name: quay.io
+      network:
+        hostname: localhost
+      auth:
+        keys:
+          ca:
+            secretRef:
+              name: example-ca
+              certificate: tls.crt
+              key: tls.key
+              optional: true
+          inBand:
+            secretRef:
+              name: example-in-band
+              certificate: tls.crt
+              key: tls.key
+              optional: true
+          jwt:
+            secretRef:
+              name: example-jwt
+              certificate: tls.crt
+              key: tls.key
+              optional: true
+        providers:
+          dummyProvider:
+            type: tokenWebhook
+            webhookUrl: http://dummy-auth-webhook/validate_token
+      api:
+        image: quay.io/ditto-external/big-peer-subscription:1.40.3
+        imagePullPolicy: IfNotPresent
+        imagePullSecrets:
+        - name: quay.io
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        storage:
+          storageClassName: ssd
+          size: 10Gi
+        replicas: 1
+      subscriptions:
+        image: quay.io/ditto-external/big-peer-subscription:1.40.3
+        imagePullPolicy: IfNotPresent
+        imagePullSecrets:
+        - name: quay.io
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        storage:
+          storageClassName: ssd
+          size: 10Gi
+        replicas: 1
+      store:
+        image: quay.io/ditto-external/big-peer-store:1.40.3
+        imagePullPolicy: IfNotPresent
+        imagePullSecrets:
+        - name: quay.io
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        storage:
+          storageClassName: ssd
+          size: 10Gi
+        partitions: 2
+        replicas: 1
+      transactions:
+        kafka:
+          bootstrapHost: upsilon-kafka-bootstrap.kafka.svc.cluster.local:9092
+          topicName: example.transaction.log
+    ```
+</Accordion>
+
+
+## Using the HTTP API
+
+Using the HTTP API is the quickest way to verify your installation is running.
+
+<Info>
+If you've deployed locally using the `kind` example config provided, these queries should work out of the box.
+
+Otherwise, you may need to update the `localhost` according to the ingress you've configured on your K8s deployment.
+</Info>
+
+### Insert an item into the `cars` collection
+
+```bash
+curl -X POST http://localhost/2164bef3-37c0-489c-9ac6-c94b034525d7/api/v4/store/execute \
+    --header 'Authorization: bearer letmeintlf9zS1wh8suffix'                            \
+    --header 'Content-Type: application/json'                                           \
+    --data-raw '{"statement":"INSERT INTO cars DOCUMENTS (:doc1)","args":{"doc1":{"_id":{"id":"777","locationId":"123456"},"color":"blue","timestamp":"1732192529"}}}'
+```
+
+This:
+* Uses a dummy authentication token
+* Implicitly creates a new app (with id `2164bef3-37c0-489c-9ac6-c94b034525d7`)
+* Inserts a new document into the `cars` collection, which will implicitly be created
+
+### List all items in the `cars` collection
+
+We can then verify that the document was created with:
+
+```bash
+curl -X POST http://localhost/2164bef3-37c0-489c-9ac6-c94b034525d7/api/v4/store/execute \
+    --header 'Authorization: letmeintlf9zS1wh8suffix'                                   \
+    --header 'Content-Type: application/json'                                           \
+    --data-raw '{"statement":"SELECT * FROM cars"}'
+```
+
+
+## Uninstalling using Helm
+
+Before continuing, ensure any Big Peer resources that were created have been deleted. You can check for existing resources using the following command:
+
+```bash
+kubectl get bigpeers,bigpeerapps,bigpeerapikeys --namespace ditto
+```
+
+It is recommended you delete these resources before uninstalling the Ditto Operator. Otherwise, if you plan to reinstall the Ditto Operator again later the new installation will immediately discover the previous resources and proceed to create them anew.
+
+You can now delete the [helm] release that was created in [Installing the Ditto Operator]:
+
+```bash
+helm delete ditto-operator
+```
+
+[Prerequisites]: #prerequisites
+[Installing Certificate Manager]: #installing-certificate-manager
+[Installing Ingress Nginx]: #installing-ingress-nginx
+[Installing Strimzi and Kafka]: #installing-strimzi-and-kafka
+[Installing the Ditto Operator]: #installing
+[Installing the Dummy Auth Webhook]: #installing-the-dummy-auth-webhook
+[Deploying a Big Peer]: #deploying-a-big-peer
+[Running the Cars App]: #running-the-cars-app
+[Using the HTTP API]: #using-the-http-api
+[Uninstallation using Helm]: #uninstallation-using-helm
+[Limitations and Caveats]: #limitations-and-caveats
+[Appendix A: Creating a local `kind` cluster]: #appendix-a-creating-a-local-kind-cluster
+
+[kubectl]: https://kubernetes.io/docs/reference/kubectl
+[KUBECONFIG]: https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig
+[helm]: https://helm.sh
+[helm install]: https://helm.sh/docs/helm/helm_install
+[cert-manager]: https://cert-manager.io
+[strimzi]: https://strimzi.io
+[ingress-nginx]: https://kubernetes.github.io/ingress-nginx/
+[KRaft]: https://developer.confluent.io/learn/kraft
+[kind]: https://kind.sigs.k8s.io
+[kind ingress user guide]: https://kind.sigs.k8s.io/docs/user/ingress
+[ingress controller]: https://kubernetes.io/docs/concepts/services-networking/ingress-controllers
+[these instructions first]: #appendix-a-creating-a-local-kind-cluster
+
+[chart]: ../charts/operator
+[values.yaml]: ../charts/operator/values.yaml
+[Dummy Auth Webhook]: ../hydra/dummy-auth-webhook
+[example-full.yaml]: ./example-full.yaml
