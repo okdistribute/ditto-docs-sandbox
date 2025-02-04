@@ -102,7 +102,7 @@ ditto.sync.registerSubscription(
 var queryArguments = new Dictionary<string, object>(){{"color", "blue" }};
 
 ditto.Sync.RegisterSubscription(
-  "SELECT * FROM cars WHERE color = 'blue'",
+  "SELECT * FROM cars WHERE color = :color",
   queryArguments);
 ```
 
