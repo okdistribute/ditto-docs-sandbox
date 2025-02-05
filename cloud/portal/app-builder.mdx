@@ -1,17 +1,15 @@
 ---
-title: Ditto Forge
-description: "Get started building apps with Ditto in minutes. Ditto Forge allows you to focus on what's unique to your business, while we take care of the rest."
+title: Ditto App Builder
+description: "Get started building apps with Ditto in minutes. Focus on what's unique to your business, while we take care of the rest."
 icon: gauge
 iconType: solid
 ---
 
 <Warning>
-Ditto Forge for iOS is currently in private preview and is likely to evolve further, prior to its full release.
-
-You can sign up for the [Ditto Forge](https://ditto.live/platform/mongodb-connector) waitlist to request access to the preview!
+Ditto App Builder is currently in private preview and is likely to evolve further, prior to its full release. Email rae@ditto.live if you have any comments, questions, or feedback.preview.
 </Warning>
 
-Ditto Forge defines the structure of your app, organizing Ditto objects such as
+Ditto App Builder defines the structure of your app, organizing Ditto objects such as
 collections, fields, queries, and views without writing a single line of code.
 
 In this tutorial we will teach you how to:
@@ -21,38 +19,48 @@ In this tutorial we will teach you how to:
 
 ## Getting started
 
+### Create the app
 
 <Steps>
 <Step>
 Sign up or log in to the <a href="https://portal.ditto.live/" target="_blank">Ditto portal</a>.
 </Step>
 <Step>
-Open the Ditto database that you want to use with Forge.
+Open the Ditto app that you want to use.
 </Step>
 <Step>
 Click “App Builder ↗️” on the top-right of the screen.
 </Step>
 <Step>
-Join the <a href="https://testflight.apple.com/join/Hmk6Cat9" target="_blank">Apple TestFlight Beta Group</a> and install the iOS app. 
-</Step>
-<Step>
-Ensure your device is iOS 16.0+ or higher and you have WiFi enabled. 
-</Step>
-<Step>
-In the iOS app, click “Scan” at the bottom and scan the QR Code in the portal.
+Ditto comes with a maintenance app template to help you get started. 
 </Step>
 </Steps>
 
-You now have created your first Ditto Forge application.
+### Prepare the iOS device
+<Steps>
+<Step>
+Ensure your iOS device is iOS 16.0+ or higher and you have WiFi enabled. 
+</Step>
+<Step>
+<b>Join Testflight.</b> Open the camera app on your iOS device and scan the QR code you see. Alternatively, you can click the following <a href="https://testflight.apple.com/join/Hmk6Cat9" target="_blank">Apple TestFlight Beta Group link</a> to install the iOS app.
+</Step>
+<Step>
+<b>Add the app.</b> Click next, and you will see another QR code you can scan. In the iOS app, click “Scan” at the bottom and scan the QR Code.
+</Step>
+</Steps>
+
+You now have created your first application!
 
 ## Data
 
-In the Data tab, you define the data schema of your enterprise records. Forge
-enables relational database management, using a schema-based model that allows
-both unstructured and structured data to coexist. Data in your Ditto database
-that does not conform to your structured schema will not appear in Forge apps.
+In the Data tab, you define the data schema of your enterprise records. Data in your Ditto database
+that does not conform to your structured schema will not appear in your app.
 This enables the best of both worlds: the enterprise stability of SQL alongside
 the flexible speed of a document database.
+
+<Warning>
+  The maintenance template comes with some example data. To delete this example data, scroll down to [Troubleshooting](#troubleshooting).
+</Warning>
 
 ### Data Source
 
@@ -65,7 +73,7 @@ more flexible because:
 relationships, arrays, or nested objects.
 
 <Warning>Data that does not conform to the schema definition will not appear
-in the Ditto Forge app.</Warning>
+in the app.</Warning>
 
 <Steps>
 <Step>
@@ -97,7 +105,7 @@ team.
 ![Create team](/images/cloud/portal/create-team.gif)
 
 <Warning>
-Forge only supports one-to-one and one-to-many relationships today. Many-to-many relationships will be supported in the future.
+The app builder only supports one-to-one and one-to-many relationships today. Many-to-many relationships will be supported in the future.
 </Warning>
 
 <Steps>
@@ -217,14 +225,29 @@ renew security credentials. Once connected, the app can go offline again
 for another 7 days. This can be configured by upgrading to an authenticated
 version of Ditto.
 
-### Clear the database state 
+### Delete the example data
+ 
+The maintenance template comes with some example data. To delete this dummy data, start opening the DQL editor and issuing the following commands. 
+Each command should be issued separately, since DQL does not support multi-line queries
 
-Open DQL Editor and issue the following commands one by one in the editor. Each command should be issued separately, since DQL does not support multi-line queries
+```
+TOMBSTONE FROM users where created_by = 'ditto-system-user-id'
+TOMBSTONE FROM assets where created_by = 'ditto-system-user-id'
+TOMBSTONE FROM work_orders where created_by = 'ditto-system-user-id'
+TOMBSTONE FROM rooms where created_by = 'ditto-system-user-id'
+TOMBSTONE FROM messages where created_by = 'ditto-system-user-id'
+```
+
+### Delete everything
+
+To start over from scratch, as though you are a first time user, open DQL Editor and issue the following commands one by one in the editor. 
 
 ```
 TOMBSTONE FROM users
 TOMBSTONE FROM assets
 TOMBSTONE FROM work_orders
+TOMBSTONE FROM rooms
+TOMBSTONE FROM messages
 TOMBSTONE FROM __projects
 TOMBSTONE FROM __project_pages
 TOMBSTONE FROM __data_schema
