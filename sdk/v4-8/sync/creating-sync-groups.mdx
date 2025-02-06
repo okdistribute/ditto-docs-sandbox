@@ -42,7 +42,10 @@ do {
 ```
 
 ```kotlin Kotlin
-ditto.transportConfig.global.syncGroup = 1234U
+val transportConfig = ditto.transportConfig
+transportConfig.global.syncGroup = 1234U
+
+ditto.transportConfig = transportConfig
 
 ditto.startSync()
 ```
@@ -64,7 +67,7 @@ ditto.startSync()
 DittoTransportConfig transportConfig = new DittoTransportConfig();
 transportConfig.Global.SyncGroup = 1234;
 
-ditto.TransportConfig.Global.SyncGroup = 1234;
+ditto.TransportConfig = transportConfig;
 
 ditto.StartSync();
 ```
