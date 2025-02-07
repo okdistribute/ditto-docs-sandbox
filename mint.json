@@ -759,7 +759,8 @@
           "group": "2. Setup and SDK Configuration",
           "pages": [
             "best-practices/2-setup-and-sdk-configuration",
-            "best-practices/optimizing-bundle-sizes-for-android"
+            "best-practices/optimizing-bundle-sizes-for-android",
+            "best-practices/integrate-with-crash-reporters"
           ]
         },
         {

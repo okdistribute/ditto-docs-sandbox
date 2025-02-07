@@ -1,0 +1,47 @@
+---
+title: "Integrate With Crash Reporters"
+---
+
+
+Crash reporting tools such as Sentry, DataDog, or Crashlytics can be invaluable when trying to debug errors or crashes in the field. Because the Ditto SDK core uses native code, it is important to provide the reporting tools with information on how to interpret native crashes. Without this, crash reports will not include human-readable symbols for issues in the Ditto core.
+
+This guide shows how to provide symbol information to crash reporters. It does not cover how to integrate the reporting tools themselves. Refer to the tool's documentation for guidance on how to do so.
+
+# Using crash reporters in Android apps
+
+<Steps>
+  <Step title="Setup">
+    Integrate the crash reporter SDK into your app, following their documentation.
+  </Step>
+  <Step title="Check crash collection">
+    Trigger a panic and check that it was registered in your crash reporter. You can use the `DittoExperimental.triggerTestPanic()` function to do so. At this point, without native symbols, the crash will be unreadable. If you are not seeing any crashes in the reporter, check that you have integrated its components correctly.
+  </Step>
+  <Step title="Upload symbols">
+    Upload the native library `.so` file provided by the Ditto SDK for the platform you are targeting. This file contains a symbol map allowing crashes to be symbolicated.
+    <Note>Check your crash reporter's documentation for how to do this. For example, <a href="https://firebase.google.com/docs/crashlytics/ndk-reports ">Crashlytics has a Gradle plugin</a> which uploads symbols automatically while <a href="https://docs.sentry.io/platforms/android/data-management/debug-files/upload/">Sentry provides a CLI tool</a>.</Note>
+  </Step>
+  <Step title="Final test">
+    Trigger a new panic and notice that the crash is now symbolicated by the reporting framework.
+  </Step>
+</Steps>
+
+
+# Using crash reporters in iOS apps
+
+<Steps>
+  <Step title="Setup">
+    Integrate the crash reporter SDK into your app, following their documentation.
+  </Step>
+  <Step title="Check crash collection">
+    Trigger a panic and check that it was registered in your crash reporter. You can use the `DittoExperimental.triggerTestPanic()` function to do so. At this point, without native symbols, the crash will be unreadable. If you are not seeing any crashes in the reporter, check that you have integrated its components correctly.
+  </Step>
+  <Step title="Upload symbols">
+    For release builds, you can obtain the `dsym` files from Xcode. They are included in the `.xcarchive` file. Navigate to `Xcode → Window → Organizer → Archives → (Right click on a specific build) → Show in Finder → Show Package Contents → dSYMs Folder`. Here you can find all the required files: 
+    1. Your own app's symbol file, such as `MyApp.app.dSYM`
+    2. The Ditto `DittoObjC.framework.dSYM` and `DittoSwift.framework.dSYM` files.
+    <Note>Check your crash reporter's documentation for how to do this. For example <a href="https://docs.sentry.io/platforms/apple/guides/ios/dsym/">Sentry provides a CLI tool</a>.</Note>
+  </Step>
+  <Step title="Final test">
+    Trigger a new panic and notice that the crash is now symbolicated by the reporting framework.
+  </Step>
+</Steps>
