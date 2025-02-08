@@ -915,20 +915,13 @@
       "group": "Support",
       "pages": [
         "support/contact-us",
-        {
-          "group": "Knowledge Base",
-          "icon": "book-open",
-          "iconType": "solid",
-          "pages": [
-            "support/knowledge-base",
-            "support/troubleshooting",
-            "support/faq",
-            "support/proguard-rules-for-android",
-            "support/mongodb-migrationguide",
-            "support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
-            "support/Glossary"
-          ]
-        }
+        "support/knowledge-base",
+        "support/troubleshooting",
+        "support/faq",
+        "support/proguard-rules-for-android",
+        "support/mongodb-migrationguide",
+        "support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
+        "support/Glossary"
       ]
     }
   ],
