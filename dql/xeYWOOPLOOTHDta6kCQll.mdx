@@ -6,6 +6,7 @@ description: "Recently released, the Ditto SDK version 4.5 introduces the Ditto 
 
 Intended for those developers already using Ditto with their app to sync, this guide provides an overview of how to adopt DQL and the corresponding usage APIs.
 
+
 ## Introduction
 
 There are two primary ways to use DQL within the Ditto SDK:
@@ -53,28 +54,29 @@ To introduce DQL in a phased approach, we recommend you consider:
 
 <CardGroup>
   <Card title="Legacy">
-```javascript JS
-await ditto.store
-.collection('cars')
-.find('color == "blue"')
-```
+  ```javascript JS
+  await ditto.store
+  .collection('cars')
+  .find('color == "blue"')
+  ```
   </Card>
   <Card title="DQL">
-```javascript JS
-await ditto.store.execute(`
-  SELECT *
-  FROM cars
-  WHERE color = 'blue'
-  `)
-```
+  ```javascript JS
+  await ditto.store.execute(`
+    SELECT *
+    FROM cars
+    WHERE color = 'blue'
+    `)
+  ```
   </Card>
 </CardGroup>
 
+
 ## DQL for Data Sync Subscriptions
 
-hint{type="warning"}
-Data Sync Subscriptions using DQL are forward-compatible starting at v4.5.
-
+<Info>
+  Data Sync Subscriptions using DQL are forward-compatible starting at v4.5.
+</Info>
 
 This means that devices using DQL and the `ditto.sync.registerSubscription(...)` API on v4.5 or later will only be able to sync with other devices on v4.5 or later.
 
@@ -111,21 +113,21 @@ To introduce DQL for data subscriptions in a phased approach, we recommend you c
 
 <CardGroup>
   <Card title="Legacy">
-```javascript JS
-ditto.store
-.collection('cars')
-.find('color == "blue"')
-.subscribe()
-```
+  ```javascript JS
+  ditto.store
+  .collection('cars')
+  .find('color == "blue"')
+  .subscribe()
+  ```
   </Card>
   <Card title="DQL">
-```javascript JS
-ditto.sync.registerSubscription(`
-  SELECT *
-  FROM cars
-  WHERE color = 'blue'
-  `)
-```
+  ```javascript JS
+  ditto.sync.registerSubscription(`
+    SELECT *
+    FROM cars
+    WHERE color = 'blue'
+    `)
+  ```
   </Card>
 </CardGroup>
 
