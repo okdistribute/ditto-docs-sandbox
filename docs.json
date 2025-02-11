@@ -9,25 +9,24 @@
   },
   "favicon": "/favicon.png",
   "navigation": {
-    "versions": [
+    "tabs": [
       {
-        "version": "v4.9",
-        "default": true,
-        "tabs": [
+        "tab": "Home",
+        "groups": [
           {
-            "tab": "Home",
-            "groups": [
-              {
-                "group": "Home",
-                "pages": [
-                  "home/introduction",
-                  "home/about-ditto"
-                ]
-              }
+            "group": "Home",
+            "pages": [
+              "home/introduction",
+              "home/about-ditto"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "tab": "SDK",
+        "versions": [
           {
-            "tab": "SDK",
+            "version": "4.9",
             "groups": [
               {
                 "group": "Getting Started",
@@ -217,334 +216,7 @@
             ]
           },
           {
-            "tab": "Query Language (DQL)",
-            "groups": [
-              {
-                "group": "Clauses",
-                "pages": [
-                  "dql/dql",
-                  "dql/select",
-                  "dql/insert",
-                  "dql/update",
-                  "dql/evict"
-                ]
-              },
-              {
-                "group": "Types and Functions",
-                "pages": [
-                  "dql/types-and-definitions",
-                  "dql/ids-paths-strings-keywords",
-                  "dql/operator-expressions"
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  "dql/roadmap",
-                  {
-                    "group": "Legacy Query Language",
-                    "pages": [
-                      "dql/UAopX0p28gyjw3guV1APQ",
-                      "dql/DSqhle8Mn0Lpa4SvEU7ve",
-                      "dql/YAGtbUIy40FsnPL0Kj4gd",
-                      "dql/xeYWOOPLOOTHDta6kCQll"
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Cloud Platform",
-            "groups": [
-              {
-                "group": "Overview",
-                "pages": [
-                  "cloud/overview"
-                ]
-              },
-              {
-                "group": "Cloud Portal",
-                "icon": {
-                  "name": "browser",
-                  "style": "solid"
-                },
-                "pages": [
-                  "cloud/portal/creating-a-ditto-account",
-                  "cloud/portal/creating-a-new-app",
-                  "cloud/portal/getting-sdk-connection-details",
-                  "cloud/portal/data-browser-and-editor",
-                  "cloud/portal/role-based-access-control",
-                  "cloud/portal/capturing-small-peer-info"
-                ]
-              },
-              {
-                "group": "HTTP Data API",
-                "icon": {
-                  "name": "globe",
-                  "style": "solid"
-                },
-                "pages": [
-                  "cloud/http-api/getting-started",
-                  "cloud/http-api/auth-and-params",
-                  "cloud/http-api/api/post-storeexecute",
-                  "cloud/http-api/attachments",
-                  {
-                    "group": "Legacy HTTP API",
-                    "icon": {
-                      "name": "puzzle-piece",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "cloud/http-api/api/post-storefind",
-                      "cloud/http-api/api/post-storefindbyid",
-                      "cloud/http-api/api/post-storewrite",
-                      "cloud/http-api/api/post-storecount"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Data Integration",
-                "pages": [
-                  "cloud/cdc",
-                  "cloud/mongodb-connector"
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  {
-                    "group": "Backend Architecture",
-                    "icon": {
-                      "name": "cubes-stacked",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "cloud/backend-architecture",
-                      "cloud/backend-architecture/cloud-optional-design",
-                      "cloud/backend-architecture/timestamps",
-                      "cloud/backend-architecture/causally-consistent-design",
-                      "cloud/backend-architecture/failure-handling"
-                    ]
-                  },
-                  "cloud/release-notes",
-                  "cloud/compatibility-map"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Best Practices",
-            "groups": [
-              {
-                "group": "Best Practices",
-                "pages": [
-                  "best-practices/best-practices",
-                  {
-                    "group": "1. Planning and Architecture Design",
-                    "pages": [
-                      "best-practices/1-planning-and-architecture-design",
-                      "best-practices/sync-handling",
-                      "best-practices/conflict-handling",
-                      "best-practices/data-flow-management"
-                    ]
-                  },
-                  {
-                    "group": "2. Setup and SDK Configuration",
-                    "pages": [
-                      "best-practices/2-setup-and-sdk-configuration",
-                      "best-practices/optimizing-bundle-sizes-for-android",
-                      "best-practices/integrate-with-crash-reporters"
-                    ]
-                  },
-                  {
-                    "group": "3. Data Modeling and Sync Logic",
-                    "pages": [
-                      "best-practices/3-data-modeling-and-sync-logic",
-                      "best-practices/batch-write-transactions",
-                      {
-                        "group": "Selecting the right pattern",
-                        "pages": [
-                          "best-practices/9lD49ZtExskKuBX-Kq8Jn",
-                          "best-practices/map-evaluation-criteria"
-                        ]
-                      },
-                      "best-practices/WWnxvj7dPgfnXDIhtlEEb",
-                      {
-                        "group": "Time-based Replication",
-                        "pages": [
-                          "best-practices/time-based-replication",
-                          "best-practices/big-peer-based-evictions",
-                          "best-practices/small-peer-based-evictions"
-                        ]
-                      },
-                      "best-practices/b42k_4oU7uo5xhwADd2k3",
-                      "best-practices/4Mugq3GOSbi46hjEECrQT"
-                    ]
-                  },
-                  {
-                    "group": "4. Security, Access Control, and Privacy",
-                    "pages": [
-                      "best-practices/4-security-access-control-and-privacy",
-                      "best-practices/maintaining-privacy-in-peer-to-peer-communication",
-                      "best-practices/secure-peer-to-peer-communication",
-                      "best-practices/implementing-role-based-access-control-rbac"
-                    ]
-                  },
-                  {
-                    "group": "5. Testing and optimization",
-                    "pages": [
-                      "best-practices/5-testing-and-optimization",
-                      "best-practices/IJCASYeQiLW9avEk1AiEj",
-                      "best-practices/_ejkcEiL59dpeQdg0cjiM"
-                    ]
-                  },
-                  {
-                    "group": "6. Deployment",
-                    "pages": [
-                      "best-practices/6-deployment",
-                      "best-practices/prioritizing-bluetooth-connections-in-high-density-mesh-networks",
-                      "best-practices/network-deployment"
-                    ]
-                  },
-                  {
-                    "group": "7. Performance Optimization and Troubleshooting",
-                    "pages": [
-                      "best-practices/7-performance-optimization-and-troubleshooting",
-                      "best-practices/sync-performance-with-redundant-ble-connections",
-                      "best-practices/wi-fi-interference-and-client-load",
-                      "best-practices/pCZgBpKcap9tMliT8K4p_"
-                    ]
-                  },
-                  {
-                    "group": "8. Monitoring and Maintenance",
-                    "pages": [
-                      "best-practices/8-monitoring-and-maintenance",
-                      "best-practices/integrate-ditto-tools-for-kotlin-swift-and-c-net-in-15-minutes",
-                      "best-practices/device-observability-and-ditto-logs"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Example Projects",
-                "pages": [
-                  "best-practices/example-projects/Inventory",
-                  "best-practices/example-projects/meal-ordering",
-                  "best-practices/example-projects/Chat-App",
-                  "best-practices/example-projects/Point-of-Sale"
-                ]
-              },
-              {
-                "group": "How-To Tutorials",
-                "pages": [
-                  {
-                    "group": "Swift",
-                    "pages": [
-                      "best-practices/how-to/swift/visionos-beta-guide",
-                      "best-practices/how-to/swift/stateobject-vs-observedobject",
-                      "best-practices/how-to/swift/dittoswifttools",
-                      "best-practices/how-to/swift/Preventing-SwiftUI-Previews-from-Syncing",
-                      "best-practices/how-to/swift/jHZR1qGx_I13O7dsrPH9r",
-                      "best-practices/how-to/swift/Animating-UITableView-with-the-Observe-API",
-                      "best-practices/how-to/swift/Attachments_Chat-App",
-                      "best-practices/how-to/swift/Avoiding-Excessive-Memory-Consumption",
-                      "best-practices/how-to/swift/Swift-Authentication-and-Access",
-                      "best-practices/how-to/swift/Swift-Testing",
-                      "best-practices/how-to/swift/SwiftUI_Task-App",
-                      "best-practices/how-to/swift/UIKit_Task-App"
-                    ]
-                  },
-                  {
-                    "group": "JavaScript Web and Node.js",
-                    "pages": [
-                      "best-practices/how-to/js/prebuilt-task-app",
-                      "best-practices/how-to/js/svelte-framework",
-                      "best-practices/how-to/js/onlinewithauthentication",
-                      "best-practices/how-to/js/Kafka-Events_Node.js",
-                      "best-practices/how-to/js/Getting-started-with-Electron-TypeScript-Vite-and-Ditto",
-                      "best-practices/how-to/js/basic-task-app"
-                    ]
-                  },
-                  {
-                    "group": "React Native",
-                    "pages": [
-                      "best-practices/how-to/react/Offline-peer-to-peer-sync-using-JavaScript,-React-and-Auth0",
-                      "best-practices/how-to/react/Running a React-Web-App-in-an-Android-App",
-                      "best-practices/how-to/react/React-Native-Task-App"
-                    ]
-                  },
-                  {
-                    "group": "C#",
-                    "pages": [
-                      "best-practices/how-to/c-sharp/maui-task-app",
-                      "best-practices/how-to/c-sharp/console-task-app",
-                      "best-practices/how-to/c-sharp/permissions",
-                      "best-practices/how-to/c-sharp/authentication-server",
-                      "best-practices/how-to/c-sharp/xamarin-task-app"
-                    ]
-                  },
-                  {
-                    "group": "Rust",
-                    "pages": [
-                      "best-practices/how-to/rust/getting-started-in-your-project",
-                      "best-practices/how-to/rust/mocking-time-in-async-rust"
-                    ]
-                  },
-                  {
-                    "group": "Kotlin",
-                    "pages": [
-                      "best-practices/how-to/Kotlin/kotlin-task-app",
-                      "best-practices/how-to/Kotlin/jetpack-compose-task-app"
-                    ]
-                  },
-                  "best-practices/how-to/bluetooth-on-linux",
-                  "best-practices/how-to/c-plus-plus-quickstart-temp",
-                  "best-practices/how-to/c-sharp-tutorials-temp",
-                  "best-practices/how-to/swift-tutorials-temp",
-                  "best-practices/how-to/tutorials-overview"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Support",
-            "groups": [
-              {
-                "group": "Support",
-                "pages": [
-                  "support/contact-us",
-                  "support/knowledge-base",
-                  "support/troubleshooting",
-                  "support/faq",
-                  "support/proguard-rules-for-android",
-                  "support/mongodb-migrationguide",
-                  "support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
-                  "support/Glossary"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "version": "v4.8",
-        "tabs": [
-          {
-            "tab": "Home",
-            "groups": [
-              {
-                "group": "Home",
-                "pages": [
-                  "home/introduction",
-                  "home/about-ditto"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "SDK",
+            "version": "4.8",
             "groups": [
               {
                 "group": "Getting Started",
@@ -734,334 +406,7 @@
             ]
           },
           {
-            "tab": "Query Language (DQL)",
-            "groups": [
-              {
-                "group": "Clauses",
-                "pages": [
-                  "dql/dql",
-                  "dql/select",
-                  "dql/insert",
-                  "dql/update",
-                  "dql/evict"
-                ]
-              },
-              {
-                "group": "Types and Functions",
-                "pages": [
-                  "dql/types-and-definitions",
-                  "dql/ids-paths-strings-keywords",
-                  "dql/operator-expressions"
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  "dql/roadmap",
-                  {
-                    "group": "Legacy Query Language",
-                    "pages": [
-                      "dql/UAopX0p28gyjw3guV1APQ",
-                      "dql/DSqhle8Mn0Lpa4SvEU7ve",
-                      "dql/YAGtbUIy40FsnPL0Kj4gd",
-                      "dql/xeYWOOPLOOTHDta6kCQll"
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Cloud Platform",
-            "groups": [
-              {
-                "group": "Overview",
-                "pages": [
-                  "cloud/overview"
-                ]
-              },
-              {
-                "group": "Cloud Portal",
-                "icon": {
-                  "name": "browser",
-                  "style": "solid"
-                },
-                "pages": [
-                  "cloud/portal/creating-a-ditto-account",
-                  "cloud/portal/creating-a-new-app",
-                  "cloud/portal/getting-sdk-connection-details",
-                  "cloud/portal/data-browser-and-editor",
-                  "cloud/portal/role-based-access-control",
-                  "cloud/portal/capturing-small-peer-info"
-                ]
-              },
-              {
-                "group": "HTTP Data API",
-                "icon": {
-                  "name": "globe",
-                  "style": "solid"
-                },
-                "pages": [
-                  "cloud/http-api/getting-started",
-                  "cloud/http-api/auth-and-params",
-                  "cloud/http-api/api/post-storeexecute",
-                  "cloud/http-api/attachments",
-                  {
-                    "group": "Legacy HTTP API",
-                    "icon": {
-                      "name": "puzzle-piece",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "cloud/http-api/api/post-storefind",
-                      "cloud/http-api/api/post-storefindbyid",
-                      "cloud/http-api/api/post-storewrite",
-                      "cloud/http-api/api/post-storecount"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Data Integration",
-                "pages": [
-                  "cloud/cdc",
-                  "cloud/mongodb-connector"
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  {
-                    "group": "Backend Architecture",
-                    "icon": {
-                      "name": "cubes-stacked",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "cloud/backend-architecture",
-                      "cloud/backend-architecture/cloud-optional-design",
-                      "cloud/backend-architecture/timestamps",
-                      "cloud/backend-architecture/causally-consistent-design",
-                      "cloud/backend-architecture/failure-handling"
-                    ]
-                  },
-                  "cloud/release-notes",
-                  "cloud/compatibility-map"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Best Practices",
-            "groups": [
-              {
-                "group": "Best Practices",
-                "pages": [
-                  "best-practices/best-practices",
-                  {
-                    "group": "1. Planning and Architecture Design",
-                    "pages": [
-                      "best-practices/1-planning-and-architecture-design",
-                      "best-practices/sync-handling",
-                      "best-practices/conflict-handling",
-                      "best-practices/data-flow-management"
-                    ]
-                  },
-                  {
-                    "group": "2. Setup and SDK Configuration",
-                    "pages": [
-                      "best-practices/2-setup-and-sdk-configuration",
-                      "best-practices/optimizing-bundle-sizes-for-android",
-                      "best-practices/integrate-with-crash-reporters"
-                    ]
-                  },
-                  {
-                    "group": "3. Data Modeling and Sync Logic",
-                    "pages": [
-                      "best-practices/3-data-modeling-and-sync-logic",
-                      "best-practices/batch-write-transactions",
-                      {
-                        "group": "Selecting the right pattern",
-                        "pages": [
-                          "best-practices/9lD49ZtExskKuBX-Kq8Jn",
-                          "best-practices/map-evaluation-criteria"
-                        ]
-                      },
-                      "best-practices/WWnxvj7dPgfnXDIhtlEEb",
-                      {
-                        "group": "Time-based Replication",
-                        "pages": [
-                          "best-practices/time-based-replication",
-                          "best-practices/big-peer-based-evictions",
-                          "best-practices/small-peer-based-evictions"
-                        ]
-                      },
-                      "best-practices/b42k_4oU7uo5xhwADd2k3",
-                      "best-practices/4Mugq3GOSbi46hjEECrQT"
-                    ]
-                  },
-                  {
-                    "group": "4. Security, Access Control, and Privacy",
-                    "pages": [
-                      "best-practices/4-security-access-control-and-privacy",
-                      "best-practices/maintaining-privacy-in-peer-to-peer-communication",
-                      "best-practices/secure-peer-to-peer-communication",
-                      "best-practices/implementing-role-based-access-control-rbac"
-                    ]
-                  },
-                  {
-                    "group": "5. Testing and optimization",
-                    "pages": [
-                      "best-practices/5-testing-and-optimization",
-                      "best-practices/IJCASYeQiLW9avEk1AiEj",
-                      "best-practices/_ejkcEiL59dpeQdg0cjiM"
-                    ]
-                  },
-                  {
-                    "group": "6. Deployment",
-                    "pages": [
-                      "best-practices/6-deployment",
-                      "best-practices/prioritizing-bluetooth-connections-in-high-density-mesh-networks",
-                      "best-practices/network-deployment"
-                    ]
-                  },
-                  {
-                    "group": "7. Performance Optimization and Troubleshooting",
-                    "pages": [
-                      "best-practices/7-performance-optimization-and-troubleshooting",
-                      "best-practices/sync-performance-with-redundant-ble-connections",
-                      "best-practices/wi-fi-interference-and-client-load",
-                      "best-practices/pCZgBpKcap9tMliT8K4p_"
-                    ]
-                  },
-                  {
-                    "group": "8. Monitoring and Maintenance",
-                    "pages": [
-                      "best-practices/8-monitoring-and-maintenance",
-                      "best-practices/integrate-ditto-tools-for-kotlin-swift-and-c-net-in-15-minutes",
-                      "best-practices/device-observability-and-ditto-logs"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Example Projects",
-                "pages": [
-                  "best-practices/example-projects/Inventory",
-                  "best-practices/example-projects/meal-ordering",
-                  "best-practices/example-projects/Chat-App",
-                  "best-practices/example-projects/Point-of-Sale"
-                ]
-              },
-              {
-                "group": "How-To Tutorials",
-                "pages": [
-                  {
-                    "group": "Swift",
-                    "pages": [
-                      "best-practices/how-to/swift/visionos-beta-guide",
-                      "best-practices/how-to/swift/stateobject-vs-observedobject",
-                      "best-practices/how-to/swift/dittoswifttools",
-                      "best-practices/how-to/swift/Preventing-SwiftUI-Previews-from-Syncing",
-                      "best-practices/how-to/swift/jHZR1qGx_I13O7dsrPH9r",
-                      "best-practices/how-to/swift/Animating-UITableView-with-the-Observe-API",
-                      "best-practices/how-to/swift/Attachments_Chat-App",
-                      "best-practices/how-to/swift/Avoiding-Excessive-Memory-Consumption",
-                      "best-practices/how-to/swift/Swift-Authentication-and-Access",
-                      "best-practices/how-to/swift/Swift-Testing",
-                      "best-practices/how-to/swift/SwiftUI_Task-App",
-                      "best-practices/how-to/swift/UIKit_Task-App"
-                    ]
-                  },
-                  {
-                    "group": "JavaScript Web and Node.js",
-                    "pages": [
-                      "best-practices/how-to/js/prebuilt-task-app",
-                      "best-practices/how-to/js/svelte-framework",
-                      "best-practices/how-to/js/onlinewithauthentication",
-                      "best-practices/how-to/js/Kafka-Events_Node.js",
-                      "best-practices/how-to/js/Getting-started-with-Electron-TypeScript-Vite-and-Ditto",
-                      "best-practices/how-to/js/basic-task-app"
-                    ]
-                  },
-                  {
-                    "group": "React Native",
-                    "pages": [
-                      "best-practices/how-to/react/Offline-peer-to-peer-sync-using-JavaScript,-React-and-Auth0",
-                      "best-practices/how-to/react/Running a React-Web-App-in-an-Android-App",
-                      "best-practices/how-to/react/React-Native-Task-App"
-                    ]
-                  },
-                  {
-                    "group": "C#",
-                    "pages": [
-                      "best-practices/how-to/c-sharp/maui-task-app",
-                      "best-practices/how-to/c-sharp/console-task-app",
-                      "best-practices/how-to/c-sharp/permissions",
-                      "best-practices/how-to/c-sharp/authentication-server",
-                      "best-practices/how-to/c-sharp/xamarin-task-app"
-                    ]
-                  },
-                  {
-                    "group": "Rust",
-                    "pages": [
-                      "best-practices/how-to/rust/getting-started-in-your-project",
-                      "best-practices/how-to/rust/mocking-time-in-async-rust"
-                    ]
-                  },
-                  {
-                    "group": "Kotlin",
-                    "pages": [
-                      "best-practices/how-to/Kotlin/kotlin-task-app",
-                      "best-practices/how-to/Kotlin/jetpack-compose-task-app"
-                    ]
-                  },
-                  "best-practices/how-to/bluetooth-on-linux",
-                  "best-practices/how-to/c-plus-plus-quickstart-temp",
-                  "best-practices/how-to/c-sharp-tutorials-temp",
-                  "best-practices/how-to/swift-tutorials-temp",
-                  "best-practices/how-to/tutorials-overview"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Support",
-            "groups": [
-              {
-                "group": "Support",
-                "pages": [
-                  "support/contact-us",
-                  "support/knowledge-base",
-                  "support/troubleshooting",
-                  "support/faq",
-                  "support/proguard-rules-for-android",
-                  "support/mongodb-migrationguide",
-                  "support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
-                  "support/Glossary"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "version": "v4.7",
-        "tabs": [
-          {
-            "tab": "Home",
-            "groups": [
-              {
-                "group": "Home",
-                "pages": [
-                  "home/introduction",
-                  "home/about-ditto"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "SDK",
+            "version": "4.7",
             "groups": [
               {
                 "group": "Getting Started",
@@ -1251,315 +596,315 @@
                 ]
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        "tab": "Query Language (DQL)",
+        "groups": [
           {
-            "tab": "Query Language (DQL)",
-            "groups": [
-              {
-                "group": "Clauses",
-                "pages": [
-                  "dql/dql",
-                  "dql/select",
-                  "dql/insert",
-                  "dql/update",
-                  "dql/evict"
-                ]
-              },
-              {
-                "group": "Types and Functions",
-                "pages": [
-                  "dql/types-and-definitions",
-                  "dql/ids-paths-strings-keywords",
-                  "dql/operator-expressions"
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  "dql/roadmap",
-                  {
-                    "group": "Legacy Query Language",
-                    "pages": [
-                      "dql/UAopX0p28gyjw3guV1APQ",
-                      "dql/DSqhle8Mn0Lpa4SvEU7ve",
-                      "dql/YAGtbUIy40FsnPL0Kj4gd",
-                      "dql/xeYWOOPLOOTHDta6kCQll"
-                    ]
-                  }
-                ]
-              }
+            "group": "Clauses",
+            "pages": [
+              "dql/dql",
+              "dql/select",
+              "dql/insert",
+              "dql/update",
+              "dql/evict"
             ]
           },
           {
-            "tab": "Cloud Platform",
-            "groups": [
+            "group": "Types and Functions",
+            "pages": [
+              "dql/types-and-definitions",
+              "dql/ids-paths-strings-keywords",
+              "dql/operator-expressions"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "dql/roadmap",
               {
-                "group": "Overview",
+                "group": "Legacy Query Language",
                 "pages": [
-                  "cloud/overview"
+                  "dql/UAopX0p28gyjw3guV1APQ",
+                  "dql/DSqhle8Mn0Lpa4SvEU7ve",
+                  "dql/YAGtbUIy40FsnPL0Kj4gd",
+                  "dql/xeYWOOPLOOTHDta6kCQll"
                 ]
-              },
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Cloud Platform",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "cloud/overview"
+            ]
+          },
+          {
+            "group": "Cloud Portal",
+            "icon": {
+              "name": "browser",
+              "style": "solid"
+            },
+            "pages": [
+              "cloud/portal/creating-a-ditto-account",
+              "cloud/portal/creating-a-new-app",
+              "cloud/portal/getting-sdk-connection-details",
+              "cloud/portal/data-browser-and-editor",
+              "cloud/portal/role-based-access-control",
+              "cloud/portal/capturing-small-peer-info"
+            ]
+          },
+          {
+            "group": "HTTP Data API",
+            "icon": {
+              "name": "globe",
+              "style": "solid"
+            },
+            "pages": [
+              "cloud/http-api/getting-started",
+              "cloud/http-api/auth-and-params",
+              "cloud/http-api/api/post-storeexecute",
+              "cloud/http-api/attachments",
               {
-                "group": "Cloud Portal",
+                "group": "Legacy HTTP API",
                 "icon": {
-                  "name": "browser",
+                  "name": "puzzle-piece",
                   "style": "solid"
                 },
                 "pages": [
-                  "cloud/portal/creating-a-ditto-account",
-                  "cloud/portal/creating-a-new-app",
-                  "cloud/portal/getting-sdk-connection-details",
-                  "cloud/portal/data-browser-and-editor",
-                  "cloud/portal/role-based-access-control",
-                  "cloud/portal/capturing-small-peer-info"
+                  "cloud/http-api/api/post-storefind",
+                  "cloud/http-api/api/post-storefindbyid",
+                  "cloud/http-api/api/post-storewrite",
+                  "cloud/http-api/api/post-storecount"
                 ]
-              },
+              }
+            ]
+          },
+          {
+            "group": "Data Integration",
+            "pages": [
+              "cloud/cdc",
+              "cloud/mongodb-connector"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
               {
-                "group": "HTTP Data API",
+                "group": "Backend Architecture",
                 "icon": {
-                  "name": "globe",
+                  "name": "cubes-stacked",
                   "style": "solid"
                 },
                 "pages": [
-                  "cloud/http-api/getting-started",
-                  "cloud/http-api/auth-and-params",
-                  "cloud/http-api/api/post-storeexecute",
-                  "cloud/http-api/attachments",
-                  {
-                    "group": "Legacy HTTP API",
-                    "icon": {
-                      "name": "puzzle-piece",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "cloud/http-api/api/post-storefind",
-                      "cloud/http-api/api/post-storefindbyid",
-                      "cloud/http-api/api/post-storewrite",
-                      "cloud/http-api/api/post-storecount"
-                    ]
-                  }
+                  "cloud/backend-architecture",
+                  "cloud/backend-architecture/cloud-optional-design",
+                  "cloud/backend-architecture/timestamps",
+                  "cloud/backend-architecture/causally-consistent-design",
+                  "cloud/backend-architecture/failure-handling"
+                ]
+              },
+              "cloud/release-notes",
+              "cloud/compatibility-map"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Best Practices",
+        "groups": [
+          {
+            "group": "Best Practices",
+            "pages": [
+              "best-practices/best-practices",
+              {
+                "group": "1. Planning and Architecture Design",
+                "pages": [
+                  "best-practices/1-planning-and-architecture-design",
+                  "best-practices/sync-handling",
+                  "best-practices/conflict-handling",
+                  "best-practices/data-flow-management"
                 ]
               },
               {
-                "group": "Data Integration",
+                "group": "2. Setup and SDK Configuration",
                 "pages": [
-                  "cloud/cdc",
-                  "cloud/mongodb-connector"
+                  "best-practices/2-setup-and-sdk-configuration",
+                  "best-practices/optimizing-bundle-sizes-for-android",
+                  "best-practices/integrate-with-crash-reporters"
                 ]
               },
               {
-                "group": "Reference",
+                "group": "3. Data Modeling and Sync Logic",
                 "pages": [
+                  "best-practices/3-data-modeling-and-sync-logic",
+                  "best-practices/batch-write-transactions",
                   {
-                    "group": "Backend Architecture",
-                    "icon": {
-                      "name": "cubes-stacked",
-                      "style": "solid"
-                    },
+                    "group": "Selecting the right pattern",
                     "pages": [
-                      "cloud/backend-architecture",
-                      "cloud/backend-architecture/cloud-optional-design",
-                      "cloud/backend-architecture/timestamps",
-                      "cloud/backend-architecture/causally-consistent-design",
-                      "cloud/backend-architecture/failure-handling"
+                      "best-practices/9lD49ZtExskKuBX-Kq8Jn",
+                      "best-practices/map-evaluation-criteria"
                     ]
                   },
-                  "cloud/release-notes",
-                  "cloud/compatibility-map"
+                  "best-practices/WWnxvj7dPgfnXDIhtlEEb",
+                  {
+                    "group": "Time-based Replication",
+                    "pages": [
+                      "best-practices/time-based-replication",
+                      "best-practices/big-peer-based-evictions",
+                      "best-practices/small-peer-based-evictions"
+                    ]
+                  },
+                  "best-practices/b42k_4oU7uo5xhwADd2k3",
+                  "best-practices/4Mugq3GOSbi46hjEECrQT"
+                ]
+              },
+              {
+                "group": "4. Security, Access Control, and Privacy",
+                "pages": [
+                  "best-practices/4-security-access-control-and-privacy",
+                  "best-practices/maintaining-privacy-in-peer-to-peer-communication",
+                  "best-practices/secure-peer-to-peer-communication",
+                  "best-practices/implementing-role-based-access-control-rbac"
+                ]
+              },
+              {
+                "group": "5. Testing and optimization",
+                "pages": [
+                  "best-practices/5-testing-and-optimization",
+                  "best-practices/IJCASYeQiLW9avEk1AiEj",
+                  "best-practices/_ejkcEiL59dpeQdg0cjiM"
+                ]
+              },
+              {
+                "group": "6. Deployment",
+                "pages": [
+                  "best-practices/6-deployment",
+                  "best-practices/prioritizing-bluetooth-connections-in-high-density-mesh-networks",
+                  "best-practices/network-deployment"
+                ]
+              },
+              {
+                "group": "7. Performance Optimization and Troubleshooting",
+                "pages": [
+                  "best-practices/7-performance-optimization-and-troubleshooting",
+                  "best-practices/sync-performance-with-redundant-ble-connections",
+                  "best-practices/wi-fi-interference-and-client-load",
+                  "best-practices/pCZgBpKcap9tMliT8K4p_"
+                ]
+              },
+              {
+                "group": "8. Monitoring and Maintenance",
+                "pages": [
+                  "best-practices/8-monitoring-and-maintenance",
+                  "best-practices/integrate-ditto-tools-for-kotlin-swift-and-c-net-in-15-minutes",
+                  "best-practices/device-observability-and-ditto-logs"
                 ]
               }
             ]
           },
           {
-            "tab": "Best Practices",
-            "groups": [
-              {
-                "group": "Best Practices",
-                "pages": [
-                  "best-practices/best-practices",
-                  {
-                    "group": "1. Planning and Architecture Design",
-                    "pages": [
-                      "best-practices/1-planning-and-architecture-design",
-                      "best-practices/sync-handling",
-                      "best-practices/conflict-handling",
-                      "best-practices/data-flow-management"
-                    ]
-                  },
-                  {
-                    "group": "2. Setup and SDK Configuration",
-                    "pages": [
-                      "best-practices/2-setup-and-sdk-configuration",
-                      "best-practices/optimizing-bundle-sizes-for-android",
-                      "best-practices/integrate-with-crash-reporters"
-                    ]
-                  },
-                  {
-                    "group": "3. Data Modeling and Sync Logic",
-                    "pages": [
-                      "best-practices/3-data-modeling-and-sync-logic",
-                      "best-practices/batch-write-transactions",
-                      {
-                        "group": "Selecting the right pattern",
-                        "pages": [
-                          "best-practices/9lD49ZtExskKuBX-Kq8Jn",
-                          "best-practices/map-evaluation-criteria"
-                        ]
-                      },
-                      "best-practices/WWnxvj7dPgfnXDIhtlEEb",
-                      {
-                        "group": "Time-based Replication",
-                        "pages": [
-                          "best-practices/time-based-replication",
-                          "best-practices/big-peer-based-evictions",
-                          "best-practices/small-peer-based-evictions"
-                        ]
-                      },
-                      "best-practices/b42k_4oU7uo5xhwADd2k3",
-                      "best-practices/4Mugq3GOSbi46hjEECrQT"
-                    ]
-                  },
-                  {
-                    "group": "4. Security, Access Control, and Privacy",
-                    "pages": [
-                      "best-practices/4-security-access-control-and-privacy",
-                      "best-practices/maintaining-privacy-in-peer-to-peer-communication",
-                      "best-practices/secure-peer-to-peer-communication",
-                      "best-practices/implementing-role-based-access-control-rbac"
-                    ]
-                  },
-                  {
-                    "group": "5. Testing and optimization",
-                    "pages": [
-                      "best-practices/5-testing-and-optimization",
-                      "best-practices/IJCASYeQiLW9avEk1AiEj",
-                      "best-practices/_ejkcEiL59dpeQdg0cjiM"
-                    ]
-                  },
-                  {
-                    "group": "6. Deployment",
-                    "pages": [
-                      "best-practices/6-deployment",
-                      "best-practices/prioritizing-bluetooth-connections-in-high-density-mesh-networks",
-                      "best-practices/network-deployment"
-                    ]
-                  },
-                  {
-                    "group": "7. Performance Optimization and Troubleshooting",
-                    "pages": [
-                      "best-practices/7-performance-optimization-and-troubleshooting",
-                      "best-practices/sync-performance-with-redundant-ble-connections",
-                      "best-practices/wi-fi-interference-and-client-load",
-                      "best-practices/pCZgBpKcap9tMliT8K4p_"
-                    ]
-                  },
-                  {
-                    "group": "8. Monitoring and Maintenance",
-                    "pages": [
-                      "best-practices/8-monitoring-and-maintenance",
-                      "best-practices/integrate-ditto-tools-for-kotlin-swift-and-c-net-in-15-minutes",
-                      "best-practices/device-observability-and-ditto-logs"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Example Projects",
-                "pages": [
-                  "best-practices/example-projects/Inventory",
-                  "best-practices/example-projects/meal-ordering",
-                  "best-practices/example-projects/Chat-App",
-                  "best-practices/example-projects/Point-of-Sale"
-                ]
-              },
-              {
-                "group": "How-To Tutorials",
-                "pages": [
-                  {
-                    "group": "Swift",
-                    "pages": [
-                      "best-practices/how-to/swift/visionos-beta-guide",
-                      "best-practices/how-to/swift/stateobject-vs-observedobject",
-                      "best-practices/how-to/swift/dittoswifttools",
-                      "best-practices/how-to/swift/Preventing-SwiftUI-Previews-from-Syncing",
-                      "best-practices/how-to/swift/jHZR1qGx_I13O7dsrPH9r",
-                      "best-practices/how-to/swift/Animating-UITableView-with-the-Observe-API",
-                      "best-practices/how-to/swift/Attachments_Chat-App",
-                      "best-practices/how-to/swift/Avoiding-Excessive-Memory-Consumption",
-                      "best-practices/how-to/swift/Swift-Authentication-and-Access",
-                      "best-practices/how-to/swift/Swift-Testing",
-                      "best-practices/how-to/swift/SwiftUI_Task-App",
-                      "best-practices/how-to/swift/UIKit_Task-App"
-                    ]
-                  },
-                  {
-                    "group": "JavaScript Web and Node.js",
-                    "pages": [
-                      "best-practices/how-to/js/prebuilt-task-app",
-                      "best-practices/how-to/js/svelte-framework",
-                      "best-practices/how-to/js/onlinewithauthentication",
-                      "best-practices/how-to/js/Kafka-Events_Node.js",
-                      "best-practices/how-to/js/Getting-started-with-Electron-TypeScript-Vite-and-Ditto",
-                      "best-practices/how-to/js/basic-task-app"
-                    ]
-                  },
-                  {
-                    "group": "React Native",
-                    "pages": [
-                      "best-practices/how-to/react/Offline-peer-to-peer-sync-using-JavaScript,-React-and-Auth0",
-                      "best-practices/how-to/react/Running a React-Web-App-in-an-Android-App",
-                      "best-practices/how-to/react/React-Native-Task-App"
-                    ]
-                  },
-                  {
-                    "group": "C#",
-                    "pages": [
-                      "best-practices/how-to/c-sharp/maui-task-app",
-                      "best-practices/how-to/c-sharp/console-task-app",
-                      "best-practices/how-to/c-sharp/permissions",
-                      "best-practices/how-to/c-sharp/authentication-server",
-                      "best-practices/how-to/c-sharp/xamarin-task-app"
-                    ]
-                  },
-                  {
-                    "group": "Rust",
-                    "pages": [
-                      "best-practices/how-to/rust/getting-started-in-your-project",
-                      "best-practices/how-to/rust/mocking-time-in-async-rust"
-                    ]
-                  },
-                  {
-                    "group": "Kotlin",
-                    "pages": [
-                      "best-practices/how-to/Kotlin/kotlin-task-app",
-                      "best-practices/how-to/Kotlin/jetpack-compose-task-app"
-                    ]
-                  },
-                  "best-practices/how-to/bluetooth-on-linux",
-                  "best-practices/how-to/c-plus-plus-quickstart-temp",
-                  "best-practices/how-to/c-sharp-tutorials-temp",
-                  "best-practices/how-to/swift-tutorials-temp",
-                  "best-practices/how-to/tutorials-overview"
-                ]
-              }
+            "group": "Example Projects",
+            "pages": [
+              "best-practices/example-projects/Inventory",
+              "best-practices/example-projects/meal-ordering",
+              "best-practices/example-projects/Chat-App",
+              "best-practices/example-projects/Point-of-Sale"
             ]
           },
           {
-            "tab": "Support",
-            "groups": [
+            "group": "How-To Tutorials",
+            "pages": [
               {
-                "group": "Support",
+                "group": "Swift",
                 "pages": [
-                  "support/contact-us",
-                  "support/knowledge-base",
-                  "support/troubleshooting",
-                  "support/faq",
-                  "support/proguard-rules-for-android",
-                  "support/mongodb-migrationguide",
-                  "support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
-                  "support/Glossary"
+                  "best-practices/how-to/swift/visionos-beta-guide",
+                  "best-practices/how-to/swift/stateobject-vs-observedobject",
+                  "best-practices/how-to/swift/dittoswifttools",
+                  "best-practices/how-to/swift/Preventing-SwiftUI-Previews-from-Syncing",
+                  "best-practices/how-to/swift/jHZR1qGx_I13O7dsrPH9r",
+                  "best-practices/how-to/swift/Animating-UITableView-with-the-Observe-API",
+                  "best-practices/how-to/swift/Attachments_Chat-App",
+                  "best-practices/how-to/swift/Avoiding-Excessive-Memory-Consumption",
+                  "best-practices/how-to/swift/Swift-Authentication-and-Access",
+                  "best-practices/how-to/swift/Swift-Testing",
+                  "best-practices/how-to/swift/SwiftUI_Task-App",
+                  "best-practices/how-to/swift/UIKit_Task-App"
                 ]
-              }
+              },
+              {
+                "group": "JavaScript Web and Node.js",
+                "pages": [
+                  "best-practices/how-to/js/prebuilt-task-app",
+                  "best-practices/how-to/js/svelte-framework",
+                  "best-practices/how-to/js/onlinewithauthentication",
+                  "best-practices/how-to/js/Kafka-Events_Node.js",
+                  "best-practices/how-to/js/Getting-started-with-Electron-TypeScript-Vite-and-Ditto",
+                  "best-practices/how-to/js/basic-task-app"
+                ]
+              },
+              {
+                "group": "React Native",
+                "pages": [
+                  "best-practices/how-to/react/Offline-peer-to-peer-sync-using-JavaScript,-React-and-Auth0",
+                  "best-practices/how-to/react/Running a React-Web-App-in-an-Android-App",
+                  "best-practices/how-to/react/React-Native-Task-App"
+                ]
+              },
+              {
+                "group": "C#",
+                "pages": [
+                  "best-practices/how-to/c-sharp/maui-task-app",
+                  "best-practices/how-to/c-sharp/console-task-app",
+                  "best-practices/how-to/c-sharp/permissions",
+                  "best-practices/how-to/c-sharp/authentication-server",
+                  "best-practices/how-to/c-sharp/xamarin-task-app"
+                ]
+              },
+              {
+                "group": "Rust",
+                "pages": [
+                  "best-practices/how-to/rust/getting-started-in-your-project",
+                  "best-practices/how-to/rust/mocking-time-in-async-rust"
+                ]
+              },
+              {
+                "group": "Kotlin",
+                "pages": [
+                  "best-practices/how-to/Kotlin/kotlin-task-app",
+                  "best-practices/how-to/Kotlin/jetpack-compose-task-app"
+                ]
+              },
+              "best-practices/how-to/bluetooth-on-linux",
+              "best-practices/how-to/c-plus-plus-quickstart-temp",
+              "best-practices/how-to/c-sharp-tutorials-temp",
+              "best-practices/how-to/swift-tutorials-temp",
+              "best-practices/how-to/tutorials-overview"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Support",
+        "groups": [
+          {
+            "group": "Support",
+            "pages": [
+              "support/contact-us",
+              "support/knowledge-base",
+              "support/troubleshooting",
+              "support/faq",
+              "support/proguard-rules-for-android",
+              "support/mongodb-migrationguide",
+              "support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
+              "support/Glossary"
             ]
           }
         ]
