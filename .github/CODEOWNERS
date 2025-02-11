@@ -7,7 +7,7 @@
 * @getditto/docs-mergers
 
 # Docs Site Configuration
-mint.json @getditto/product
+docs.json @getditto/product
 
 # Cloud
 /cloud/ @TMWilds
