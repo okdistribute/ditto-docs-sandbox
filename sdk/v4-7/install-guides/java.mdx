@@ -66,43 +66,35 @@ To fully unlock Ditto's capabilities, configure your app to automatically reques
 
 The Ditto Android SDK includes a set of permissions that are required to use all the device features necessary to enable sync. The permissions below will be automatically merged into your app's final manifest.
 
+<CodeGroup>
 ```xml AndroidManifest.xml
-<uses-permission android:name="android.permission.BLUETOOTH"
-    android:maxSdkVersion="30" />
-<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
-    android:maxSdkVersion="30" />
-<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"
-    tools:targetApi="s" />
-<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
-    tools:targetApi="s" />
-<uses-permission android:name="android.permission.BLUETOOTH_SCAN"
-    android:usesPermissionFlags="neverForLocation"
-    tools:targetApi="s" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-    android:maxSdkVersion="32" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-    android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
-    android:usesPermissionFlags="neverForLocation"
-    tools:targetApi="tiramisu" />
+<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" tools:targetApi="tiramisu" />
 ```
+</CodeGroup>
 
 The `tools:targetApi `attribute causes the permission to only be requested on devices running the specified API level or higher. This avoids errors on older OS versions that do not recognize the permission.
 
 The `android:maxSdkVersion` attribute causes that permission to only be requested on devices running the specified SDK level or lower. This avoids asking for more permissions than Ditto needs, however it will prevent your app from being able to request the permission on devices running a newer OS version. To opt out of this behavior and request the permission on all OS versions, see the following snippet:
 
-```xml Location Permission Override
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-    tools:remove="android:maxSdkVersion" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-    tools:remove="android:maxSdkVersion" />
+<CodeGroup>
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:remove="android:maxSdkVersion" />
 ```
+</CodeGroup>
 
 Note that you may need to add the xmlns:tools="http://schemas.android.com/tools" namespace attribute to your app's root `<manifest>`tag as shown in the AndroidManifest.xml example above.
 

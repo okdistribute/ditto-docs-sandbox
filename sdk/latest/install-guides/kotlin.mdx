@@ -77,17 +77,14 @@ The Ditto SDK's `AndroidManifest.xml` includes all of the necessary permissions 
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
 <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="32" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-    android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
-    android:usesPermissionFlags="neverForLocation"
-    tools:targetApi="tiramisu" />
+<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" tools:targetApi="tiramisu" />
 ```
 </CodeGroup>
 
@@ -106,11 +103,9 @@ Open the AndroidManifest.xml located in the app/src/main directory of your proje
 Within the same `<manifest>` tag, just before the `<application>` tag, add the relevant permissions you want to configure (location example):
 
 <CodeGroup>
-```xml XML
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
- tools:remove="android:maxSdkVersion" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
- tools:remove="android:maxSdkVersion" />
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:remove="android:maxSdkVersion" />
 ```
 </CodeGroup>
 Note the additional `tools:remove` attribute. This tells the manifest merger to selectively remove the `android:maxSdkVersion` behavior from the associated permissions, changing them to apply to all Android versions.
@@ -128,7 +123,7 @@ In addition to being declared in the manifest, some permissions need to be reque
 - Handles any errors encountered during the permissions request process.
 
 ### Using the Helper
-To use the DittoSyncPermissions helper class:
+To use the `DittoSyncPermissions` helper class:
 
 <Steps>
 <Step>

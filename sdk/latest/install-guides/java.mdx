@@ -67,32 +67,24 @@ Android requires certain permissions to be explicitly requested by the app to ac
 
 The Ditto SDK's AndroidManifest.xml includes all of the necessary permissions for enabling its mesh network capabilities. These permissions will automatically be merged with your app's permissions, so you should be aware of them.
 
+<CodeGroup>
 ```xml AndroidManifest.xml
-<uses-permission android:name="android.permission.BLUETOOTH"
-    android:maxSdkVersion="30" />
-<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
-    android:maxSdkVersion="30" />
-<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"
-    tools:targetApi="s" />
-<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
-    tools:targetApi="s" />
-<uses-permission android:name="android.permission.BLUETOOTH_SCAN"
-    android:usesPermissionFlags="neverForLocation"
-    tools:targetApi="s" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-    android:maxSdkVersion="32" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-    android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
-    android:usesPermissionFlags="neverForLocation"
-    tools:targetApi="tiramisu" />
+<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" tools:targetApi="tiramisu" />
 ```
+</CodeGroup>
 
 Some of these permissions have an android:maxSdkVersion attribute which means they are not used on devices running newer versions of Android. This is a best practice to respect users' privacy when those permissions are not necessary.
 
@@ -106,12 +98,12 @@ To override any of these permission limitations in your app, do the following:
   </Step>
   <Step >
   Within the same `<manifest>` tag, just before the `<application>` tag, add the relevant permissions you want to configure (location example):
-  ```xml AndroidManifest.xml
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-    tools:remove="android:maxSdkVersion" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-    tools:remove="android:maxSdkVersion" />
-  ```
+<CodeGroup>
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:remove="android:maxSdkVersion" />
+```
+</CodeGroup>
   Note the additional `tools:remove` attribute. This tells the manifest merger to selectively remove the `android:maxSdkVersion` behavior from the associated permissions, changing them to apply to all Android versions.
   </Step>
 </Steps>

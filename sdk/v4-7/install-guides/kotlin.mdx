@@ -96,40 +96,32 @@ To include the necessary permissions required by Android, and then do the follow
     </Step>
     <Step>
     Within the `<manifest>` tag, confirm that the following namespace declarations are included and, if needed, add them to the beginning of the file:
-    ```xml AndroidManifest.xml
-    <manifest
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    ```
+<CodeGroup>
+```xml AndroidManifest.xml
+<manifest xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+```
+</CodeGroup>
     </Step>
     <Step>
     Within the same `<manifest>` tag, just before the `<application>` tag, add the following permissions:
-    ```bash AndroidManifest.xml
-        <uses-permission android:name="android.permission.BLUETOOTH"
-            android:maxSdkVersion="30" />
-        <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
-            android:maxSdkVersion="30" />
-        <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"
-            tools:targetApi="s" />
-        <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
-            tools:targetApi="s" />
-        <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
-            android:usesPermissionFlags="neverForLocation"
-            tools:targetApi="s" />
-        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-            android:maxSdkVersion="32" />
-        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-            android:maxSdkVersion="30" />
-        <uses-permission android:name="android.permission.INTERNET" />
-        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-        <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-        <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-        <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-        <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
-            android:usesPermissionFlags="neverForLocation"
-            tools:targetApi="tiramisu" />
-    ````
+<CodeGroup>
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" tools:targetApi="tiramisu" />
+```
+</CodeGroup>
     </Step>
     <Step>
     To limit the Android OS from granting select permissions, use the tools:remove attribute to selectively exclude specific permissions from being affected by the android:maxSdkVersion behavior.
@@ -140,12 +132,12 @@ To include the necessary permissions required by Android, and then do the follow
 
     For example, the following snippet shows a configuration that requests permissions from end users regardless of the SDK version on the peer device:
 
-    ```xml AndroidManifest.xml
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-        tools:remove="android:maxSdkVersion" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
-        tools:remove="android:maxSdkVersion" />
-    ```
+<CodeGroup>
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:remove="android:maxSdkVersion" />
+```
+</CodeGroup>
     </Step>
     <Step>
     Save the `AndroidManifest.xml` file.
@@ -156,9 +148,8 @@ To include the necessary permissions required by Android, and then do the follow
 
 Ensure that your app’s build.gradle file includes the Ditto SDK dependency with the correct version:
 
-```bash bash
-
-1implementation "live.ditto:ditto:4.7.1"
+```kotlin Kotlin
+implementation "live.ditto:ditto:4.7.1"
 ```
 ### Ensuring Permissions Setup
 
@@ -175,7 +166,7 @@ To use the `DittoSyncPermissions` helper class:
     <Step>
     Import the `DittoSyncPermissions` helper class in the main activity of your app:
 
-    ```kotlin kotlin
+    ```kotlin Kotlin
     import com.ditto.sdk.DittoSyncPermissions
     ```
     </Step>

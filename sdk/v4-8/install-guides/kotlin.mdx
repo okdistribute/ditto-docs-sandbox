@@ -67,31 +67,21 @@ Android requires certain permissions to be explicitly requested by the app to ac
 The Ditto SDK's AndroidManifest.xml includes all of the necessary permissions for enabling its mesh network capabilities. These permissions will automatically be merged with your app's permissions, so you should be aware of them.
 
 <CodeGroup>
-```xml
-1<uses-permission android:name="android.permission.BLUETOOTH" 
-2 android:maxSdkVersion="30" /> 
-3<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" 
-4 android:maxSdkVersion="30" /> 
-5<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" 
-6 tools:targetApi="s" /> 
-7<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" 
-8 tools:targetApi="s" /> 
-9<uses-permission android:name="android.permission.BLUETOOTH_SCAN" 
-10 android:usesPermissionFlags="neverForLocation" 
-11 tools:targetApi="s" /> 
-12<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" 
-13 android:maxSdkVersion="32" /> 
-14<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" 
-15 android:maxSdkVersion="30" /> 
-16<uses-permission android:name="android.permission.INTERNET" /> 
-17<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> 
-18<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 
-19<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> 
-20<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" /> 
-21<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> 
-22<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" 
-23 android:usesPermissionFlags="neverForLocation" 
-24 tools:targetApi="tiramisu" />
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="s" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+<uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" tools:targetApi="tiramisu" />
 ```
 </CodeGroup>
 
@@ -107,13 +97,15 @@ Open the AndroidManifest.xml located in the app/src/main directory of your proje
 </Step>
 <Step>
 
-`Within the same <manifest> tag, just before the <application> tag, add the relevant permissions you want to configure (location example):`
+Within the same `<manifest>` tag, just before the `<application>` tag, add the relevant permissions you want to configure (location example):
 
 <CodeGroup>
-```xml
-// ... manifest content ...
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:remove="android:maxSdkVersion" />
 ```
 </CodeGroup>
+Note the additional `tools:remove` attribute. This tells the manifest merger to selectively remove the `android:maxSdkVersion` behavior from the associated permissions, changing them to apply to all Android versions.
 </Step>
 </Steps>
 
