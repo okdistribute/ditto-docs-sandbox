@@ -92,11 +92,11 @@ During the authentication process you can specify user specific metadata that wi
 
 The following write permissions describe that `userID: "123abc"` can:
 
-1. `write` to documents in the `"books"` collection where the `_id.locationId == 'abcedef123456'`.
-2. `write` to any document in the `"newspapers"` collection. We use a single value of `true`
-3. `read` to documents in the `"books"` collection where the `_id.locationId == 'abcedef123456'`
+1. `write` to documents in the `"books"` collection matching the query `"_id.locationId == 'abcedef123456'"`.
+2. `write` to any document in the `"newspapers"` collection. This is done with the single-word query`"true"`
+3. `read` to documents in the `"books"` collection matching the query `"_id.locationId == 'abcedef123456'"`
 
-```json JSON
+```json JSON {9-12, 14-17, 23-26}
 {
   "authenticate": true,
   "expirationSeconds": 28800,
@@ -105,30 +105,24 @@ The following write permissions describe that `userID: "123abc"` can:
     "write": {
       "everything": false, // ensure that this is false
       "queriesByCollection": {
-        // highlight-start
         // 1.
         "books": [
-          _id.locationId == 'abcedef123456'
+          "_id.locationId == 'abcedef123456'"
         ],
-        // highlight-end
 
-        // highlight-start
         // 2.
         "newspapers": [
-          "true"
+          "true" // Note that this a string not a boolean, as it represents a query
         ]
-        // highlight-end
       }
     },
     "read": {
       "everything": false, // ensure that this is false
       "queriesByCollection": {
-        // highlight-start
         // 3.
         "books": [
-          _id.locationId == 'abcedef123456'
+          "_id.locationId == 'abcedef123456'"
         ],
-        // highlight-end
       }
     }
   }
@@ -265,7 +259,7 @@ The disadvantage is that an unprivileged user does have a device containing priv
 
 Therefore relaxed access rules - app-level security - are only suitable for environments where there is a degree of trust that the devices won't end up unlocked in the wrong hands.
 
-## Authenication Webhook Response Schema
+## Authentication Webhook Response Schema
 
 Below is a schema definiton that describes the JSON response Ditto Cloud expects from the authentication webhook.
 
