@@ -4,7 +4,257 @@ icon: flutter
 iconType: solid
 ---
 
-<Update label="4.8.0-publicpreview.2" description="Release Date: Oct 25, 2024">
-Reliability and stability improvements.
+<Note>The Flutter SDK follows a separate release cadence from our other SDKs to provide flexibility for
+the initial GA release. During the 4.9.* series, the Flutter release version may not align with other SDKs.
+This will be resolved starting with 4.10.0.</Note>
 
+<Update label="4.9.0 (GA Release)" description="Release Date: Jan 27, 2024">
+    # 4.9.0 (GA Release)
+    We’re excited to announce the General Availability of the Ditto Flutter SDK! Designed to
+    empower developers building cross-platform apps, the Flutter SDK delivers reliable real-time
+    data synchronization and offline-first capabilities, now production-ready!
+
+
+    ## API Support Guarantees
+    General Availability (GA) means API stability! Starting with `4.9.0` Ditto will guarantee semver
+    support of all APIs following industry standards. For more on semver see
+    [semver.org](https://semver.org/).
+
+    ## Changes from the Public Preview
+    To provide the best product with our GA release we've made some final modifications to the
+    underlying architecture that bridges Dart and the Ditto Core for Android. The goal with this change
+    is to provide a higher quality product with improved performance, reliability, and developer
+    experience.
+    
+    These changes provide the following benefits:
+    - Enhanced developer ergonomics through synchronous APIs
+    - Improved performance for all operations across all platforms
+    - Reduced complexity improving reliability
+    - Reduced background operations for better battery life 
+    - Lower memory consumption
+
+    ## Breaking Changes
+    This release contains a handful of minor syntax changes to provide an improved developer
+    experience and better support the underlying framework. These syntax changes all stem from
+    the ability to support non-async calls across the Dart-Ditto Core FFI.
+
+    In the initial Dart-Ditto implementation all Dart internal calls were required to make async calls
+    into Ditto. This required us to make all Ditto API methods `async`. Due to the improvements
+    with our recent changes we are now able to provide synchronous methods. This change will bring a more
+    natural developer experience.
+
+    #### Ditto Initialization Required using `await Ditto.init()`
+    From `4.9.0` and later it's required to call `await Ditto.init()` before using *any* Ditto
+    functionality. Failing to do so can result in incorrect initialization of Ditto and unexpected
+    failures.
+
+    Notably, this must happen after `WidgetsFlutterBinding.ensureInitialized()` has
+    been called.
+
+    Flutter's `runApp` already calls
+    `WidgetsFlutterBinding.ensureInitialized()`, so if calling `Ditto.init()` inside
+    the `initState` of a `StatefulWidget`, it will just work.
+
+    To initialize `Ditto` in `main`, use the following syntax:
+
+    ```dart
+    Future<void> main() async {
+        WidgetsFlutterBinding.ensureInitialized();
+        await Ditto.init();
+        runApp(MyCoolApp());
+    }
+    ```
+
+    #### Select `asnyc` functions have become sync
+    Select functions that don't require asynchronous execution have been converted from `async`
+    to standard sync operations.
+
+    *Changed Methods Include:*
+    - `ditto.startSync();`
+    - `ditto.store.registerObserver(...);`
+    - `ditto.sync.registerSubscription(...);`
+    
+    *Example with basic replacement:*
+
+    ```dart
+    // Previous syntax
+    final observer = await ditto.store.registerObserver("SELECT * FROM tasks");
+
+    // New syntax
+    final observer = ditto.store.registerObserver("SELECT * FROM tasks");
+    ```
+
+    *Example chaining Future's with `.then()` (often seen in `initState()`):*
+
+    ```dart
+    // Previous syntax
+    ditto.store.registerObserver("SELECT * FROM tasks").then((observer) {
+      setState(() {
+        _observer = observer;
+      });
+    });
+
+    // New syntax
+    final observer = ditto.store.registerObserver("SELECT * FROM tasks");
+    setState(() {
+        _observer = observer;
+    });
+    ```
+
+    #### Methods to setter/getter variables
+    Async getter/setter method pairs have been converted to properties using Dart's getter/setter syntax, for a more natural
+    developer experience.
+
+    *Changed Methods Include:*
+    |Previous|New|
+    | - | - |
+    |`DittoLogger.setMinimumLogLevel(...)` `DittoLogger.getMinimumLogLevel(...)`|`DittoLogger.minimumLogLevel`|
+    |`DittoLogger.setCustomLogCallback(...)` `DittoLogger.getCustomLogCallback(...)`|`DittoLogger.customLogCallback`|
+
+    *Examples*
+
+    ```dart
+    // Previous syntax
+    await DittoLogger.setMinimumLogLevel(LogLevel.debug);
+    await DittoLogger.getMinimumLogLevel();
+
+    // New syntax
+    DittoLogger.minimumLogLevel = LogLevel.debug;
+    ```
+
+    ```dart
+    // Previous syntax
+    await DittoLogger.setCustomLogCallback((logLevel, logString) {
+        print("$logLevel: $logString");
+    });
+
+    // New syntax
+    DittoLogger.customLogCallback = (logLevel, logString) {
+        print("$logLevel: $logString");
+    }
+    ```
+    
+    #### Boolean functions renamed from `getFoo`/`setFoo` to `isFoo`
+    For property types where the value type is `bool`, the functions will have been renamed
+    from `getFoo` and `setFoo` to `isFoo`.
+
+    *Changed Methods Include:*
+    |Previous|New|
+    | - | - |
+    |`DittoLogger.setEnabled()` `DittoLogger.getEnabled()`|`DittoLogger.isEnabled`|
+    |`ditto.setTransportConfig()` `ditto.getTransportConfig()`|`ditto.transportConfig`|
+
+    *Examples*
+    ```dart
+    // Previous syntax
+    await DittoLogger.setEnabled()
+    await DittoLogger.getEnabled()
+
+    // New syntax
+    DittoLogger.isEnabled
+    ```
+    ```dart
+    // Previous syntax
+    await ditto.setTransportConfig()
+    await ditto.getTransportConfig()
+
+    // New syntax
+    ditto.transportConfig
+    ```
+
+
+    #### Select Async Initialization is now Sync
+    Objects with `async` constructors that didn't require asynchronous initialization have
+    been changed for a more natural developer experience.
+
+    *Changed Methods Include:*
+    - All `Identity` subclass (E.g. `OnlinePlaygroundIdentity`)
+
+    *Example:*
+    ```dart
+    // Previous syntax
+    final identity = await OnlinePlaygroundIdentity.create(
+      appID: appID,
+      token: token,
+    );
+
+    // New syntax
+    final identity = OnlinePlaygroundIdentity(
+      appID: appID,
+      token: token,
+    );
+    ```
+
+    #### Restricted Class Modifiers
+
+    Many of our types are now either `final` classes (which prevent *all*
+    subtyping), or `interface` classes (which allow `implements` but disallow
+    other forms of subtyping).
+
+    If you were previously extending or implementing a type and this is now
+    disallowed, you can create a wrapper type:
+
+    *Example:*
+    
+    ```dart
+    // Previous syntax
+    class MockDitto extends Mock implements Ditto {}
+
+    // New syntax
+    class DittoWrapper {
+        final Ditto _ditto;
+        // constructor
+
+        Future<List<Task>> loadTasks() => ...;
+    }
+
+    class MockDitto extends Mock implements DittoWrapper {}
+    ```
+
+    Some types may explicitly allow subtyping. Follow the API docs to understand when subtyping is best used.
+
+    #### Removal of `dart:io` types in public API
+
+    `Directory` and `File` are no longer found in our public API.
+
+    For example `Ditto.open()` previously took a `Directory persistenceDirectory`,
+    but this has been changed to `String`.
+
+    This can be resolved by calling `.path`:
+    ```dart
+    // Previous syntax
+    final persistenceDirectory = Directory("/my/cool/directory");
+    final ditto = await Ditto.open(
+      persistenceDirectory: persistenceDirectory,
+      // ...
+    );
+
+    // New syntax
+    final persistenceDirectory = Directory("/my/cool/directory");
+    final ditto = await Ditto.open(
+      persistenceDirectory: persistenceDirectory.path,
+      // ...
+    );
+    ```
+
+    #### Min Kotlin Gradle Plugin Version Upgraded to 1.8.0
+    Supporting new Android capabilities requires using Kotlin Gradle Plugin version `1.8.0` or later.
+
+    *To upgrade:*
+    1. Navigate to the root folder
+    2. Open `./android/settings.gradle`
+    3. Update the `org.jetbrains.kotlin.android` plugin to `1.8.0`
+        ```gradle {3}
+        plugins {
+            // ...
+            id "org.jetbrains.kotlin.android" version "1.8.0" apply false
+        }
+        ```
+
+</Update>
+
+<Update label="4.8.0-publicpreview.2" description="Release Date: Oct 25, 2024">
+    Final Preview Release
+    
+    **Contains:** Reliability and stability improvements.
 </Update>

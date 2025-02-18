@@ -66,12 +66,12 @@
                       "sdk/latest/install-guides/kotlin",
                       "sdk/latest/install-guides/js",
                       "sdk/latest/install-guides/nodejs",
+                      "sdk/latest/install-guides/flutter",
                       "sdk/latest/install-guides/react-native",
                       "sdk/latest/install-guides/java",
                       "sdk/latest/install-guides/c-sharp",
                       "sdk/latest/install-guides/cpp",
-                      "sdk/latest/install-guides/rust",
-                      "sdk/latest/install-guides/flutter"
+                      "sdk/latest/install-guides/rust"
                     ]
                   },
                    "sdk/latest/quickstarts/mongodb-migrationguide"
