@@ -1,0 +1,101 @@
+---
+title: React Native Quickstart
+sidebarTitle: React Native
+description: Get started quickly with Ditto using the Ditto Quickstart Applications
+icon: react
+iconType: solid
+---
+
+import {
+    QuickstartCloneTheRepoBody,
+    QuickstartSyncDataOfflineBody,
+    QuickstartConfigTitleAndAppIdBody
+} from '/snippets/quickstart-shared-components.mdx';
+import { js_4_9_api_link } from '/snippets/sdk-api-reference-links.mdx';
+
+## Prerequisites
+
+Ditto’s React Native Quickstart supports **iOS** and **Android**. Before getting started, ensure you have the following:
+- A code editor (Visual Studio Code is our recommendation, but any code editor will work)
+- [Git](https://git-scm.com/) installed on your machine
+- [Node.js](https://nodejs.org/en/download) installed on your machine
+- A Ditto [Portal](https://portal.ditto.live) account with a configured Ditto Application (see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
+
+<AccordionGroup>
+  <Accordion title="Android Specific Prerequisites" icon="android">
+   - [Android Studio](https://developer.android.com/studio/install) installed on your machine
+   - A physical Android device or Android emulator
+   </Accordion>
+   <Accordion title="iOS Specific Prerequisites" icon="apple">
+   - A macOS machine with the latest version of [Xcode](https://developer.apple.com/xcode/) (15 or later) installed
+   - A physical iOS device or iOS simulator
+   </Accordion>
+</AccordionGroup>
+
+## Get Started
+
+### 1. Clone the Repository
+
+1. Open the terminal
+2. Clone the repository from GitHub.
+    ```script
+    git clone https://github.com/getditto/quickstart
+    ```
+3. Navigate to the project root directory:
+    ```script
+    cd quickstart
+    ```
+
+### 2. Configure Ditto
+
+#### Get Ditto App ID and Playground Token
+<QuickstartConfigTitleAndAppIdBody />
+
+#### Add Ditto Credentials
+
+1. In the terminal navigate to the application folder. Then, launch it in a code editor. (e.g. VS Code)
+    ```shell
+    cd react-native
+    code . 
+    ```
+2. Open `App.tsx` and replace `<YOUR APP ID>` and `<YOUR PLAYGROUND TOKEN>` with the App ID and Playground
+Token from your Ditto Application.
+    ```ts {3,4}
+    const identity: IdentityOnlinePlayground = {
+        type: 'onlinePlayground',
+        appID: '<YOUR APP ID>',
+        token: '<YOUR PLAYGROUND TOKEN>',
+    };
+    ```
+
+### 3. Run the Application
+
+1. Open a terminal and navigate to your application folder.
+2. Install dependencies
+    ```shell yarn
+    yarn install
+    ```
+3. Run the Application
+    <CodeGroup>
+    ```shell iOS
+    (cd ios && RCT_NEW_ARCH_ENABLED=1 pod install)
+    yarn react-native run-ios
+    ```
+    ```shell Android
+    yarn react-native run-android
+    ```
+    </CodeGroup>
+
+### 4. Sync-Data Offline
+
+<QuickstartSyncDataOfflineBody/>
+
+## Next Steps
+
+All the Ditto Quickstart apps works together! Try running a quickstart app in other languages and see them all collaborate.
+
+## Additional Resources
+
+- [React Native Install Guide](/sdk/latest/install-guides/react-native)
+- <a href={js_4_9_api_link}>JavaScript API Reference</a>
+- [JavaScript Release Notes](/sdk/latest/release-notes/js)

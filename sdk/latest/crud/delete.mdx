@@ -1,9 +1,12 @@
 ---
-title: Delete
-description: "This article provides an overview and how-to instructions for deleting documents within Ditto."
+title: Removing Documents
+description: "This article provides an overview and how-to instructions for removing documents within Ditto."
+icon: trash-can
 ---
 
-This article provides an overview and how-to instructions for deleting documents using the `EVICT` DQL operation.
+See [Document Model](/key-concepts/document-model) for more information on documents in Ditto.
+
+This article provides an overview and how-to instructions for removing documents using the `EVICT` DQL operation.
 
 - [Evict Method](#evicting-data)
 - [Coordinating Evictions](#coordinating-evictions)
@@ -239,23 +242,6 @@ await ditto.store.execute("EVICT FROM cars WHERE isSafeToEvict = true");
 ```
 </CodeGroup>
 
-# Deleting Attachments
-
-Unlike documents, attachments cannot be explicitly deleted on their own. Instead, you modify the document containing the attachment token referencing it.
-
-Attachment data stored within the Small Peer Ditto store is automatically garbage collected on a 10-minute cadence when no longer referenced. Currently, attachments can only be deleted by way of garbage collection.
-
-The following table provides an overview of the various ways you can indirectly delete attachments:
-
-| **Approach** | **Description**                                                                              |
-| ------------ | -------------------------------------------------------------------------------------------- |
-| `UPDATE`     | Update the document to remove the associated attachment token.                               |
-| `EVICT`      | Delete the entire document, including the associated attachment token, from the Ditto store. |
-
-The storage mechanism Small Peers use to store data, including blob data, depends on the platform:
-
-- If running in the browser or a server-based system, data is stored in its Random Access Memory (RAM).
-- If running on a mobile device like an iPhone, data is stored on its local filesystem.
 
 # Referencing Previously Evicted Documents
 

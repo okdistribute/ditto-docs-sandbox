@@ -1,0 +1,159 @@
+---
+title: Accessing Data
+description: 'Learn how to access data in Ditto, including creating, reading, updating, and removing data.'
+icon: database
+iconType: solid
+---
+
+Ditto is a local-first, embedded database designed for offline-first applications. It runs within your app (on mobile, web, IoT, etc.), allowing you to read and write data even without an internet connection.
+Each instance of the Ditto SDK (often called a "small peer" in Ditto terminology) maintains its own local datastore, so the app remains fully functional offline and can share data locally.
+
+You interact with data in Ditto using the Ditto Query Language (DQL). DQL is a SQL-like language that allows you to read and write data to the local database, but is specialized for use with JSON-like structures and CRDTs.
+DQL can be executed using the `ditto.store.execute()` method in each of the Ditto SDKs, or via the `/store/execute` endpoint in the Ditto HTTP API.
+You can read more about DQL in the [DQL documentation](/dql/dql).
+
+## Creating Data
+
+Creating data in Ditto involves inserting new documents into a collection in the local database. A collection in Ditto is similar to a table, and a document is a JSON-like object representing one record. To add a document, you typically call an insert operation on Ditto's store. This is done using an `INSERT INTO` DQL statement. 
+
+For example, you can execute a query like:
+
+```sql
+INSERT INTO cars 
+DOCUMENTS { 'make': 'Ford', 'model': 'Mustang' }
+```
+
+This DQL statement would insert a new document into the cars collection with the given field, as no ID has been assigned to this document one would be automatically generated.
+Once the document is inserted, it is immediately stored in the local Ditto database, and is immediately visible for querying in the application. At the next available point, the new document will also be synced to other connected devices, see [Syncing Data](/key-concepts/syncing-data) for more information.
+
+For more examples of creating new documents in your language of choice, please see [Creating Documents](/sdk/latest/crud/create).
+
+## Reading Data
+
+Reading data from Ditto is done by querying the documents in the local store using a DQL `SELECT` statement.
+
+For example:
+```sql
+SELECT * 
+FROM cars 
+```
+
+This will retrieve all documents in the cars collection and return the results in a json object.
+
+Typically you will want to refine the query to get a subset of data, especially in cases where there are many documents in the collection. DQL's `WHERE` clause allows you to filter the results based on specific criteria.
+
+For example:
+```sql
+SELECT *
+FROM cars
+WHERE color = 'blue'
+```
+
+This will retrieve all documents in the cars collection where the color field is "blue" and return the results in a json object.
+
+These queries are executed against the local Ditto store and will return results very quickly from the device's database. Querying the local store is very fast and works offline. Note that the results are not live, so if the data is updated on another device, the results will not be updated until the data on the other device is synced to the local device.
+
+For more examples of reading data in your language of choice, please see [Reading Documents](/sdk/latest/crud/read).
+
+### Observing Changes
+
+If new data arrives (via sync) or local data changes, Ditto can notify your app directly, without needing to periodically run a query, so you can update the UI in real-time.
+
+This is done using Ditto's store observers, which is a change listener to a query that will be notified when the results of the query are updated. This is called using the `ditto.store.registerObserver()` method in each of the Ditto SDKs.
+By specifying a DQL `SELECT` statement, Ditto will notify the observer when the results of the query change. It will provide these results as a callback containing the full dataset of the results of the query, which can then be passed directly to the UI framework of your choice, which will often handle efficient updates to the UI based on the changes.
+
+For more examples of reacting to data changes in your language of choice, please see [Observing Data Changes](/sdk/latest/crud/observing-data-changes).
+
+## Updating Data
+
+Updating data in Ditto means modifying existing documents in a collection. You can change one or more fields of a document by executing an UPDATE statement through DQL. 
+
+The syntax follows a familiar SQL pattern: you specify the target collection, set new values for one or more fields, and include a WHERE clause to select which document(s) to update. 
+
+For example, suppose we have a cars collection and we want to change the color of the car with `_id` `123` to blue. We could run:
+
+```sql
+UPDATE cars 
+SET color = 'blue' 
+WHERE _id = '123'
+```
+
+This will find the document in the cars collection whose ID is "123" and update its color field to "blue".
+
+You can set multiple fields in one update query as well (for instance, updating both color and model in the same statement). The WHERE clause can target any condition; often you'll use the document's `_id` to update a specific record, but you could update multiple documents at once if they match a filter. 
+Only the specified fields are modified — all other fields in the document remain unchanged.
+
+When you execute an update, the changes are applied to the local store immediately. Ditto tracks this change and will propagate it to other peers on the network during the next sync. This means your update is done offline-safe: you can update data with no internet, and Ditto will queue that change to send out when connectivity is available. Each update operation in Ditto is idempotent on the target documents (applying the same update again will have no effect if the data is already updated) and will be merged with any concurrent changes from other devices. In essence, updating documents with Ditto is straightforward - you specify what to change and let Ditto handle applying it locally and syncing it globally.
+
+For more examples of updating data in your language of choice, please see [Updating Documents](/sdk/latest/crud/update).
+
+## Removing Data
+
+Removing data in Ditto is the process of removing documents from a collection. 
+
+There are typically two reasons that you want to delete data in Ditto:
+- Logical Deletes
+- Local Eviction
+
+These need to be handled differently within Ditto, and so the operations you use to remove data are different depending on the reason you want to remove the data.
+
+### Logical Deletes
+
+Logical deletes are a way to remove data from Ditto where the removal has a semantic meaning within your application. For example deleting a user's account from the app.
+
+In this scenario you want to remove a document from the local store, but you also want the device to tell all other devices that it's replicating with to remove the same document. In short, you need that delete to be propagated throughout the entire system.
+
+This can be achieved in one of two ways, depending on if you need to retain the previous value of the document for any reason.
+
+#### Soft-Delete Pattern
+If you wish to retain the previous value of the document then we recommend following a soft-delete pattern. This is where you add a field to the document to indicate that it has been deleted, so that it can be handled appropriately throughout the rest of your system.
+For example you can add an `isDeleted` field to the document to indicate that it has been deleted, and then when specifying your subscription and setting up local queries/observers you can filter out documents where `isDeleted` is true.
+
+For example:
+```sql
+SELECT *
+FROM cars
+WHERE isDeleted = false
+```
+
+You can then periodically perform a [local eviction](#local-eviction) to remove deleted documents from the local store that you no longer need.
+More details on how to implement a soft-delete pattern can be found in the [Removing Documents](/sdk/latest/crud/delete) documentation.
+
+#### Tombstones
+If you do not need to retain the previous value of the document then you can use a tombstone pattern. This is where you remove the document from the local store entirely.
+
+This can be done using the `.remove()` method in the Ditto SDK, and in the Big Peer using the `TOMBSTONE` DQL operation:
+
+```sql
+TOMBSTONE 
+FROM cars 
+WHERE _id = '123'
+```
+
+Through Ditto's replication protocol, the tombstone will be propagated to other devices that currently have a non-tombstoned copy of the document, and so the document will be deleted from those devices. However, the tombstone itself will not be automatically cleaned up from the local store.
+
+<Note>
+These two different mechanisms will be collapsed into a single `DELETE` operation in Ditto 4.10.
+
+Tombstones will also be cleaned up automatically in Ditto 4.10.
+</Note>
+
+### Local Eviction
+There are many scenarios where you may want to remove data from the local store without it being propagated to other devices. For example, in point-of-sales systems, it is not necessary to keep more than a few days of transaction data on the device, but you still need to retain the data upstream for reporting purposes.
+
+This local purging is achieved using the `EVICT` DQL operation.
+For example:
+```sql
+EVICT 
+FROM cars 
+WHERE _id = '123'
+```
+
+This will remove the document from the local store, but this will not be propagated to any other devices.
+
+If other connected peers contain a copy of that document, and the document matches the local device's subscription query, then the document will be re-replicated to the local device.
+It's therefore important to ensure that the subscription query is correctly set up or adjusted to not re-replicate the documents that you want to evict.
+
+You may not that the soft-delete pattern is a specialized version of local eviction where a boolean flag is used to indicate that the document is safe to be evicted. However, you can also use local eviction to evict documents using an alternative condition, such as a time-based condition (e.g. documents older than 3 days).
+
+You can read more about local purging and combining this with the subscription query in the [Removing Documents](/sdk/latest/crud/delete) documentation.

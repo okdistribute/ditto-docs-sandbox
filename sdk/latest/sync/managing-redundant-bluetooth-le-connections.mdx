@@ -1,12 +1,8 @@
 ---
-title : Managing Redundant Bluetooth LE Connections
+title : Redundant Bluetooth LE Connections
+description: "This article explains how Ditto manages redundant Bluetooth Low Energy (LE) connections within the mesh network by default, the tradeoffs with mesh size in mind, and how to deviate from this default behavior so you can ensure continuous sync uptime in your mesh."
+icon: bluetooth
 ---
-
-This article explains how Ditto manages redundant Bluetooth Low Energy (LE) connections within the mesh network by default, the tradeoffs with mesh size in mind, and how to deviate from this default behavior so you can ensure continuous sync uptime in your mesh:
-
-- [Default Ditto Behavior](./managing-redundant-bluetooth-le-connections#default-ditto-behavior)
-- [Considerations by Mesh Size](./managing-redundant-bluetooth-le-connections#considerations-by-mesh-size)
-- [Enabling Redundant Connections](./managing-redundant-bluetooth-le-connections#enabling-redundant-connections)
 
 ## Default Ditto Behavior
 
@@ -24,9 +20,7 @@ For example, in a PoS system, maintaining redundant connections may be preferred
 
 To change the default behavior and enable redundant connections, set the system parameter `mesh_chooser_avoid_redundant_bluetooth` to `false`:
 
-
-
-```dql DQL
+```mysql DQL
 ALTER SYSTEM SET mesh_chooser_avoid_redundant_bluetooth = false
 ```
 

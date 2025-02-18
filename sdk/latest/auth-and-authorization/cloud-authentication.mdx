@@ -1,5 +1,5 @@
 ---
-title: Cloud Authentication
+title: Online Authentication
 description: "This article provides an introduction to Ditto's methods for authentication, as well as step‑by‑step instructions on how to use the online playground authentication mode to initialize Ditto and start prototyping."
 icon: cloud
 iconType: solid
@@ -7,95 +7,8 @@ iconType: solid
 
 import PlaygroundConnectExamples from "/snippets/connect-examples/playground/playground-connect-examples.mdx"
 
-Ditto's security relies on digital identities for peer-to-peer authentication and access control permissions and privileges. Each instance of Ditto running in your app must prove its identity to other peers before it is allowed to sync.
-
-The following table provides an overview of authentication in Ditto:
-
-| **Method** | **Use Case** |
-| --- | --- |
-| `OnlinePlayground`¹ | You're ready to explore and test realtime sync capabilities without the commitment using either a demo app or your own development app. |
-| `OnlineWithAuthentication` | You've integrated Ditto, integrated a third‑party identity service provider, and are now ready to go into production. |
-
-<Warning>
-¹Do not use the online playground identity for production-level apps.
-
-The online playground is intended for testing and experimentation purposes only. Deploying playground certificates to a live environment could lead to vulnerabilities and security risks.
-</Warning>
-## OnlinePlayground Identity
-
-Before you can sync offline, you must first connect to the internet to retrieve your *playground certificate*.
-
-Using Ditto's online playground identity, you can sync with other peers that share the same app ID and read and write to collections without the hassle of needing to set up your own authentication.
-
-<Info>
-Each instance of Ditto running in your app is assigned a random universally unique identifier (UUID), which is the string of alphanumeric characters that identify your app across Ditto, as well as all other systems and environments.
-</Info>
-
-The *online playground* is an authentication mode that allows you to explore platform features and functionality without the hassle of setting up your own authentication mechanism.
-
-<Note>
-  Before you can sync offline, you must connect to the internet to obtain your playground certificate from the Big Peer.
-</Note>
-<Note>
-Unless you have a specialized use case, such as a government app, you must connect to the internet at least once before you can sync offline with other peers.
-</Note>
-The playground certificate is an X.509-formatted certificate generated automatically by the Big Peer when a network connection is available. Once you've obtained your playground certificate from the Big Peer, you can go offline and sync with unrestricted platform access for a maximum of one week — reading and writing to all collections and establishing connections with all peers sharing the same app ID.
-
-After one week, however, your playground certificate expires and you lose access to the platform, requiring you to reconnect to the internet so the Big Peer can automatically generate a new playground certificate.
-
-## Initializing Ditto and Going Offline
-To explore Ditto without the commitment, authenticate using the playground identity:
-
-<Steps>
-    <Step>
-    If you want to use Ditto in an air-gapped environment that is entirely offline or on‑premises, contact Ditto Customer Engineering. (See [Contact Us](/support/contact-us))
-    </Step>
-    <Step>
-    From the [portal](https://portal.ditto.live/ "portal"), create your app and get your access credentials required for peer-to-peer offline sync. (See [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
-
-   <PlaygroundConnectExamples />
-  </Step>
-</Steps>
-
-
-## OnlineWithAuthentication Identity
-
-Ditto __does not come with an identity provider__. Using "Online With Authentication" requires that you have your own identity provider already set up. Each app can use multiple identity providers.
-
-The "Online With Authentication" identity type is geared towards apps that will be deployed in real world settings. "Online With Authentication" identity types are: 
-
-* for apps that need to integrate with existing permissions
-* for apps that need to integrate with existing authentication systems
-
-### How it works
-
-<Warning>>
-Devices using Online with Authentication need to connect to the Internet and
-authenticate at least once before synchronizing with other peers. This is
-required so devices can get a valid certificate before going offline.  
-</Warning>>
-
-To use the "Online With Authentication" system, your client application is expected to authenticate with your identity system and retrieve some sort of token _prior_ to syncing with Ditto. Often times this token is some sort of identity token, access token, commonly in the format of a JWT (JSON Web Token).
-
-
-Once your client application successfully has retrieved this token, it should pass it to the Ditto `authenticator` which will pass it to an authentication webhook. As the developer, you are responsible for writing code and deploying the this webhook to an accessible URL. The authentication webhook will validate and decode the token from the client side and return identity and access control information back to your Ditto instance. 
-
-The full flow is detailed in the diagram below:
-
-```mermaid
-sequenceDiagram
-    Client App->>Your Authentication Mechanism: Send Credentials
-    Your Authentication Mechanism->>Client App: Return JWT
-    Client App->>Ditto Big Peer: JWT
-    Ditto Big Peer->>Auth Webhook: JWT 
-    Auth Webhook->>Ditto Big Peer: Formatted Ditto Auth Response
-    Ditto Big Peer->>Client App: Ditto Credentials
-    rect rgba(0, 0, 255, .1)
-      Client App->Ditto Big Peer: Ditto Sync
-    end
-```
-
-### API
+Learn more about Ditto's authentication methods in [Authentication and Authorization](/key-concepts/authentication-and-authorization).
+## API
 
 To see fully working examples, see the [code samples on GitHub](https://github.com/getditto/examples-permission "code samples on GitHub").
 
@@ -570,5 +483,5 @@ For more information on how to design your app's permissions, see [Data Authoriz
 ​Now, the portal will attempt to reach this server. That means you must deploy it somewhere that this HTTP request is accessible. For testing, you can use a quick-deploy service such as Glitch.
 
 <Info>
-Please be sure that this endpoint is not behind a firewall or VPN. If you cannot get around this requirement [contact us](/support/contact-us).
+Please be sure that this endpoint is not behind a firewall or VPN. If you cannot get around this requirement [contact us](https://support.ditto.live/hc/en-us).
 </Info>

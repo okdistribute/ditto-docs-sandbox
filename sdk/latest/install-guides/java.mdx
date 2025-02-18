@@ -197,13 +197,34 @@ For instructions on how to obtain your access credentials, see [Getting SDK Conn
 </Step>
 </Steps>
 
+## Proguard
+When building a release version of an Android app with minification enabled, the app may crash at runtime due to ProGuard or R8 shrinking or obfuscating necessary code. To ensure the app runs smoothly in release builds, it's important to explicitly retain critical classes and methods. This can be achieved by adjusting your ProGuard rules to prevent essential code from being removed or altered during the minification process.
 
+To help identify issues caused by missing or obfuscated classes, here's a typical crash log that you might encounter when the necessary ProGuard rules are not applied:
 
+```
+java.lang.NoSuchMethodError: no static method "Llive/ditto/internal/swig/ffi/dittoffiJNI;.SwigDirector_Retainable_retain(Llive/ditto/internal/swig/ffi/Retainable;)”
+```
 
+To ensure optimal app performance when using the Ditto SDK, update your ProGuard rules to retain critical classes. Depending on the features you're using, you’ll need to add specific rules to prevent ProGuard from stripping essential code:
 
+**Ditto Native Bindings - Required for All Ditto SDK Use:**
 
+This rule ensures that all native bindings related to Ditto are preserved and available at runtime.
 
+```
+-keep class live.ditto.internal.swig.ffi.** { *; }
+```
 
+**Ditto Blanket Exclusion - Required for Presence**
 
+This rule retains all Ditto classes, which is essential for features like [Presence Viewer](/sdk/latest/sync/using-mesh-presence#presence-viewer), and ensures Jackson classes are preserved for proper JSON deserialization.
 
+```
+-keep class live.ditto.** { *; }
+-keepnames class com.fasterxml.jackson.** { *; }
+```
 
+- `keep class live.ditto.internal.swig.ffi.**` ensures that all classes and interfaces under the live.ditto.internal.swig.ffi package (including sub-packages) are retained.
+- `{ *; }` specifies that all members (fields, methods, constructors, etc.) of these classes should be preserved as well.
+- This rule prevents ProGuard from shrinking, obfuscating, or modifying these classes, ensuring that your app functions correctly in a minified release build.

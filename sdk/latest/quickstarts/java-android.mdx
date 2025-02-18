@@ -1,0 +1,60 @@
+---
+title: Java for Android Quickstart
+sidebarTitle: Java Android
+description: Get started quickly with Ditto using the Ditto Quickstart Applications
+icon: android
+iconType: solid
+---
+
+import {
+    QuickstartCloneTheRepoBody,
+    QuickstartSyncDataOfflineBody,
+    QuickstartConfigTitleAndAppIdBody
+} from '/snippets/quickstart-shared-components.mdx';
+import { java_4_9_api_link } from '/snippets/sdk-api-reference-links.mdx';
+
+## Prerequisites
+
+Ditto’s Java Android Quickstart supports **Android**. Before getting started, ensure
+you have the following:
+- [Android Studio](https://developer.android.com/studio) (Ladybug or later) installed
+- [Git](https://git-scm.com/) installed on your machine
+- A Ditto [Portal](https://portal.ditto.live) account with a configured Ditto Application (see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
+
+## Get Started
+
+### 1. Clone the Repository
+<QuickstartCloneTheRepoBody />
+
+### 2. Configure Ditto
+
+#### Get Ditto App ID and Playground Token
+<QuickstartConfigTitleAndAppIdBody />
+
+#### Add Ditto Credentials
+
+1. Navigate to `app/src/main/java/com/example/dittotasks/MainActivity.java`
+2. Update the following variables with the App ID and Playground Token from your Ditto Application
+    ```java
+    private String DITTO_APP_ID = "";
+    private String DITTO_PLAYGROUND_TOKEN = "";
+    ```
+
+### 3. Run the Application
+
+1. Launch Android Studio and open the `quickstart/android-java` directory
+2. In Android Studio, select a connected Android device, or create and launch an Android emulator and select it as the destination, then choose the `Run > Run 'app'` menu item.
+
+### 4. Sync-Data Offline
+
+<QuickstartSyncDataOfflineBody/>
+
+## Next Steps
+
+All the Ditto Quickstart apps works together! Try running a quickstart app in other languages and see them all collaborate.
+
+## Additional Resources
+
+- [Java Install Guide](/sdk/latest/install-guides/java)
+- <a href={java_4_9_api_link}>Java API Reference</a>
+- [Java Release Notes](/sdk/latest/release-notes/java)

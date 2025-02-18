@@ -1,0 +1,82 @@
+---
+title: JavaScript Web Quickstart
+sidebarTitle: JavaScript Web
+description: Get started quickly with Ditto using the Ditto Quickstart Applications
+icon: js
+iconType: solid
+---
+
+import {
+    QuickstartCloneTheRepoBody,
+    QuickstartSyncDataOfflineBody,
+    QuickstartConfigTitleAndAppIdBody
+} from '/snippets/quickstart-shared-components.mdx';
+import { js_4_9_api_link } from '/snippets/sdk-api-reference-links.mdx';
+
+## Prerequisites
+
+Ditto’s JavaScript Web Quickstart runs on modern web browsers. Before getting started, ensure you have the following:
+- A code editor (Visual Studio Code is our recommendation, but any code editor will work)
+- [Git](https://git-scm.com/) installed on your machine
+- [Node.js](https://nodejs.org/en/download) installed on your machine
+- A Ditto [Portal](https://portal.ditto.live) account with a configured Ditto Application (see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
+
+## Get Started
+
+### 1. Clone the Repository
+
+1. Open the terminal
+2. Clone the repository from GitHub.
+    ```script
+    git clone https://github.com/getditto/quickstart
+    ```
+3. Navigate to the project root directory:
+    ```script
+    cd quickstart
+    ```
+
+### 2. Configure Ditto
+
+#### Get Ditto App ID and Playground Token
+<QuickstartConfigTitleAndAppIdBody />
+
+#### Add Ditto Credentials
+
+1. Copy the `.env.template` file at the root of the `quickstart` repo to `.env` and add your app ID and online playground token.
+    ```shell
+    cp .env.sample .env
+    ```
+2. Update the `.env` file with the App ID and Playground Token from your Ditto Application
+    ```shell
+    DITTO_APP_ID="REPLACE_ME_WITH_YOUR_APP_ID"
+    DITTO_PLAYGROUND_TOKEN="REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN"
+    ```
+
+### 3. Run the Application
+
+1. Navigate to the project directory
+    ```shell
+    cd javascript-web
+    ```
+2. Install dependencies
+    ```shell
+    npm install
+    ```
+3. Run the Application
+    ```shell
+    npm start 2>/dev/null
+    ```
+
+### 4. Sync-Data Offline
+
+<QuickstartSyncDataOfflineBody/>
+
+## Next Steps
+
+All the Ditto Quickstart apps works together! Try running a quickstart app in other languages and see them all collaborate.
+
+## Additional Resources
+
+- [JavaScript Install Guide](/sdk/latest/install-guides/js)
+- <a href={js_4_9_api_link}>JavaScript API Reference</a>
+- [JavaScript Release Notes](/sdk/latest/release-notes/js)

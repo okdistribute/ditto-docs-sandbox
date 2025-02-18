@@ -8,20 +8,20 @@ iconType: solid
 Refer to any of the following to help you get back on track:
 
 <Info>
-    If you need technical support, submit a technical support request ticket. (See [Contact Us](/support/contact-us))
+    If you need technical support, submit a technical support request ticket. (See [Contact Us](https://support.ditto.live/hc/en-us))
 </Info>
 
 <CardGroup>
- <Card title="Obtaining and Analyzing the Debug Logs" icon="square-1" href="/support/troubleshooting#obtaining-and-analyzing-the-debug-logs" iconType="solid" horizontal/>
+ <Card title="Obtaining and Analyzing the Debug Logs" icon="square-1" href="#obtaining-and-analyzing-the-debug-logs" iconType="solid" horizontal/>
 
- <Card title="Synchronizing seems slow or comes to a halt over time" icon="square-2" href="/support/troubleshooting#synchronization-seems-slow-or-comes-to-a-halt-over-time" iconType="solid" horizontal/>
+ <Card title="Synchronizing seems slow or comes to a halt over time" icon="square-2" href="#synchronization-seems-slow-or-comes-to-a-halt-over-time" iconType="solid" horizontal/>
 
-<Card title="App is using too much memory, why?" icon="square-3" href="/support/troubleshooting#app-is-using-too-much-memory-why" iconType="solid" horizontal/>
+<Card title="App is using too much memory, why?" icon="square-3" href="#app-is-using-too-much-memory-why" iconType="solid" horizontal/>
 
-<Card title="Debugging Blocked Transactions" icon="square-4" href="/support/troubleshooting#debugging-blocked-transactions" iconType="solid" horizontal/>
+<Card title="Debugging Blocked Transactions" icon="square-4" href="#debugging-blocked-transactions" iconType="solid" horizontal/>
 
-<Card title="Causes of Blocked Transactions" icon="square-5" href="/support/troubleshooting#causes-of-blocked-transactions" iconType="solid" horizontal/>
-<Card title="Still stuck?" icon="square-5" href="/support/troubleshooting#still-stuck" iconType="solid" horizontal/>
+<Card title="Causes of Blocked Transactions" icon="square-5" href="#causes-of-blocked-transactions" iconType="solid" horizontal/>
+<Card title="Still stuck?" icon="square-5" href="#still-stuck" iconType="solid" horizontal/>
 </CardGroup>
 
 
@@ -479,13 +479,13 @@ Did you follow the [tutorial]()? The tutorial is your best guide for implementin
 ### Common mistakes
 
 1. `authenticationExpiringSoon` and `authenticationRequired` both need to be
-   implemented according to the [sample code](/support/troubleshooting).
+   implemented according to the sample code.
 2. Since callback objects are only invoked when Ditto initializes and the client authentication certificate expires, do not create subscriptions inside callbacks.
 3. Keep a strong reference to the AuthClient for the duration of the Ditto object, otherwise the auth handler will become garbage collected at an inappropriate time.
 </Warning>
 
 
-**Verify that your webhook provider name is **[**correctly copied in the Ditto portal**](/support/troubleshooting)**.**
+Verify that your webhook provider name is correctly copied in the Ditto portal.
 
 The provider name given to the Ditto Client must match a provider name in the Portal (e.g., `my-auth`).
 
@@ -639,7 +639,7 @@ namespace Sync {
 ## Synchronization seems slow, or comes to a halt over time
 
 - Ensure that you are only creating a fixed number of live queries, with a smaller amount of data. Do not use `findAll()` because you can sync more data than the small peer can reasonably handle.
-- Evict irrelevant data. You can evict all irrelevant once per day [Read more here](/support/troubleshooting).
+- Evict irrelevant data. You can evict all irrelevant once per day
 - Turn off verbose logging. Verbose logging can slow down replication considerably, especially with thousands of documents. Hence, it could look like that sync is stalling, but that can be indistinguishable from the logging mechanism slowing down ditto because it is trying to write too many lines.
 - Look at the size of your ditto directory. Is it very large? Large databases will be slower. Try to query less data.
 

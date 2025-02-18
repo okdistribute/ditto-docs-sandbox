@@ -1,0 +1,174 @@
+---
+title: Document Model
+description: Ditto stores data records as JSON-like documents. Internally these documents are CRDTs, which are a binary representation of JSON documents designed for automatic conflict resolution.
+icon: file-lines
+---
+
+## Document Structure
+
+Ditto documents are composed of field-and-value pairs and have the following structure:
+
+```json
+{
+   field1: value1,
+   field2: value2,
+   field3: value3,
+   ...
+   fieldN: valueN
+}
+```
+
+The value of a field can be any of the JSON data types, including other documents, arrays, and arrays of documents. For example, the following document contains values of varying types:
+
+```json
+{
+  _id: "0016d749-9a9b-4ece-8794-7f3eb40bc82e",
+  name: "John Doe",
+  age: 30,
+  email: "john.doe@example.com",
+  address: {
+    street: "123 Main St",
+    city: "Anytown",
+    state: "CA",
+    zip: "12345"
+  },
+  is_active: true,
+  created_at: "2021-01-01T00:00:00Z"
+}
+```
+
+The above fields have the following data types:
+
+- `_id`: `STRING`
+- `name`: `STRING`
+- `age`: `NUMBER`
+- `email`: `STRING`
+- `address`: `OBJECT`
+- `is_active`: `BOOLEAN`
+- `created_at`: `DATE`
+
+## Identifying Documents
+
+In Ditto, each document stored in a collection requires a unique `_id` field that acts as a primary key. If an inserted document omits the `_id` field, Ditto automatically generates a unique identifier for the `_id` field.
+
+Once set for a given document, the `_id` field cannot be changed. The same document contents inserted with a different `_id` will be treated as a new document within Ditto.
+
+The `_id` is required for all documents and can either be a string or an object.
+While generating a unique identifier is the default behavior, typically you will provide your own `_id` values represented as a more complex object (acting as a composite key).
+
+For example, the following document includes a `_id` field with a complex object:
+
+```json
+{
+  _id: {
+    orderId: "0016d749-9a9b-4ece-8794-7f3eb40bc82e"
+    locationId: "5da42ab5-d00b-4377-8524-43e43abf9e01"
+  },
+  ...
+}
+```
+
+You can then either query documents using the entire `_id` object or by breaking it down into its individual components.
+
+```sql DQL
+SELECT * 
+FROM orders 
+WHERE _id.locationId = '5da42ab5-d00b-4377-8524-43e43abf9e01'
+```
+
+```sql DQL
+SELECT * 
+FROM orders 
+WHERE _id = {'orderId': '0016d749-9a9b-4ece-8794-7f3eb40bc82e', 'locationId': '5da42ab5-d00b-4377-8524-43e43abf9e01'}
+```
+
+It is important to carefully consider the `_id` field when designing your data model, as this is used for authorization rules within Ditto. For more information, see [Authorization](/key-concepts/authentication-and-authorization).
+
+## Document Fields
+
+Documents are composed of fields, which are key-value pairs.
+
+### Field Names
+
+Similar to most document-oriented databases, you can only use `strings` to encode field names in documents.
+
+For complete naming rules, see [IDs, Paths, Strings, and Keywords](/dql/types-and-definitions.mdx#ids-paths-strings-and-keywords).
+
+### Field Values
+
+Field values can be encoded using various *data types*, including scalar types, providing flexibility in representing a wide range of information.
+
+<Warning>
+Avoid using `arrays` in Ditto.
+
+Due to potential merge conflicts when offline peers reconnect to the mesh and attempt to sync their updates, especially when multiple peers make concurrent updates to the same item within the` array`.
+
+Instead using a JSON object within a `MAP` allows you to automatically merge the contents of the `MAP` when offline peers reconnect to the mesh.
+</Warning>
+
+Each value of a field is stored as a specific CRDT type, for example a `MAP` or `REGISTER`.
+You can read more about CRDTs in [Syncing Data](/key-concepts/syncing-data#crdts).
+
+## Relationships
+
+There are several methods for linking related data items and organizing them for easy lookup:
+
+- Field referencing another document by `_id`.
+- Embedded JSON object within the document.
+
+### Foreign-Key Relationships
+
+To create a *foreign-key relationship*, store the primary key to one document within another document.
+
+A foreign-key relationship establishes a link between two or more datasets. For example, if you have two collections, `cars` and `owners`, where each car has a corresponding owner, every document in the `cars` collection would include a field containing the ID of a document in the `owners` collection.
+
+For example:
+```json Car
+{
+  "_id": "0016d749-9a9b-4ece-8794-7f3eb40bc82e",
+  "owner_id": "5da42ab5-d00b-4377-8524-43e43abf9e01"
+}
+```
+
+```json Owner
+{
+  "_id": "5da42ab5-d00b-4377-8524-43e43abf9e01",
+  "name": "John Doe"
+}
+```
+
+### Embedded Relationships
+
+An *embedded relationship* establishes a parent-child hierarchy between embedded data elements. In this hierarchy, the key functions as the parent, and its encapsulated values, represented as a set of key-value pairs, serve as children.
+
+For example:
+```json
+{
+  "_id": {
+    "vin": "JTMDF4EV0FD100869",
+    "make": "Toyota",
+    "model": "RAV4",
+    "year": 2015,
+  },
+  "details": {
+    "engine": {
+      "type": "Gasoline",
+      "displacement": "1.8L"
+    },
+    "interior": {
+      "seats": 5,
+      "color": "Black"
+    },
+    "features": {
+      "safety": {
+        "airbags": 6,
+        "antilockBrakes": true
+      },
+      "technology": {
+        "infotainment": "Touchscreen",
+        "navigation": true
+      }
+    }
+  }
+}
+```

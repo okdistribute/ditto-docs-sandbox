@@ -1,10 +1,12 @@
 ---
-title: Customizing Transport Configurations
+title: Customizing Transports
+description: This article provides instructions on explicitly configuring your Ditto instance to listen for connections on a specific port and to connect to remote instances using a host (IP) and port.
+icon: wrench
 ---
 
 import PlaygroundExamples from "/snippets/connect-examples/playground/playground-connect-examples.mdx"
 
-This article provides instructions on explicitly configuring your Ditto instance to listen for connections on a specific port and to connect to remote instances using a host (IP) and port.
+You can read more about the various transports that Ditto uses in [Mesh Networking](/key-concepts/mesh-networking#transports).
 
 <Info>
 Although Ditto automatically attempts to connect to other instances on the Local Area Network (LAN), Bluetooth Low Energy (LE), and Apple Wireless Direct Link (AWDL), supplying a `DittoTransportConfig` does *not* enable this feature by default.

@@ -1,0 +1,164 @@
+---
+title: Mesh Networking
+description: 'The _mesh_ is an underlay for data sync within Ditto, operating independently of your queries and sync subscriptions. Data updates propagate through the mesh automatically to devices with matching subscriptions.'
+icon: network-wired
+iconType: solid
+---
+
+Upon initiating the sync process by invoking the `startSync` function from the top-most scope of your app, peers with the same app ID immediately form a _mesh network_ using a mixture of communication transports, each with advantages and disadvantages. For example, Ditto prioritizes Wi-Fi for its high bandwidth and only falls back to Bluetooth LE when needed, in case of poor connectivity.
+
+Unlike typical home networks — which represent a star topology where all devices connect directly to a central router, switch, or access point — a peer-to-peer mesh network offers multiple pathways for communication.
+
+Here's a quick video explaining the various network transports:
+
+<iframe width="100%" height="420" src="https://www.youtube.com/embed/SzbqsL4KCBE" title="Network Transports Overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Mesh Formation
+
+When an end user launches your app, the first thing they do is observe how quickly it syncs the latest information.
+
+Ditto understands this. When sync begins, it uses all transports aggressively to locate and connect to multiple potential peers using the same app ID concurrently. At the same time, the existing peers notice the newcomer's arrival. If there is capacity, they will also establish connections to the new device.
+
+Together these processes ensure that a new peer is integrated into the mesh as quickly as possible.
+
+<Frame>
+<img src="/images/v4.9/image-13.png" />
+</Frame>
+
+A mobile phone has a finite battery life; therefore, after the initial burst of activity, Ditto adapts to become more efficient.
+
+Each additional LAN connection consumes more CPU time but also depletes radio energy. Bluetooth Low Energy (LE) faces particularly stringent constraints — devices can only handle a few concurrent connections, and each connection initiation can take several seconds.
+
+In larger meshes, Ditto limits the number of interconnections and chooses them wisely to optimize overall efficiency.
+
+<Frame>
+<img src="/images/v4.9/image-14.png" />
+</Frame>
+
+At the same time, Ditto must not have too *few* connections; otherwise, *islanding* can occur.
+
+*Islanding* refers to the isolation of different groups of devices within the same network. Put another way, it's a scenario where different groups of devices, located in the same logical area, are connected in individual clusters — if there is no connection between those groups, they will not sync data.
+
+Ditto uses the following two techniques to prevent islanding, neither of which requires central coordination:
+
+- Maintaining a reasonably dense mesh to minimize the likelihood of island formation.
+- Implementing a *random connection churn*, where devices periodically change their connections to different peers. This implementation ensures that even if an island forms, it is likely to be transient and only last a few seconds.
+
+<Frame>
+<img src="/images/v4.9/image-15.png" />
+</Frame>
+
+It might sound complex, but there's no need to worry. All of these functionalities are integrated directly into Ditto, and your app will handle them automatically. You simply need to embed the Ditto SDK into your application, and Ditto will ensure connectivity between your devices seamlessly.
+
+## Transports
+
+Ditto leverages an array of _communication transports_, supporting a variety of use cases and end-user devices. Communication transports are networking protocols that facilitate data transmission across different environments. For instance, using the local area network (LAN) transport for data movement in an office-like setting.
+
+Which transports Ditto supports depends on what kind of device or Small Peer SDK you are using, for example:
+
+- A mobile phone can use Bluetooth LE, LAN, P2P Wi-Fi, and WebSockets.
+- A web app running in a browser can use WebSockets.
+- A Raspberry Pi can use Bluetooth LE, LAN, and WebSockets.
+
+Most transports are configured automatically, however you will need to provide the Big Peer URL when initializing the Ditto SDK.
+You can learn more about configuring transports within your application in [Customizing Transports Configurations](/sdk/latest/sync/customizing-transport-configurations).
+
+### WebSockets
+
+WebSockets are a communication transport that allows for real-time, bidirectional communication between a client and a server. In the context of Ditto, WebSockets are used to connect your data in the mesh with a centralized cloud database, called the Big Peer.
+
+<Frame>
+<img src="/images/v4.9/gif-1.gif" />
+</Frame>
+
+Synchronizing with the Big Peer is especially important for those who want to use Ditto in non-peer-to-peer deployments, such as when using a web browser, or when integrating with systems that are not part of the mesh, like MongoDB Atlas.
+
+It is also possible to use WebSockets to connect to a local server running the Ditto SDK directly, to provide additional resiliency and performance in your mesh for mission-critical systems.
+For more on Big Peer, see: [Cloud Platform Overview](/cloud/overview)
+
+### Bluetooth Low Energy
+
+Ditto utilizes both traditional Wi-Fi and Bluetooth Low Energy (LE) to maintain a continuous mesh network of Transmission Control Protocol (TCP) connections.
+
+Bluetooth LE technology forms low-powered and high-distance connections between devices, making it highly performant in offline scenarios when replicating small amounts of data.
+
+<Info>
+In the event of a Wi-Fi network disruption, such as a router getting disconnected, Ditto does not automatically try to establish a new independent Bluetooth LE connection as a fallback.
+
+Instead, Ditto actively works to maintain the previously established Wi-Fi and Bluetooth LE connections where possible.
+</Info>
+
+The following visual overview illustrates how Ditto uses Bluetooth LE to form low-powered, high-distance connections between peer devices.
+
+<Info>
+The distances and bandwidth limitations and capacities illustrated in the video are approximations and vary depending on the Bluetooth® firmware installed on the device.
+</Info>
+
+<Frame>
+<img src="/images/v4.9/gif-2.gif" />
+</Frame>
+
+### Peer-to-Peer Wi-Fi
+
+Available to most devices, standard peer-to-peer Wi-Fi enables direct, point-to-point connections between peers without requiring traditional network infrastructure like a centralized server, router, or access point.
+
+In addition to standard peer-to-peer Wi-Fi, Ditto incorporates a customized multiplexer to increase frequency, speed, and efficiency of data transmission between peers participating in the mesh.
+
+The following table provides an overview of the Wi-Fi technologies Ditto supports:
+
+| **Platform** | **Ditto-Supported Technology**    |
+| ------------ | --------------------------------- |
+| Apple        | Apple Wireless Direct Link (AWDL) |
+| Android      | Wi-Fi Aware                       |
+
+The following video illustrates Ditto’s sophisticated and decentralized approach to peer-to-peer Wi-Fi connections between distributed peers connected in the mesh network:
+
+<Info>
+The maximum distance of a connection can vary depending on the specific peer-to-peer transport type being used.
+</Info>
+
+<Frame>
+<img src="/images/v4.9/gif-3.gif" />
+</Frame>
+
+### Local Area Network
+
+When devices are connected over the same Wi-Fi access point or through other means like an Ethernet cable, they can take advantage of a local area network (_LAN_), if available, to communicate directly with each other without requiring internet access.
+
+A LAN is an interconnected network made up of devices that are physically near each other, such as a home, enterprise, or college campus.
+
+### Configuring Transports
+
+Ditto should work out-of-the-box with the default transport configuration for most use cases. For instructions on customizing the transport configuration, see [Customizing Transports Configurations](/sdk/latest/sync/customizing-transport-configurations).
+
+## Ditto Multiplexer
+
+Ditto incorporates a *multiplexer* inside the peer-to-peer mesh network to facilitate data sync.
+
+Developed by Ditto, the multiplexer is an intelligent sync machine that seamlessly switches between active transport types as needed, without duplicating data.
+
+In addition, the multiplexer breaks down data packets into small fragments and then, once received on the other side, reassembles them.
+
+### Rainbow Connection
+
+When the transports collaborate in parallel and the multiplexer automatically switches between them to establish the most optimal connection, these diverse transport types collectively form what is known as the _rainbow connection _— each color of the rainbow symbolizes a different transport type:
+
+<iframe width="100%" height="420" src="https://www.youtube.com/embed/8_A1CkYfzoM" title="1.2 Intro to Ditto: The Rainbow Connection" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Presence Graph
+
+Independent of the internet, Ditto syncs data among peers by establishing sessions and forming a mesh network using all available network transports on a device. In this process, discovered peers create a _presence graph_ by advertising and forming connections.
+
+<Info>
+For more information on how to use the presence graph within your application, see [Using Mesh Presence](/sdk/latest/sync/using-mesh-presence).
+</Info>
+
+Much like a conventional city map with roads, the presence graph is like a guide for peers, helping them determine the shortest and fastest paths to route updates from point A to B.
+
+If an intermediate peer becomes unavailable, the presence graph facilitates route updates, ensuring continuous connectivity similar to navigation apps like Google Maps. This flexibility allows the multihop links, established during the flood-fill process, to adapt as devices join and leave the mesh network.
+
+Represented by different colors in the following graphic, available transports establish multiple active connections simultaneously within the mesh:
+
+<Frame>
+<img src="/images/v4.9/image-11.png" />
+</Frame>

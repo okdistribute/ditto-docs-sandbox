@@ -11,34 +11,57 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Home",
+        "tab": "Getting Started",
         "groups": [
           {
-            "group": "Home",
+            "group": "Getting Started",
             "pages": [
               "home/introduction",
               "home/about-ditto"
+            ]
+          },
+          {
+            "group": "Key Concepts",
+            "pages": [
+              "key-concepts/apps-and-collections",
+              "key-concepts/document-model",
+              "key-concepts/accessing-data",
+              "key-concepts/syncing-data",
+              "key-concepts/authentication-and-authorization",
+              "key-concepts/mesh-networking"
+            ]
+          },
+          {
+            "group": "Additional Resources",
+            "pages": [
+              "/home/glossary",
+              "/home/faq"
             ]
           }
         ]
       },
       {
-        "tab": "SDK",
+        "tab": "Build with the SDK",
+        "description": "Learn to build applications using the Ditto SDK",
+        "icon": {
+          "name": "laptop-mobile",
+          "style": "solid"
+        },
         "versions": [
           {
             "version": "4.9",
             "groups": [
               {
-                "group": "Getting Started",
+                "group": "Installing the SDK",
                 "pages": [
+                  "sdk/latest/install-guides/install-guides",
                   {
-                    "group": "Install Guides",
+                    "group": "Languages",
                     "icon": {
-                      "name": "download",
+                      "name": "code",
                       "style": "solid"
                     },
                     "pages": [
-                      "sdk/latest/install-guides/install-guides",
                       "sdk/latest/install-guides/swift",
                       "sdk/latest/install-guides/kotlin",
                       "sdk/latest/install-guides/js",
@@ -48,109 +71,55 @@
                       "sdk/latest/install-guides/c-sharp",
                       "sdk/latest/install-guides/cpp",
                       "sdk/latest/install-guides/rust",
-                      {
-                        "group": "Flutter",
-                        "icon": {
-                          "name": "flutter",
-                          "style": "solid"
-                        },
-                        "pages": [
-                          "sdk/latest/install-guides/flutter",
-                          "sdk/latest/install-guides/flutter/quick-start",
-                          "sdk/latest/install-guides/flutter/roadmap"
-                        ]
-                      }
+                      "sdk/latest/install-guides/flutter"
                     ]
-                  }
+                  },
+                   "sdk/latest/quickstarts/mongodb-migrationguide"
                 ]
               },
               {
-                "group": "Data",
+                "group": "Accessing Data",
                 "pages": [
-                  {
-                    "group": "Document Model",
-                    "icon": {
-                      "name": "folder-tree",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "sdk/latest/document-model/fields",
-                      "sdk/latest/document-model/Collections",
-                      "sdk/latest/document-model/identifiers",
-                      "sdk/latest/document-model/relationships"
-                    ]
-                  },
-                  {
-                    "group": "Data Types",
-                    "icon": {
-                      "name": "share-nodes",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "sdk/latest/data-types/register",
-                      "sdk/latest/data-types/map",
-                      "sdk/latest/data-types/attachment"
-                    ]
-                  },
-                  {
-                    "group": "Data Store CRUD",
-                    "icon": {
-                      "name": "database",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "sdk/latest/crud/create",
-                      "sdk/latest/crud/read",
-                      "sdk/latest/crud/update",
-                      "sdk/latest/crud/delete",
-                      "sdk/latest/crud/observing-data-changes"
-                    ]
-                  },
-                  {
-                    "group": "Syncing Data",
-                    "icon": {
-                      "name": "rotate",
-                      "style": "solid"
-                    },
-                    "pages": [
-                      "sdk/latest/sync/start-and-stop-sync",
-                      "sdk/latest/sync/syncing-data",
-                      "sdk/latest/sync/mongodb-connector",
-                      "sdk/latest/sync/using-mesh-presence",
-                      {
-                        "group": "Advanced Customization",
-                        "pages": [
-                          "sdk/latest/sync/customizing-transport-configurations",
-                          "sdk/latest/sync/creating-sync-groups",
-                          "sdk/latest/sync/handling-connection-requests",
-                          {
-                            "group": "Using Alert System",
-                            "pages": [
-                              "sdk/latest/sync/using-alter-system",
-                              "sdk/latest/sync/managing-redundant-bluetooth-le-connections"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "group": "Sync Concepts",
-                        "pages": [
-                          "sdk/latest/sync/concepts/mesh-networking-101",
-                          "sdk/latest/sync/concepts/transports-overview",
-                          "sdk/latest/sync/consistency-models"
-                        ]
-                      }
-                    ]
-                  }
+                  "sdk/latest/crud/create",
+                  "sdk/latest/crud/read",
+                  "sdk/latest/crud/update",
+                  "sdk/latest/crud/delete",
+                  "sdk/latest/crud/working-with-attachments",
+                  "sdk/latest/crud/observing-data-changes"
                 ]
               },
               {
-                "group": "Security",
+                "group": "Syncing Data",
+                "icon": {
+                  "name": "rotate",
+                  "style": "solid"
+                },
+                "pages": [
+                  "sdk/latest/sync/start-and-stop-sync",
+                  "sdk/latest/sync/syncing-data"
+                ]
+              },
+              {
+                "group": "Authentication and Authorization",
                 "pages": [
                   "sdk/latest/auth-and-authorization/cloud-authentication",
-                  "sdk/latest/auth-and-authorization/shared-key",
-                  "sdk/latest/auth-and-authorization/data-authorization",
-                  "sdk/latest/auth-and-authorization/certificate-based-security"
+                  "sdk/latest/auth-and-authorization/data-authorization"
+                ]
+              },
+              {
+                "group": "Managing the Mesh",
+                "pages": [
+                  "sdk/latest/sync/using-mesh-presence",
+                  "sdk/latest/sync/customizing-transport-configurations",
+                  "sdk/latest/sync/handling-connection-requests"
+                ]
+              },
+              {
+                "group": "Advanced",
+                "pages": [
+                  "sdk/latest/sync/using-alter-system",
+                  "sdk/latest/sync/managing-redundant-bluetooth-le-connections",
+                  "sdk/latest/troubleshooting"
                 ]
               },
               {
@@ -601,6 +570,11 @@
       },
       {
         "tab": "Query Language (DQL)",
+        "icon": {
+          "name": "file-magnifying-glass",
+          "style": "regular"
+        },
+        "description": "Learn to query data using DQL",
         "groups": [
           {
             "group": "Clauses",
@@ -639,6 +613,11 @@
       },
       {
         "tab": "Cloud Platform",
+        "description": "Integrate with the Ditto Cloud Platform",
+        "icon": {
+          "name": "cloud",
+          "style": "regular"
+        },
         "groups": [
           {
             "group": "Overview",
@@ -719,6 +698,10 @@
       },
       {
         "tab": "Best Practices",
+        "icon": {
+          "name": "list-check",
+          "style": "regular"
+        },
         "groups": [
           {
             "group": "Best Practices",
@@ -890,24 +873,6 @@
             ]
           }
         ]
-      },
-      {
-        "tab": "Support",
-        "groups": [
-          {
-            "group": "Support",
-            "pages": [
-              "support/contact-us",
-              "support/knowledge-base",
-              "support/troubleshooting",
-              "support/faq",
-              "support/proguard-rules-for-android",
-              "support/mongodb-migrationguide",
-              "support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
-              "support/Glossary"
-            ]
-          }
-        ]
       }
     ]
   },
@@ -926,13 +891,13 @@
   "navbar": {
     "links": [
       {
-        "label": "Log in",
-        "href": "https://portal.ditto.live/login?_gl=1*1bow2wn*_ga*NTY3MzI4MDE4LjE3Mjc3NjM2Njg.*_ga_D8PMW3CCL2*MTcyNzc2MzY2Ny4xLjAuMTcyNzc2MzY2Ny42MC4wLjA."
+        "label": "Support",
+        "href": "https://support.ditto.live/hc/en-us"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Get Started",
+      "label": "Start for Free!",
       "href": "https://portal.ditto.live/create-account?_gl=1*1bow2wn*_ga*NTY3MzI4MDE4LjE3Mjc3NjM2Njg.*_ga_D8PMW3CCL2*MTcyNzc2MzY2Ny4xLjAuMTcyNzc2MzY2Ny42MC4wLjA."
     }
   },
@@ -1084,6 +1049,86 @@
     {
       "source": "/cloud/portal/getting-playground-token-credentials",
       "destination": "/cloud/portal/getting-sdk-connection-details"
+    },
+    {
+      "source": "/support/Glossary",
+      "destination": "/home/glossary"
+    },
+    {
+      "source": "/support/faq",
+      "destination": "/home/faq"
+    },
+    {
+      "source": "/support/contact-us",
+      "destination": "https://support.ditto.live/hc/en-us"
+    },
+    {
+      "source": "/sdk/latest/auth-and-authorization/shared-key",
+      "destination": "/key-concepts/authentication-and-authorization#shared-key-authentication"
+    },
+    {
+      "source": "/sdk/latest/data-types/map",
+      "destination": "/key-concepts/syncing-data#maps"
+    },
+    {
+      "source": "/sdk/latest/data-types/register",
+      "destination": "/key-concepts/syncing-data#registers"
+    },
+    {
+      "source": "/sdk/latest/data-types/attachment",
+      "destination": "/key-concepts/syncing-data#attachments"
+    },
+    {
+      "source": "/sdk/latest/document-model/Collections",
+      "destination": "/key-concepts/apps-and-collections"
+    },
+    {
+      "source": "/sdk/latest/document-model/field",
+      "destination": "/key-concepts/document-model#document-fields"
+    },
+    {
+      "source": "/sdk/latest/document-model/identifiers",
+      "destination": "/key-concepts/document-model#identifying-documents"
+    },
+    {
+      "source": "/sdk/latest/document-model/relationships",
+      "destination": "/key-concepts/document-model#relationships"
+    },
+    {
+      "source": "/sdk/latest/sync/concepts/mesh-networking-101",
+      "destination": "/key-concepts/mesh-networking"
+    },
+    {
+      "source": "/sdk/latest/sync/concepts/transports-overview",
+      "destination": "/key-concepts/mesh-networking#transports"
+    },
+    {
+      "source": "/sdk/latest/sync/consistency-models",
+      "destination": "/key-concepts/syncing-data#causal-consistency"
+    },
+    {
+      "source": "/sdk/latest/sync/creating-sync-groups",
+      "destination": "/sdk/latest/sync/handling-connection-requests#sync-groups"
+    },
+    {
+      "source": "/support/knowledge-base",
+      "destination": "/home/troubleshooting"
+    },
+    {
+      "source": "/support/troubleshooting",
+      "destination": "/home/troubleshooting"
+    },
+    {
+      "source": "/support/migrating-authentication-and-authorization-from-atlas-device-sync-to-ditto",
+      "destination": "/sdk/latest/quickstarts/mongodb-migrationguide#ditto-auth-vs-device-sync-auth"
+    },
+    {
+      "source": "/support/proguard-rules-for-android",
+      "destination": "/sdk/latest/install-guides/kotlin#proguard"
+    },
+    {
+      "source": "/support/mongodb-migrationguide",
+      "destination": "/sdk/latest/quickstarts/mongodb-migrationguide"
     }
   ]
 }

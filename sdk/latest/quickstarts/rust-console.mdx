@@ -1,0 +1,68 @@
+---
+title: Rust Console App Quickstart
+sidebarTitle: Rust Console App
+description: Get started quickly with Ditto using the Ditto Quickstart Applications
+icon: rust
+iconType: solid
+---
+
+import {
+    QuickstartCloneTheRepoBody,
+    QuickstartSyncDataOfflineBody,
+    QuickstartConfigTitleAndAppIdBody
+} from '/snippets/quickstart-shared-components.mdx';
+import { rust_4_9_api_link } from '/snippets/sdk-api-reference-links.mdx';
+
+## Prerequisites
+
+Ditto’s Rust Console App Quickstart supports **Windows**, **macOS** and **Linux**. Before getting started, ensure you have the following:
+- [Git](https://git-scm.com/) installed on your machine
+- [Rust](https://rustup.rs/) development tools installed on your machine
+- A Ditto [Portal](https://portal.ditto.live) account with a configured Ditto Application (see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
+
+## Get Started
+
+### 1. Clone the Repository
+<QuickstartCloneTheRepoBody />
+
+### 2. Configure Ditto
+
+#### Get Ditto App ID and Playground Token
+<QuickstartConfigTitleAndAppIdBody />
+
+#### Add Ditto Credentials
+
+1. Copy the `.env.template` file at the top level of the `quickstart` repo to `.env` and add your app ID and online playground token.
+    ```shell
+    cp .env.sample .env
+    ```
+2. Update the `.env` file with the App ID and Playground Token from your Ditto Application
+    ```shell
+    DITTO_APP_ID="REPLACE_ME_WITH_YOUR_APP_ID"
+    DITTO_PLAYGROUND_TOKEN="REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN"
+    ```
+
+### 3. Run the Application
+
+1. Navigate to the project directory
+    ```shell
+    cd rust-tui
+    ```
+2. Run the Application
+    ```shell
+    cargo run 2>/dev/null
+    ```
+
+### 4. Sync-Data Offline
+
+<QuickstartSyncDataOfflineBody/>
+
+## Next Steps
+
+All the Ditto Quickstart apps works together! Try running a quickstart app in other languages and see them all collaborate.
+
+## Additional Resources
+
+- [Rust Install Guide](/sdk/latest/install-guides/rust)
+- <a href={rust_4_9_api_link}>Rust API Reference</a>
+- [Rust Release Notes](/sdk/latest/release-notes/rust)

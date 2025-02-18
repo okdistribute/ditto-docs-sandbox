@@ -1,0 +1,549 @@
+---
+title: Working with Attachments
+description: "This article provides an overview and how-to instructions for working with attachments within Ditto. Attachments in Ditto are represented using the ATTACHMENT data type, which you can use to store binary data, such as images, alongside queryable descriptive information, such as file name and description."
+icon: "paperclip"
+---
+
+See [Syncing Data](/key-concepts/syncing-data#attachments) for more information on attachments in Ditto.
+
+## ATTACHMENT Object
+
+The ATTACHMENT object, shown on the right, stores your attachment outside the local device, is not directly visible in your code, and consists of _metadata_ and a binary large object (_blob_) store.
+
+- The metadata component is a set of string values providing extra details about the file or complex document, such as name and size, among other identifying information.
+- The blob store is an array of bytes representing your large file or complex document encoded as an ATTACHMENT data type. (See [Blob Store](#blob-store))
+
+<Frame>
+    <img src="/images/v4.9/datatype-1.webp"/>
+</Frame>
+
+<Accordion
+    title="For example..."
+>
+The following snippet in JSON demonstrates the structure of an ATTACHMENT object storing a JPEG file named "car\_stock\_photo.jpg":
+
+In this structure:
+
+- The blob encodes the image.
+- The metadata contains extra details about the binary contents, including its Multipurpose Internet Mail Extension (_MIME_) type and name as a set of `string` values.
+
+```json Structure
+{
+    "blob": [...], // array of bytes
+    "metadata": {
+        "mime_type": "image/jpeg",
+        "name": "car_stock_photo.jpg"
+    }
+}
+```
+
+<Info>
+MIME, also known as *internet media type*, is a standard identifier for specifying the structure and format of a document or file. It enables web browsers and other software systems to interpret and handle binary data appropriately when transmitting it over the internet. (See the official [MDN Web Docs > MIME types (IANA media types)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types "MDN Web Docs > MIME types (IANA media types)"))
+</Info>
+</Accordion>
+
+## Attachment Token
+
+The attachment token, shown on the right, encapsulates information Ditto uses to identify and retrieve the full attachment when needed; as in, you've explicitly fetched it in your app.
+
+<Frame>
+    <img src="/images/v4.9/datatype-2.webp"/>
+</Frame>
+
+<Accordion title="For example...">
+Here is an attachment token structured within a document. In this structure, the picture attachment token acts as a placeholder for the full attachment storing a JPEG file named car\_stock\_photo.jpg:
+
+```json Document
+{
+    "_id": "abc123",
+    "make": "Hyundai",
+    "year": 2018,
+    "color": "black",
+    "picture": {
+        "id": "<unique identifier>",
+        "metadata": {
+            "mime_type": "image/jpeg",
+            "name": "car_stock_photo.jpg",
+        },
+        "len": 123
+    }
+}
+```
+
+</Accordion>
+
+### Schema
+
+The following structure and corresponding table provide an overview of the schema the attachment token uses to model the data it contains:
+
+```json JSON
+{
+  "id": "string",
+  "len": 42,
+  "metadata": {}
+}
+```
+
+Here are the attachment token properties you can query to increase the efficiency of fetching operations in your app:
+
+| **Field** | **Detail**    | **Description**                                                                                                  |
+| --------- | ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| id        | Attachment ID | A cryptographic hash of the attachment's binary contents. (See [Organizing by ID](#organizing-by-id)) |
+| len       | Blob Length   | The size of the blob data in terms of length (len) in bytes. (See [Blob Store](#blob-store))    |
+| metadata  | Metadata      | Additional information about the attachment, such as its name, type, and so on.                                  |
+
+## Blob Store
+
+A JSON blob stores binary data representing any file type. For example, it can store image files like JPEG, PNG, and TIFF; video files such as MP4; audio files, including MP3 and WAV; document files like PDF; and more.
+
+The metadata is stored in the document, while the blob is stored in a dedicated location independent of documents. The following table provides an overview of blob storage locations:
+
+| **Type**   | **Blob Store Location**                                                                                                                                                                       |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Small Peer | - If running in the browser or a server-based system, in-memory storage. Specifically, within Random Access Memory (RAM). - If running on a mobile device like an iPhone, filesystem storage. |
+| Big Peer   | Cloud object storage service: Amazon WebServices (AWS) Simple Storage Service (S3).                                                                                                           |
+
+### Organizing by ID
+
+Ditto organizes and stores blob data using the content-addressable network (_CAN_) paradigm. CAN is a distributed network architecture widely implemented in decentralized systems like Ditto's where scalability, efficiency, and fault tolerance are essential requirements. (See the official [_Content-Addressable Network_](https://en.wikipedia.org/wiki/Content-addressable_network "Content-Addressable Network") Wikipedia article.)
+
+In more straightforward terms, Ditto organizes and accesses attachment data by the cryptographic _hash table_ of its contents — for instance, attachment ID — rather than its physical location. A hash table is a data structure that stores key-value pairs.
+
+By adhering to the CAN framework for attachment management, Ditto stores and retrieves data efficiently. For instance:
+
+- _Deduplication_ — If the same blob is created multiple times, Ditto stores only one copy. Similarly, if an attachment is added to multiple documents, they all reference the same blob.
+- _Conflict-free_ _s\*\*ync_ — Blobs are stored based on the cryptographic hash of their contents, ensuring that conflicts are effectively impossible.
+- _Decentralized_ — No central server is required to manage attachments. They can be created and accessed concurrently throughout the network, even with intermittent connectivity.
+
+### Purging Blob Data
+
+Blob storage is managed internally using a reference-counting process known as _garbage collection_.
+
+The garbage collection process running periodically in the background of Small Peers frees up space by removing blobs that no longer have any references — once an attachment has no remaining references, its blob is considered safe to remove, and the garbage collection process clears it from the device.
+
+### Syncing ATTACHMENT Objects
+
+The two components comprising an ATTACHMENT object — metadata stored internally within a document and blob data storing the actual binary data of your attachment — sync in different ways:
+
+- Metadata syncs just as any other document.
+- Blob data syncs with an entirely different protocol than documents; one that is asynchronous and built on top of Ditto's rainbow connection technology and optimizes for large binary data transfer. (See [Mesh Networking](/key-concepts/mesh-networking))
+
+Attachment blob sync being asynchronous provides three key advantages:
+
+- Unblocking fetching operations so the document continues syncing without interruption when retrieving an attachment.
+- Ditto multiplexes between these independent activities to balance needs for low latency and high throughput at the edge.
+- Blob sync is resilient, so if connectivity is interrupted while transferring an attachment, progress is not lost. Once restored or if another peer possesses the attachment, Ditto resumes the transfer from the point of interruption.
+
+Blob sync remains performant — Ditto uses data structures like _Bloom filters_ to scale efficiently and remain light on system resources.
+
+Bloom filters are randomized data structures designed to represent sets in a compressed form, making them highly effective in peer-to-peer environments where concerns such as memory usage and accuracy are prevalent. (See the official [_Bloom filter_](https://en.wikipedia.org/wiki/Bloom_filter "Bloom filter") Wikipedia article.)
+
+### Garbage Collection
+
+When an attachment token stored on a Small Peer end-user device is unused, meaning there are no remaining references to it, the _garbage collection_ process running periodically in the background automatically deletes it to free up space.
+
+Garbage collection is a reference-counting process that only runs on Small Peer devices (not on the Big Peer cloud deployment). It involves scanning for objects, including blob objects, that are no longer needed or relevant and are therefore safe to delete from its device.
+
+The Big Peer stores its data in Ditto's third-party cloud object storage service provider, Amazon WebServices (AWS) Simple Storage Service (S3). For more information, see the official [_Amazon Simple Storage Service Documentation_](https://docs.aws.amazon.com/s3/ "Amazon Simple Storage Service Documentation").
+
+### Lazy-Load Retrieval Pattern
+
+Since the blob representing your large file is stored outside the local Ditto store, fetch it only when needed. This on-demand retrieval pattern, known as _lazy loading_, reduces resource usage on end-user devices.
+
+For a realworld usage scenario, see either the demo chat app for iOS or Android in the getditto > [demoapp-chat](https://github.com/getditto/demoapp-chat/tree/main "demoapp-chat") GitHub repository. For instance, in the [iOS demo chat app](https://github.com/getditto/demoapp-chat/tree/main/iOS "iOS demo chat app"), you can see a savvy implementation of ATTACHMENT with a full-resolution avatar image from a collection named User.
+
+## Creating Attachments
+
+There are two separate steps in the process of creating an attachment:
+
+<Steps>
+<Step>
+
+Create the attachment in the Ditto store. ([Initiating ATTACHMENT Objects](#initiating-attachment-objects))
+
+</Step>
+<Step>
+
+Reference the returned attachment token in a document. ([Referencing Attachment Tokens](#referencing-attachment-tokens))
+
+</Step>
+</Steps>
+
+<Info>
+For a realworld usage scenario, see either the demo chat app for iOS or Android in the getditto > [demoapp-chat](https://github.com/getditto/demoapp-chat/tree/main "demoapp-chat") GitHub repository.
+</Info>
+
+### Initiating ATTACHMENT Objects
+
+To create the ATTACHMENT object that encodes the actual contents of the file to store externally, call the `newAttachment` method on the `store` namespace.
+
+<Accordion
+    title="When creating an attachment..."
+>
+<Note>
+    When creating an attachment, provide a valid path to the large file or deeply embedded document you want to encode as an ATTACHMENT. Failure to do so may result in errors related to input-output (IO) operations.
+</Note>
+<Info>
+    Storing an attachment in the local Ditto store (instead of externally) is currently only available in the Ditto SDK for JavaScript.
+</Info>
+<Info>
+To use a DQL type other than a REGISTER — the default data type in Ditto — you must explicitly specify the type in your query; otherwise, Ditto defaults to the REGISTER type for every document property.
+</Info>
+
+</Accordion>
+
+<CodeGroup>
+
+```swift Swift
+let newAttachment = try await ditto.store.newAttachment(path: filePath)
+```
+
+```kotlin Kotlin
+val attachment = runBlocking { ditto.store.newAttachment(attachmentPathOrInputStream, attachmentMetadata) }
+```
+
+```javascript JS
+const newAttachment = await ditto.store.newAttachment(filePathOrData)
+```
+
+```java Java
+DittoAttachment attachment = ditto.store.newAttachment(attachmentPathOrInputStream, attachmentMetadata);
+```
+
+```csharp C#
+var newAttachment = await ditto.Store.NewAttachmentAsync(path: filePath);
+```
+
+```cpp C++
+auto attachment = ditto.get_store().new_attachment("/path/to/my/file.pdf");
+```
+
+```rust Rust
+let filePath: std::path::Path = // ...
+let metadata = Default::default();
+let attachment = ditto.store().new_attachment(&filePath, metadata)?;
+```
+
+```dart Dart
+final newAttachment = ditto.store.newAttachment("/path/to/my/file.pdf");
+```
+
+</CodeGroup>
+
+### Adding Optional Metadata
+
+If desired, enclose extra information about the attachment, such as name and description. This metadata is useful for attachment fetching operations.
+
+If you want to include information about the attachment, such as the attachment filename, as shown in the following snippet, a description, and other relevant details, enclose it in a metadata object as key-value pairs.
+
+<CodeGroup>
+
+```swift Swift
+let metadata = ["name": "image.png"]
+let newAttachmentWithMetadata = try await ditto.store.newAttachment(path: filePath, metadata: metadata)
+```
+
+```kotlin Kotlin
+val attachmentMetadata = mapOf("name" to attachmentFileName)
+val attachment = runBlocking { ditto.store.newAttachment(attachmentPathOrInputStream, attachmentMetadata) }
+```
+
+```javascript JS
+const metadata = { "name": "image.png" }
+const newAttachment = await ditto.store.newAttachment(imageBytes, metadata)
+```
+
+```java Java
+Map<String, String> metadata = new HashMap<>();
+metadata.put("name", "image.png");
+
+DittoAttachment attachment = ditto.store.newAttachment(attachmentPathOrInputStream, metadata);
+```
+
+```csharp C#
+var metadata = new Dictionary<string, string>()
+{
+    { "name", "image.png" }
+};
+var newAttachmentWithMetadata = await Ditto.Store.NewAttachmentAsync(filePath, metadata);
+```
+
+```cpp C++
+auto attachment = ditto.get_store().new_attachment("/path/to/my/file.pdf", {
+    {"name", "image.png"}
+});
+```
+
+```rust Rust
+let metadata = std::collections::HashMap::from_iter([
+    ("name".into(), "image.png".into()),
+]);
+
+let filePath: std::path::Path = // ...
+let attachment = ditto.store().new_attachment(&filePath, metadata)?;
+```
+
+```dart Dart
+final attachment = ditto.store.newAttachment(
+  "/path/to/my/file.pdf",
+  {"name": "image.png"},
+);
+```
+
+</CodeGroup>
+
+For example, in the following snippet, the metadata property encapsulates the name of the attachment, as well as its description:
+
+<CodeGroup>
+
+```swift Swift
+let metadata = ["name": "japan.png", "description": "This is an image of a sunset in Japan."];
+let newAttachmentWithMetadata = try await ditto.store.newAttachment(path: filePath, metadata: metadata)
+```
+
+```kotlin Kotlin
+val attachmentMetadata = mapOf(
+    "name" to "japan.png",
+    "description" to "This is an image of a sunset in Japan."
+)
+
+val attachment = runBlocking {
+  ditto.store.newAttachment(attachmentPathOrInputStream, attachmentMetadata)
+}
+```
+
+```javascript JS
+const metadata = { "name": "japan.png", "description": "This is an image of a sunset in Japan." }
+const newAttachment = await ditto.store.newAttachment(imageBytes, metadata)
+```
+
+```java Java
+Map<String, String> metadata = new HashMap<>();
+metadata.put("name", "japan.png");
+metadata.put("description", "This is an image of a sunset in Japan.");
+
+DittoAttachment attachment = ditto.store.newAttachment(attachmentPathOrInputStream, metadata);
+```
+
+```csharp C#
+var metadata = new Dictionary<string, string>()
+{
+{ "name", "japan.png" },
+{ "description", "This is an image of a sunset in Japan." }
+};
+var newAttachmentWithMetadata = await Ditto.Store.NewAttachmentAsync(filePath, metadata);
+```
+
+```cpp C++
+std::map<std::string, std::string> metadata;
+args["name"] = "japan.png";
+args["description"] = "This is an image of a sunset in Japan."
+
+auto attachment = ditto.get_store().new_attachment("/path/to/my/file.pdf", medatata);
+```
+
+```rust Rust
+let metadata = std::collections::HashMap::from_iter([
+    ("name".into(), "japan.png".into()),
+    ("description".into(), "This is an image of a sunset in Japan.".into()),
+]);
+
+let filePath: std::path::Path = // ...
+let attachment = ditto.store().new_attachment(&filePath, metadata)?;
+```
+
+```dart Dart
+final attachment = ditto.store.newAttachment(
+  filePath,
+  {
+    "name": "japan.npg",
+    "description": "This is an image of a sunset in Japan.",
+  },
+);
+```
+
+</CodeGroup>
+
+### Inserting Attachments in a Document
+
+After creating and storing a new attachment object in Ditto, you receive an _attachment token_ as part of the response.
+
+<Accordion
+    title="An attachment token is..."
+>
+    An attachment token is a pointer that references its associated ATTACHMENT object. This token is how you interact with the attachment, such as when fetching or linking it with a document.
+</Accordion>
+
+The following snippet demonstrates how to create a new document object containing a new attachment, and then insert it into the cars collection:
+
+<CodeGroup>
+
+```swift Swift
+// First, create the attachment
+let metadata = ["name": "image.png"]
+let attachment = try await ditto.store.newAttachment(path: filePath, metadata: metadata)
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+let newDocument: [String: Any] = ["_id": "123", "my_attachment": attachment]
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+let result = await ditto.store.execute(
+  query: "INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:newDocument)",
+  arguments: ["newDocument": newDocument]);
+```
+
+```kotlin Kotlin
+// First, create the attachment
+val attachmentMetadata = mapOf("name" to "image.png")
+val attachment = runBlocking { ditto.store.newAttachment(attachmentPathOrInputStream, attachmentMetadata) }
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+val document = mapOf("_id" to "123", "my_attachment" to attachment)
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+val insertQuery = "INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:document)"
+val insertArguments = mapOf("document" to document)
+val insertQueryResult = runBlocking { ditto.store.execute(insertQuery, insertArguments) }
+```
+
+```javascript JS
+// First, create the attachment
+const metadata = { "name": "image.png" }
+const attachment = await ditto.store.newAttachment(imageBytes, metadata)
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+const newDocument = { "_id": "123", my_attachment: attachment }
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+await ditto.store.execute(`
+  INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:newDocument)`,
+  { newDocument }
+);
+```
+
+```java Java
+// First, create the attachment
+Map<String, String> metadata = new HashMap<>();
+metadata.put("name", "image.png");
+DittoAttachment attachment = ditto.store.newAttachment(attachmentPathOrInputStream, metadata);
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+Map<String, Object> document = new HashMap<>();
+document.put("_id", "123");
+document.put("my_attachment", attachment);
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+DittoQueryResult result = (DittoQueryResult) ditto.store.execute(
+  "INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:document)",
+  Collections.singletonMap("document", document)
+);
+```
+
+```csharp C#
+// First, create the attachment
+var attachment = await ditto.Store.NewAttachmentAsync(path: filePath);
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+var document = new Dictionary<string, object>();
+document.Add("_id", "123");
+document.Add("my_attachment", attachment);
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+await ditto.Store.ExecuteAsync(
+  "INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:document)"
+  new { "document" = document});
+```
+
+```cpp C++
+// First, create the attachment
+auto attachment = ditto.get_store().new_attachment("/path/to/my/file.pdf");
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+struct Document {
+  std::string _id;
+  Attachment my_attachment;
+}
+
+std::map<std::string, Document>> args;
+args["document"] = {"123", "attachment"};
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+auto result = ditto.get_store().execute(
+  "INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:document)",
+  args);
+```
+
+```rust Rust
+// First, create the attachment
+let filePath: std::path::Path = // ...
+let metadata = Default::default();
+let attachment = ditto.store().new_attachment(&filePath, metadata)?;
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+let args = serde_json::json!({
+  "document": {
+      "_id": "123"
+      "my_attachment": attachment
+  }
+})
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+let result = ditto
+  .store()
+  .execute(
+    "INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:document)",
+    Some(args).into(),
+  ).await?;
+```
+
+```dart Dart
+// First, create the attachment
+final newAttachment = ditto.store.newAttachment("/path/to/my/file.pdf");
+
+// Then, create a new document object and store the attachment on the `my_attachment` field.
+final document = {
+  "_id": "123",
+  "my_attachment": attachment,
+};
+
+// Finally, insert the new document into the collection.
+// Note that the `my_attachment` field needs to be declared as an `ATTACHMENT` data type.
+// When explicitly declaring types for your fields, the COLLECTION keyword is mandatory.
+final query = "INSERT INTO COLLECTION docs (my_attachment ATTACHMENT) DOCUMENTS (:document)";
+final arguments = {"document": document};
+
+final result = await ditto.store.execute(query, arguments);
+```
+</CodeGroup>
+
+## Deleting Attachments
+
+Unlike documents, attachments cannot be explicitly deleted on their own. Instead, you modify the document containing the attachment token referencing it.
+
+Attachment data stored within the Small Peer Ditto store is automatically garbage collected on a 10-minute cadence when no longer referenced. Currently, attachments can only be deleted by way of garbage collection.
+
+The following table provides an overview of the various ways you can indirectly delete attachments:
+
+| **Approach** | **Description**                                                                              |
+| ------------ | -------------------------------------------------------------------------------------------- |
+| `UPDATE`     | Update the document to remove the associated attachment token.                               |
+| `EVICT`      | Delete the entire document, including the associated attachment token, from the Ditto store. |
+
+The storage mechanism Small Peers use to store data, including blob data, depends on the platform:
+
+- If running in the browser or a server-based system, data is stored in its Random Access Memory (RAM).
+- If running on a mobile device like an iPhone, data is stored on its local filesystem.

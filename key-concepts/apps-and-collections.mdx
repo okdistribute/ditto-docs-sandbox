@@ -1,0 +1,48 @@
+---
+title: Apps and Collections
+description: Ditto stores data records as documents (specifically JSON-like documents) which are gathered together in collections. An application stores one or more collections of documents.
+icon: files
+---
+
+## Apps
+
+In Ditto, an app is a grouping of collections.
+All applications that embed the Ditto SDK and share the same app ID will automatically form a mesh network and synchronize data with each other, either directly or via the Big Peer.
+
+While the name "App" suggests that a single Ditto app is a single application, it is common to have multiple Ditto-enabled mobile applications use a single Ditto app.
+
+For example, in the context of a point-of-sale system, a single Ditto app is likely to be used by both the kiosks and the displays in the kitchen, even though these are two distinct mobile applications.
+
+## Collections
+
+Ditto stores documents in collections. Collections are analogous to tables in relational databases.
+Collections allow you to group similar documents together within the same namespace.
+
+<Frame>
+  <img src="/images/v4.9/doc-model-2.webp"/>
+</Frame>
+
+
+### Structuring Collections
+
+While it is good practice for documents within a collection to share a similar structure — for instance, all car-related documents stored in the `cars` collection contain fields `'make'`, `'model'`, and `'year'` — structural uniformity is not mandatory.
+
+There is no limit to the number of collections you can have in your data model, so create as many collections as you need.
+
+### Managing Collections
+
+Every document must be associated with a collection, even if only one document exists within that collection.
+
+There are no explicit steps to manage collections; Ditto implicitly creates collections when you first store data for that collection.
+
+### Querying Collections
+
+When querying, database interactions occur with collections rather than individual documents.
+
+For instance, the query below searches the entire `cars` collection once executed.
+
+```sql
+SELECT * FROM cars
+```
+
+You can read more about accessing data within collections in [Accessing Data](/key-concepts/accessing-data).

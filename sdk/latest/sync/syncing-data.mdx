@@ -1,22 +1,14 @@
 ---
-title: "Syncing Data"
+title: "Managing Subscriptions"
+description: "This article provides instructions on how to create, retrieve, and cancel sync subscriptions."
+icon: rotate
 ---
 
-This article provides instructions on how to create, retrieve, and cancel sync subscriptions:
+- To get your active subscriptions, call the `subscriptions` method on the `ditto.sync` namespace. ([Retrieving Subscriptions](#retrieving-subscriptions))
 
-<Warning>
-DQL sync subscriptions are supported for devices on version 4.5 or later.
+- To cancel a subscription, call `cancel` on its subscription object you instantiated when setting up your subscription. ([Canceling Subscriptions](#canceling-subscriptions))
 
-Devices on Ditto versions 4.4 or earlier are supported, however, they do not sync data through DQL subscriptions.
-</Warning>
-
-- To get your active subscriptions, call the `subscriptions` method on the `ditto.sync` namespace. ([Retrieving Subscriptions](#retrieving-subscription))
-
-- To cancel a subscription, call `cancel` on its subscription object you instantiated when setting up your subscription. ([Canceling Subscriptions](#cancelling-subscriptions))
-
-- To confirm cancelation, call the `isCancelled` field on the subscription object. ([Canceling Subscriptions](#cancelling-subscriptions))
-
-***
+- To confirm cancelation, call the `isCancelled` field on the subscription object. ([Canceling Subscriptions](#canceling-subscriptions))
 
 ## Creating Subscriptions
 
@@ -138,8 +130,6 @@ ditto.sync.registerSubscription("""
 
 </CodeGroup>
 
-***
-
 ## Retrieving Subscriptions
 
 Retrieve active sync subscriptions by calling the `subscriptions` method on the `ditto.sync` namespace:
@@ -180,8 +170,6 @@ final activeSubscriptions = ditto.sync.subscriptions;
 ```
 
 </CodeGroup>
-
-***
 
 ## Canceling Subscriptions
 

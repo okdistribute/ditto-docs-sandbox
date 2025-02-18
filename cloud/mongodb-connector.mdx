@@ -6,7 +6,7 @@ iconType: solid
 ---
 
 <Info>
-With the <a href="https://www.mongodb.com/docs/atlas/app-services/sync/device-sync-deprecation/#std-label-device-sync-deprecation" target="_blank">deprecation of Atlas Device Sync</a>, Ditto is the recommended replacement for synchronizing edge devices with MongoDB. Refer to our [Migration Guide for Atlas Device Sync](/support/mongodb-migrationguide) for a comprehensive guide on moving from Atlas Device Sync to Ditto.
+With the <a href="https://www.mongodb.com/docs/atlas/app-services/sync/device-sync-deprecation/#std-label-device-sync-deprecation" target="_blank">deprecation of Atlas Device Sync</a>, Ditto is the recommended replacement for synchronizing edge devices with MongoDB. Refer to our [Migration Guide for Atlas Device Sync](/sdk/latest/quickstarts/mongodb-migrationguide) for a comprehensive guide on moving from Atlas Device Sync to Ditto.
 </Info>
 
 
@@ -26,7 +26,7 @@ The MongoDB Connector is provided as a managed service, running alongside the Bi
 </Frame>
 Only data currently stored within the Big Peer will be replicated to/from individual Small Peers (devices), so purpose of the connector is to synchronize data as it changes between MongoDB and the Big Peer.
 
-To do this, the connector listens to changes to documents in both Ditto and MongoDB. When it detects a change to a document it then performs conflict resolution between the two systems and updates the document in the target system with the new value. This conflict resolution mechanism roughly models Ditto's [causal consistency](/sdk/latest/sync/consistency-models#causal-consistency), ensuring that changes are not unexpectedly lost when mutations are made to the same documents in both MongoDB and Ditto simultaneously.
+To do this, the connector listens to changes to documents in both Ditto and MongoDB. When it detects a change to a document it then performs conflict resolution between the two systems and updates the document in the target system with the new value. This conflict resolution mechanism roughly models Ditto's [causal consistency](/key-concepts/syncing-data), ensuring that changes are not unexpectedly lost when mutations are made to the same documents in both MongoDB and Ditto simultaneously.
 
 Unlike other synchronization systems for MongoDB, Ditto's advanced conflict resolution (based on CRDTs) avoids the need to deploy extra backend services to handle writes and conflicts, just deploy a Big Peer and you have everything you need to integrate with MongoDB.
 
@@ -316,7 +316,7 @@ Remember that if you need to modify the configuration of a running connector, yo
 | `Collection <name> must be configured with changeStreamPreAndPostImages enabled` | Ensure that the MongoDB collection has `changeStreamPreAndPostImages` set to `true` (see [Create MongoDB Collections](#create-mongodb-collections)) |
 | `Collection <name> cannot be a capped collection` | Ensure that the MongoDB collection is not a capped collection (see [Create MongoDB Collections](#create-mongodb-collections)) |
 | `Collection <name> cannot be created` | Ensure that the MongoDB database user has the correct permissions (see [Create a MongoDB Database User](#create-a-mongodb-database-user)) |
-| `Something went wrong` | An unknown error occurred, please [contact Ditto support](/support/contact-us) for assistance. |
+| `Something went wrong` | An unknown error occurred, please [contact Ditto support](https://support.ditto.live/hc/en-us) for assistance. |
 
 ## Internal Metadata
 

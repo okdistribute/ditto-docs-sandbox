@@ -7,7 +7,7 @@ iconType: solid
 
 import KotlinConnect from "/snippets/connect-examples/playground/kotlin-playground.mdx"
 
-# Prerequisites
+## Prerequisites
 
 Following are the minimum requirements that must be met before attempting to install Ditto.
 
@@ -16,7 +16,7 @@ Following are the minimum requirements that must be met before attempting to ins
 - `compileSdk` version 34.0
 - Java Development Kit (JDK) version 11.0
 
-# Setting Up Your Environment
+## Setting Up Your Environment
 
 Include the Maven Central repository in your Gradle file, and then synchronize it with your project.
 
@@ -40,7 +40,7 @@ Include the Maven Central repository in your Gradle file, and then synchronize i
 
 </Steps>
 
-# Adding the Ditto SDK Dependency
+## Adding the Ditto SDK Dependency
 
 Add the Ditto SDK to your app’s `build.gradle` file in the `dependencies` block with the appropriate version:
 
@@ -50,7 +50,7 @@ implementation "live.ditto:ditto:4.8.1"
 ```
 </CodeGroup>
 
-## Configuring Permissions
+### Configuring Permissions
 
 The Android operating system limits access to some device functionality for end-user control and privacy. In order to use this functionality, configure your app to declare and request permissions from end users at runtime:
 
@@ -63,7 +63,7 @@ Proactively check permission status to avoid unnecessary delay between granting 
 </Step>
 </Steps>
 
-## Declaring Permissions in the Android Manifest
+### Declaring Permissions in the Android Manifest
 
 Android requires certain permissions to be explicitly requested by the app to access features like Bluetooth Low Energy and Wi-Fi Aware. These permissions must be declared in the app's manifest file and requested from the end user at runtime.
 
@@ -116,7 +116,7 @@ Note the additional `tools:remove` attribute. This tells the manifest merger to 
 For more information, see the official [Permissions on Android](https://developer.android.com/guide/topics/permissions/overview "Permissions on Android") and [Merge manifest files](https://developer.android.com/build/manage-manifests "Merge manifest files") documentation.
 </Info>
 
-## Requesting Permissions at Runtime
+### Requesting Permissions at Runtime
 In addition to being declared in the manifest, some permissions need to be requested from the user at runtime. To ensure your app has the required permissions for sync, use the DittoSyncPermissions helper class from the Ditto SDK. This helper class:
 
 - Simplifies the process of requesting end-user permissions at runtime with a single method call (ensurePermissions) for all necessary permissions.
@@ -167,7 +167,7 @@ override fun onCreate(savedInstanceState: Bundle?) { }
 </Step>
 </Steps>
 
-# Integrating and Initializing
+## Integrating and Initializing
 
 Using the Application-level `Context`, integrate Ditto into your app's `onCreate` method.
 
@@ -197,3 +197,35 @@ To ensure your app maintains a single Ditto instance throughout its lifetime and
 Replace `YOUR_APP_ID` and `YOUR_PLAYGROUND_TOKEN` with your access credentials available from the portal. (See [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details) )
 </Step>
 </Steps>
+
+## Proguard
+When building a release version of an Android app with minification enabled, the app may crash at runtime due to ProGuard or R8 shrinking or obfuscating necessary code. To ensure the app runs smoothly in release builds, it's important to explicitly retain critical classes and methods. This can be achieved by adjusting your ProGuard rules to prevent essential code from being removed or altered during the minification process.
+
+To help identify issues caused by missing or obfuscated classes, here's a typical crash log that you might encounter when the necessary ProGuard rules are not applied:
+
+```
+java.lang.NoSuchMethodError: no static method "Llive/ditto/internal/swig/ffi/dittoffiJNI;.SwigDirector_Retainable_retain(Llive/ditto/internal/swig/ffi/Retainable;)”
+```
+
+To ensure optimal app performance when using the Ditto SDK, update your ProGuard rules to retain critical classes. Depending on the features you're using, you’ll need to add specific rules to prevent ProGuard from stripping essential code:
+
+**Ditto Native Bindings - Required for All Ditto SDK Use:**
+
+This rule ensures that all native bindings related to Ditto are preserved and available at runtime.
+
+```
+-keep class live.ditto.internal.swig.ffi.** { *; }
+```
+
+**Ditto Blanket Exclusion - Required for Presence**
+
+This rule retains all Ditto classes, which is essential for features like [Presence Viewer](/sdk/latest/sync/using-mesh-presence#presence-viewer), and ensures Jackson classes are preserved for proper JSON deserialization.
+
+```
+-keep class live.ditto.** { *; }
+-keepnames class com.fasterxml.jackson.** { *; }
+```
+
+- `keep class live.ditto.internal.swig.ffi.**` ensures that all classes and interfaces under the live.ditto.internal.swig.ffi package (including sub-packages) are retained.
+- `{ *; }` specifies that all members (fields, methods, constructors, etc.) of these classes should be preserved as well.
+- This rule prevents ProGuard from shrinking, obfuscating, or modifying these classes, ensuring that your app functions correctly in a minified release build.

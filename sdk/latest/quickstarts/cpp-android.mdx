@@ -1,0 +1,88 @@
+---
+title: C++ Android Quickstart
+sidebarTitle: C++ Android
+description: Get started quickly with Ditto using the Ditto Quickstart Applications
+icon: code
+iconType: solid
+---
+
+import {
+    QuickstartCloneTheRepoBody,
+    QuickstartSyncDataOfflineBody,
+    QuickstartConfigTitleAndAppIdBody
+} from '/snippets/quickstart-shared-components.mdx';
+import { cpp_4_9_api_link } from '/snippets/sdk-api-reference-links.mdx';
+
+## Prerequisites
+
+Ditto’s C++ Android Quickstart supports **Android**. Before getting started, ensure you have the following:
+- [Android Studio](https://developer.android.com/studio) (Ladybug or later) installed
+- [Git](https://git-scm.com/) installed on your machine
+- A C++ compiler (such as [Clang](https://clang.llvm.org/get_started.html) or [GCC](https://gcc.gnu.org/install/))
+- [CMake](https://cmake.org/download/) (version 3.10 or later)
+- [Make](https://www.gnu.org/software/make/) (for building the project)
+- A Ditto [Portal](https://portal.ditto.live) account with a configured Ditto Application (see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
+
+## Get Started
+
+### 1. Clone the Repository
+<QuickstartCloneTheRepoBody />
+
+### 2. Configure Ditto
+
+#### Get Ditto App ID and Playground Token
+<QuickstartConfigTitleAndAppIdBody />
+
+#### Add Ditto Credentials
+
+1. Copy the `.env.template` file at the top level of the `quickstart` repo to `.env` and add your app ID and online playground token.
+    ```shell
+    cp .env.sample .env
+    ```
+2. Update the `.env` file with the App ID and Playground Token from your Ditto Application
+    ```shell
+    DITTO_APP_ID="REPLACE_ME_WITH_YOUR_APP_ID"
+    DITTO_PLAYGROUND_TOKEN="REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN"
+    ```
+
+#### Download, Unpack, and Link Ditto
+
+1. Navigate to the project directory
+    ```shell
+    cd android-cpp/QuickStartTasksCPP
+    ```
+2. Download `Ditto.tar.gz` and unpack an archive containing the `libditto.a` static library and Ditto header.
+    <CodeGroup>
+    ```shell x86_64
+    curl -O https://software.ditto.live/cpp-linux-x86_64/Ditto/4.8.2/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
+    ```
+    {/* Commenting out while we verify ARM */}
+    {/* ```shell aarch64
+    curl -O https://software.ditto.live/cpp-linux-aarch64/Ditto/4.8.2/dist/Ditto.tar.gz && tar xvfz Ditto.tar.gz
+    ``` */}
+    </CodeGroup>
+3. Add the `./sdk` directory to your compiler's include and linker directories, and link the
+    ditto library into your application. For example:
+    ```shell
+    g++ -std=c++17 ./src/main.cpp -I ./sdk -lditto -ldl -lrt -pthread -L ./sdk -o dist/main;
+    # Once executed, your output will be available at: ./dist/main
+    ```
+
+### 3. Run the Application
+
+1. Launch Android Studio and open the `quickstart/cpp-android` directory.
+2. In Android Studio, select a connected Android device, or create and launch an Android emulator and select it as the destination, then choose the `Run > Run 'app'` menu item.
+
+### 4. Sync-Data Offline
+
+<QuickstartSyncDataOfflineBody/>
+
+## Next Steps
+
+All the Ditto Quickstart apps works together! Try running a quickstart app in other languages and see them all collaborate.
+
+## Additional Resources
+
+- [C++ Install Guide](/sdk/latest/install-guides/cpp)
+- <a href={cpp_4_9_api_link}>Rust API Reference</a>
+- [C++ Release Notes](/sdk/latest/release-notes/cpp)

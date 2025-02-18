@@ -1,0 +1,105 @@
+---
+title: Flutter Quickstart
+sidebarTitle: Flutter
+description: Get started quickly with Ditto using the Ditto Quickstart Applications
+icon: flutter
+iconType: solid
+---
+
+import {
+    QuickstartCloneTheRepoBody,
+    QuickstartSyncDataOfflineBody,
+    QuickstartConfigTitleAndAppIdBody
+} from '/snippets/quickstart-shared-components.mdx';
+import { flutter_4_9_api_link } from '/snippets/sdk-api-reference-links.mdx';
+
+## Prerequisites
+
+Ditto’s Flutter Quickstart supports **iOS** and **Android**. Before getting started, ensure you have the following:
+- A code editor (Visual Studio Code is our recommendation, but any code editor will work)
+- [Git](https://git-scm.com/) installed on your machine
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) installed on your machine
+- A Ditto [Portal](https://portal.ditto.live) account with a configured Ditto Application (see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
+
+<AccordionGroup>
+  <Accordion title="Android Specific Prerequisites" icon="android">
+   - [Android Studio](https://developer.android.com/studio/install) installed on your machine
+   - A physical Android device or Android emulator
+   </Accordion>
+   <Accordion title="iOS Specific Prerequisites" icon="apple">
+   - A macOS machine with the latest version of [Xcode](https://developer.apple.com/xcode/) (15 or later) installed
+   - A physical iOS device or iOS simulator
+   </Accordion>
+</AccordionGroup>
+
+## Get Started
+
+### 1. Clone the Repository
+<QuickstartCloneTheRepoBody />
+
+### 2. Configure Ditto
+
+#### Get Ditto App ID and Playground Token
+<QuickstartConfigTitleAndAppIdBody />
+
+#### Update Flutter Application with Ditto Credentials
+
+1. Open the `lib/main.dart` file or the appropriate configuration file where Ditto is initialized
+2. Update the code with the App ID and Playground Token from your Ditto Application
+
+```dart Dart
+const appID = "REPLACE_ME_WITH_YOUR_APP_ID";
+const token = "REPLACE_ME_WITH_YOUR_PLAYGROUND_TOKEN";
+```
+
+### 3. Run the Application
+
+1. Navigate to the Flutter demo directory.
+   ```shell
+   cd flutter-app
+   ```
+2. Install the necessary dependencies. This fetches all required packages from pubspec.yaml.
+   ```shell
+   flutter pub get
+   ```
+3. Run the Application
+   ```shell
+   flutter run
+   ```
+
+<AccordionGroup>
+  <Accordion title="Android" icon="android">
+      4. Ensure you have an Android Emulator running or connect a physical device
+      5. Select the Android Emulator/Device
+         ```shell
+         \[1]: sdk gphone64 arm64 (emulator-1234)
+         \[2]: Mac Designed for iPad (mac-designed-for-ipad)
+
+         **Please choose one (or "q" to quit):** 1
+         ```
+   </Accordion>
+   <Accordion title="iOS" icon="apple">
+      4. Ensure you have an iOS Simulator running or connect a physical iOS device
+      5. Select the iOS Simulator/Device
+         ```shell
+         \[1]: iPhone 15 (5A8DFE9D-7BF0-4BEE-A675-A056B64CEE3F)
+         \[2]: Mac Designed for iPad (mac-designed-for-ipad)
+
+         **Please choose one (or "q" to quit):** 1
+         ```
+   </Accordion>
+</AccordionGroup>
+
+### 4. Sync-Data Offline
+
+<QuickstartSyncDataOfflineBody/>
+
+## Next Steps
+
+All the Ditto Quickstart apps works together! Try running a quickstart app in other languages and see them all collaborate.
+
+## Additional Resources
+
+- [Flutter Install Guide](/sdk/latest/install-guides/flutter)
+- <a href={flutter_4_9_api_link}>Flutter API Reference</a>
+- [Flutter Release Notes](/sdk/latest/release-notes/flutter)
