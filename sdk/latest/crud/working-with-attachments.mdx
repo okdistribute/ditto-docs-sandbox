@@ -112,7 +112,7 @@ In more straightforward terms, Ditto organizes and accesses attachment data by t
 By adhering to the CAN framework for attachment management, Ditto stores and retrieves data efficiently. For instance:
 
 - _Deduplication_ — If the same blob is created multiple times, Ditto stores only one copy. Similarly, if an attachment is added to multiple documents, they all reference the same blob.
-- _Conflict-free_ _s\*\*ync_ — Blobs are stored based on the cryptographic hash of their contents, ensuring that conflicts are effectively impossible.
+- _Conflict-free sync_ — Blobs are stored based on the cryptographic hash of their contents, ensuring that conflicts are effectively impossible.
 - _Decentralized_ — No central server is required to manage attachments. They can be created and accessed concurrently throughout the network, even with intermittent connectivity.
 
 ### Purging Blob Data
@@ -286,7 +286,7 @@ let attachment = ditto.store().new_attachment(&filePath, metadata)?;
 ```dart Dart
 final attachment = ditto.store.newAttachment(
   "/path/to/my/file.pdf",
-  {"name": "image.png"},
+  AttachmentMetadata({"name": "image.png"}),
 );
 ```
 
