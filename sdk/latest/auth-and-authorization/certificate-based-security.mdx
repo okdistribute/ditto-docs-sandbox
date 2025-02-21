@@ -71,17 +71,7 @@ Online Authentication can be used when a Ditto application is hosted on a Big Pe
       - Provider name
       - Credentials to be forwarded to the app's webhook handler
 
-      Once the identity service has a response from the auth webhook, it will build and sign a JWT. In addition to the information we would expect to find in a JWT (issuer, issued at, expiry, etc), we also include an encoded representation of the Ditto Identity.
-      The Ditto Identity is built from the information provided by the app's authentication webhook response.
-    </Step>
-    <Step title="Upgrade to an X.509 Certificate">
-      Once a peer has a JWT, it will want to use this to get a device certificate.  The peer will now make an HTTPS certificate request to the identity service.
-
-      The “request certificate” endpoint requires a valid JWT.  The contents of the new certificate is closely tied to the JWT.  The certificate expiration time is the same as the JWT, and the ditto identity embedded in the certificate is pulled from the JWT.  The identity service generates a private key for the device.  It uses this private key to generate a CSR on behalf of the client and then the identity service’s CA keys to sign it.
-
-      Once this information is prepared, the identity service is ready to respond to the request.
-
-      The response will include the client's generated certificate and private key, a list of CA certificates the client should trust, and a DateTime for expiration. The client will persist the JWT, device private key, device certificate, and CA certificates on disk and only update them when they get near expiration.
+      Once the identity service has a response from the auth webhook, it will build and sign the required Ditto Credentials (including a JWT and an X.509 certificate) and send them back down to the client. The response will include the client's generated certificate and private key, a list of CA certificates the client should trust, and a DateTime for expiration. The client will persist the JWT, device private key, device certificate, and CA certificates on disk and only update them when they get near expiration.
 
       When two peers authenticate with each other, they can use either the JWT or the device certificate via MTLS. The decision depends on the client's capabilities and connection type.
     </Step>
@@ -96,12 +86,3 @@ It would be possible to use a standard CSR flow. It was chosen to issue keys dir
 - There is no security benefit as our certificate request is in a secured tunnel, and the identity service is presumed to be completely trustworthy.
 - Validating and signing CSRs is more complex than simply creating one with the correct format and fields.
 - This is a convenient workflow if using Hashicorp Vault or similar to manage your PKI and issue certificates on demand.
-
-**Why is X.509 a separate request?**
-
-The idea is that JWTs could be quite short-lived but the X.509 certs could be long-lived to permit long periods of working offline, so the Small Peer could call them to refresh at different intervals. Different expiry periods between JWT and X.509 isn’t implemented yet.
-
-Additionally, browser peers have no use for X.509 certificates so they don’t request them.
-
-Of course, the Small Peer could have a single request that lets you request some combination of identities at once. There is no reason this couldn’t be added in the future to reduce latency.
-

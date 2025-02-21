@@ -36,9 +36,9 @@ The full flow is detailed in the diagram below:
 ```mermaid
 sequenceDiagram
     Client App->>Your Authentication Mechanism: Send Credentials
-    Your Authentication Mechanism->>Client App: Return JWT
-    Client App->>Ditto Big Peer: JWT
-    Ditto Big Peer->>Auth Webhook: JWT 
+    Your Authentication Mechanism->>Client App: Return a token string (e.g. a JWT)
+    Client App->>Ditto Big Peer: token string
+    Ditto Big Peer->>Auth Webhook: token string 
     Auth Webhook->>Ditto Big Peer: Formatted Ditto Auth Response
     Ditto Big Peer->>Client App: Ditto Credentials
     rect rgba(0, 0, 255, .1)
