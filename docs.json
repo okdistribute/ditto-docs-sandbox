@@ -42,7 +42,6 @@
       },
       {
         "tab": "Build with the SDK",
-        "description": "Learn to build applications using the Ditto SDK",
         "icon": {
           "name": "laptop-mobile",
           "style": "solid"
@@ -52,16 +51,39 @@
             "version": "4.9",
             "groups": [
               {
-                "group": "Installing the SDK",
+                "group": "Overview & Setup",
                 "pages": [
-                  "sdk/latest/install-guides/install-guides",
+                  "sdk/latest/home",
                   {
-                    "group": "Languages",
+                    "group": "Quickstarts",
                     "icon": {
-                      "name": "code",
+                      "name": "rabbit-running",
                       "style": "solid"
                     },
                     "pages": [
+                          "sdk/latest/quickstarts/quickstarts-landing",
+                          "sdk/latest/quickstarts/swift",
+                          "sdk/latest/quickstarts/kotlin-android",
+                          "sdk/latest/quickstarts/flutter",
+                          "sdk/latest/quickstarts/react-native",
+                          "sdk/latest/quickstarts/javascript-console",
+                          "sdk/latest/quickstarts/javascript-web",
+                          "sdk/latest/quickstarts/dotnet-maui",
+                          "sdk/latest/quickstarts/dotnet-console",
+                          "sdk/latest/quickstarts/cpp-console",
+                          "sdk/latest/quickstarts/cpp-android",
+                          "sdk/latest/quickstarts/java-android",
+                          "sdk/latest/quickstarts/rust-console"
+                    ]
+                  },
+                  {
+                    "group": "Install Guides",
+                    "icon": {
+                      "name": "laptop-code",
+                      "style": "solid"
+                    },
+                    "pages": [
+                      "sdk/latest/install-guides/install-guides",
                       "sdk/latest/install-guides/swift",
                       "sdk/latest/install-guides/kotlin",
                       "sdk/latest/install-guides/js",
