@@ -1151,6 +1151,10 @@
     {
       "source": "/support/mongodb-migrationguide",
       "destination": "/sdk/latest/quickstarts/mongodb-migrationguide"
+    },
+    {
+      "source": "/sdk/latest/quickstarts",
+      "destination": "/sdk/latest/quickstarts/quickstarts-landingmongodb-migrationguide"
     }
   ]
 }
