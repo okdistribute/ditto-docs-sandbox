@@ -19,7 +19,7 @@ import JsConnect from "/snippets/connect-examples/playground/js-playground.mdx"
 The Ditto SDK is designed for apps built with <a href="https://reactnative.dev/docs/getting-started-without-a-framework" target="_blank">bare React Native CLI</a>.
 
 <Warning>
-Expo Go is not currently support. Support for other Expo workflows including CNG and DIY are limited. This work is in active develepoment.
+Support for Expo workflows including Dev Builds and Go is limited. This work is in active development.
 </Warning>
 
 Once you've confirmed that you have the necessary prerequisites, integrate Ditto within your React Native app:
@@ -133,7 +133,7 @@ platform :ios, 14
 ```
 
 <Info>
-Tip: No version changes are needed for RN 0.76+ projects that already havemin\_ios\_version\_supported set to 14.
+  Tip: No version changes are needed for RN 0.76+ projects that already have `min\_ios\_version\_supported` set to 14.
 </Info>
 
 Be sure to reinstall Pods afterward:
@@ -221,20 +221,75 @@ For newer projects, set the SDK version in `android/gradle.properties`.
 </Step>
 
 <Step>
-Add the Ditto SDK as a dependency:
+Declaring Permissions in the Android Manifest
 
-1. Open the module-level `build.gradle` located in the `android/app` directory.
-2. Add the following line into the `dependencies` block located at the bottom of the file:
+Android requires certain permissions to be explicitly requested by the app to access features like Bluetooth Low Energy and Wi-Fi Aware. These permissions must be declared in the app's manifest file and requested from the end user at runtime.
+
+The Ditto SDK's `AndroidManifest.xml` includes all of the necessary permissions for enabling its mesh network capabilities. These permissions will automatically be merged with your app's permissions, so you should be aware of them.
 
 <CodeGroup>
-```
-implementation "live.ditto:ditto:4.8.1"
+```xml AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADVERTISE"
+        tools:targetApi="s" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_CONNECT"
+        tools:targetApi="s" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="s" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="tiramisu" />
+
+    <application...>
+</manifest>
 ```
 </CodeGroup>
-</Step>
 
+Some of these permissions have an `android:maxSdkVersion` attribute which means they are not used on devices running newer versions of Android. This is a best practice to respect users' privacy when those permissions are not necessary.
+
+However, some apps may still need to use one or more of the above permissions across more versions of Android. This can be accomplished by overriding the permission configuration in your app's `AndroidManifest.xml`
+
+To override any of these permission limitations in your app, do the following:
+
+<Steps>
 <Step>
-Android permissions
+Open the`AndroidManifest.xml`` located in the `app/src/main`` directory of your project.
+</Step>
+<Step>
+
+Within the same `<manifest>` tag, just before the `<application>` tag, add the relevant permissions you want to configure (location example):
+
+<CodeGroup>
+```xml AndroidManifest.xml
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="android:maxSdkVersion" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:remove="android:maxSdkVersion" />
+````
+
+</CodeGroup>
+Note the additional `tools:remove` attribute. This tells the manifest merger to selectively remove the `android:maxSdkVersion` behavior from the associated permissions, changing them to apply to all Android versions.
+</Step>
+</Steps>
+
+<Info>
+For more information, see the official [Permissions on Android](https://developer.android.com/guide/topics/permissions/overview "Permissions on Android") and [Merge manifest files](https://developer.android.com/build/manage-manifests "Merge manifest files") documentation.
+</Info>
 </Step>
 
 <Step>
@@ -244,19 +299,35 @@ If using <a href="https://reactnative.dev/docs/the-new-architecture/landing-page
 ```
 android {
     packagingOptions {
+        pickFirst 'lib/x86/libdittoffi.so'
+        pickFirst 'lib/x86_64/libdittoffi.so'
+        pickFirst 'lib/armeabi-v7a/libdittoffi.so'
+        pickFirst 'lib/arm64-v8a/libdittoffi.so'
+        
         pickFirst 'lib/x86/libjsi.so'
         pickFirst 'lib/x86_64/libjsi.so'
         pickFirst 'lib/armeabi-v7a/libjsi.so'
         pickFirst 'lib/arm64-v8a/libjsi.so'
+
+        pickFirst 'lib/x86/libreact_nativemodule_core.so'
+        pickFirst 'lib/x86_64/libreact_nativemodule_core.so'
+        pickFirst 'lib/armeabi-v7a/libreact_nativemodule_core.so'
+        pickFirst 'lib/arm64-v8a/libreact_nativemodule_core.so'
+
+        pickFirst 'lib/x86/libturbomodulejsijni.so'
+        pickFirst 'lib/x86_64/libturbomodulejsijni.so'
+        pickFirst 'lib/armeabi-v7a/libturbomodulejsijni.so'
+        pickFirst 'lib/arm64-v8a/libturbomodulejsijni.so'
+
+        pickFirst 'lib/x86/libreactnative.so'
+        pickFirst 'lib/x86_64/libreactnative.so'
+        pickFirst 'lib/armeabi-v7a/libreactnative.so'
+        pickFirst 'lib/arm64-v8a/libreactnative.so'
     }
     // Rest of the file
 }
 ```
 </CodeGroup>
-
-<Info>
-If you encounter other issues, see [Troubleshooting JSI Bindings Error]().
-</Info>
 
 </Step>
 
@@ -287,11 +358,15 @@ Within your default React component (`App`), use this helper function to request
 <CodeGroup>
 ```typescript
 import {useEffect} from 'react';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, Platform} from 'react-native';
 
 export default function App() {
 
   async function requestPermissions() {
+    if (Platform.OS !== 'android') {
+      return;
+    }
+
     const granted = await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
@@ -419,6 +494,9 @@ Specify how you want Ditto to handle which transports to sync data across the me
 import {TransportConfig} from '@dittolive/ditto';
 import {Platform} from 'react-native';
 
+
+// ... Ditto init logic
+
 const transportsConfig = new TransportConfig();
 transportsConfig.peerToPeer.bluetoothLE.isEnabled = true;
 transportsConfig.peerToPeer.lan.isEnabled = true;
@@ -443,6 +521,9 @@ For example, the following snippet defines a document object (`document`), creat
 
 <CodeGroup>
 ```javascript JS
+
+// ... Ditto init logic
+
 ditto.sync.registerSubscription(`SELECT * FROM cars`);
 
 const document = {
@@ -508,6 +589,10 @@ To set the minimum log level to `Debug`:
 
 <CodeGroup>
 ```javascript JS
+import {Logger} from '@dittolive/ditto';
+
+...
+
 Logger.minimumLogLevel = 'Debug';
 ```
 </CodeGroup>
