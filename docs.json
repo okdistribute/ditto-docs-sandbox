@@ -194,6 +194,7 @@
                       "sdk/latest/compatibility/swift",
                       "sdk/latest/compatibility/kotlin",
                       "sdk/latest/compatibility/js-web",
+                      "sdk/latest/compatibility/nodejs",
                       "sdk/latest/compatibility/react-native",
                       "sdk/latest/compatibility/java",
                       "sdk/latest/compatibility/c-sharp",
