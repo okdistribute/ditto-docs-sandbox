@@ -213,6 +213,19 @@ In the iOS app, you should see there are no work orders. This is expected, becau
 </Step>
 </Steps>
 
+### Changing App Name
+
+1. Find your project's `_id` by opening up the DQL Editor
+```
+SELECT * FROM `__projects`
+```
+
+2. Copy the _id and paste it here, and replace "My App" with the name you want to have
+```
+UPDATE `__projects` SET name = 'My App' where _id = 'PROJECT_ID' 
+```
+
+3. Re-scan the QR Code from the iOS app, and you should see the new name reflected.
 
 
 
