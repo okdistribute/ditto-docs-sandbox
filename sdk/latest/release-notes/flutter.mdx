@@ -1,5 +1,6 @@
 ---
-title: Flutter
+title: Flutter Release Notes
+sidebarTitle: Flutter
 icon: flutter
 iconType: solid
 ---
@@ -7,6 +8,33 @@ iconType: solid
 <Note>The Flutter SDK follows a separate release cadence from our other SDKs to provide flexibility for
 the initial GA release. During the 4.9.* series, the Flutter release version may not align with other SDKs.
 This will be resolved starting with 4.10.0.</Note>
+
+<Update label="4.9.1" description="Release Date: Feb 24, 2024">
+  # 4.9.1
+  <Icon icon="plus"iconType="solid" horizontal /> **Added:** Support for Flutter 3.19.
+
+  <Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** Failing to call 
+  `await Ditto.init()` will now throw. This is to prevent improper initialization.
+
+  <Icon icon="rotate-reverse"iconType="solid" horizontal /> **Changed:** `ditto.transportsConfig = config;` will now throw if `config` enables
+    transports which don't exist on the current platform (e.g. AWDL on Android or P2P Wifi on iOS).
+
+  `TransportConfig.setAllPeerToPeerEnabled()` will now take the current platform
+    into account, and will only modify transports which are available. A newly
+    created `Ditto` instance will not have transports enabled that are not
+    available on the current platform 
+
+  <Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** Resolve an uncaught exception
+   that could happen in `ditto.presence.graph` when there were P2PWifi connections.
+  
+  <Icon icon="screwdriver-wrench"iconType="solid" horizontal /> **Fixed:** The persistence directory
+   behaves differently if a relative path is provided.
+  
+  If a relative path is provided, it will be treated as a subdirectory of
+   `getApplicationDocumentsDirectory()`. If an absolute path is given, its value
+   is not modified. The `persistenceDirectory` parameter in `Ditto.open` is now
+   optional, and defaults to `"ditto"`. If the directory does not exist, it will be created.
+</Update>
 
 <Update label="4.9.0 (GA Release)" description="Release Date: Jan 27, 2024">
     # 4.9.0 (GA Release)
