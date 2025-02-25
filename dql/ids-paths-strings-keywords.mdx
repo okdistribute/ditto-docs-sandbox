@@ -47,7 +47,7 @@ To separate a name in a path, use a dot (`.`).
 For example, to navigate to the `seats` field in a `SELECT` statement:
 
 <CardGroup>
-```mysql MySQL
+```sql DQL
 SELECT * FROM COLLECTION cars (features MAP)
 WHERE features.seats = 'leather'
 ```
@@ -69,15 +69,12 @@ WHERE features.seats = 'leather'
 
 Following is an overview of the of the DQL-specific restrictions that supersede common rules:
 
-| **Topic**       | **Guideline**                                                                                                                                                                                                                         |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Path Evaluation | Path expressions are evaluated from left to right. For example, `a.b.c`:* `a` is the leftmost name
-* `b` is an intermediate name
-* `c` is the rightmost name                                                                          |
-| Collections     | Collection names cannot be present in path expressions.                                                                                                                                                                               |
-| Types           | Only `REGISTER` with nested JSON object and `MAP` types can be navigated with path expressions.                                                                                                                                       |
-| `MISSING`       | The path expression result is `MISSING` for the following conditions are both true:* The leftmost name and all intermediate names are a `REGISTER` with JSON object type or a `MAP` type.
-* The last name in the path does not exist. |
+| **Topic** | **Guidelines** |
+| --- | --- |
+| Path Evaluation | Path expressions are evaluated from left to right. For example, `a.b.c`:<br/><br/>* `a` is the leftmost name<br/><br/>* `b` is an intermediate name<br/><br/>* `c` is the rightmost name |
+| Collections     | Collection names cannot be present in path expressions. |
+| Types           | Only `REGISTER` with nested JSON object and `MAP` types can be navigated with path expressions. |
+| `MISSING`       | The path expression result is `MISSING` for the following conditions are both true:* The leftmost name and all intermediate names are a `REGISTER` with JSON object type or a `MAP` type.<br/><br/>* The last name in the path does not exist. |
 
 
 ## String Literals
