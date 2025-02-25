@@ -1,9 +1,7 @@
 ---
 title: Flutter Install Guide
 description: "Welcome to the Flutter SDK Installation Guide. This document provides step-by-step instructions for installing and configuring the Ditto SDK, enabling you to sync, query, and insert data seamlessly within your existing Flutter application."
-sidebarTitle: "Flutter"
-icon: flutter
-iconType: solid
+sidebarTitle: "Install Guide"
 ---
 
 If you're looking to get started quickly with an existing app we recommend following the [Flutter QuickStart](/sdk/latest/quickstarts/flutter).
@@ -13,7 +11,7 @@ If you're looking to get started quickly with an existing app we recommend follo
 Before you begin, ensure you have the following installed:
 
 - Code editor (preferably Visual Studio Code or Android Studio)
-- Flutter SDK (version 3.22.0 - 3.24.5)
+- Flutter SDK (version 3.19.0 - 3.24.5)
 - An existing Flutter application to integrate Ditto into
 - Ditto Portal account with a Ditto App (see [Getting SDK Connection Details](/cloud/portal/getting-sdk-connection-details))
 ### For Android development:
@@ -32,6 +30,12 @@ Before you begin, ensure you have the following installed:
 ### For iOS development:
 - macOS with the latest version of Xcode installed
 - A physical iOS device or an iOS simulator
+
+### For Web development:
+- Ensure you have Flutter SDK version 3.22.0 - 3.24.5 installed
+- Please refer to the [Flutter for
+  Web](/sdk/latest/install-guides/flutter/flutter-for-web) guide for additional
+  information on Ditto's support for Flutter Web.
 
 ## Step 1: Add the Ditto Dependency to the Application
 
@@ -127,27 +131,29 @@ Initialize the SDK to obtain an instance of `Ditto`. This is the main entry poin
 
 ```dart Dart
 Future<void> main() async {
-	WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-	// Request device permissions
-	await [
+  // Request device permissions on mobile devices
+  if (!kIsWeb) {
+    await [
       Permission.bluetoothConnect,
       Permission.bluetoothAdvertise,
       Permission.nearbyWifiDevices,
       Permission.bluetoothScan
     ].request();
+  }
 
-    // Initialize Ditto with your Ditto AppId and Playground Token
-    final identity = OnlinePlaygroundIdentity(
-      appId: "YOUR_APP_ID", // Replace with your specific id
-      token: "YOUR_PLAYGROUND_TOKEN", // Replace with your specific token
-    );
-    final ditto = await Ditto.open(identity);
+  // Initialize Ditto with your Ditto AppId and Playground Token
+  final identity = OnlinePlaygroundIdentity(
+    appId: "YOUR_APP_ID", // Replace with your specific id
+    token: "YOUR_PLAYGROUND_TOKEN", // Replace with your specific token
+  );
+  final ditto = await Ditto.open(identity);
 
-    // Start Ditto Sync
-    ditto.startSync();
+  // Start Ditto Sync
+  ditto.startSync();
 
-    runApp(MyApp(ditto: ditto));
+  runApp(MyApp(ditto: ditto));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,0 +1,125 @@
+---
+title: Flutter for Web
+description: "Run your Flutter app on the web with Ditto."
+---
+
+Ditto is bringing web support to its Flutter SDK so Flutter applications can be
+deployed to the web with minimal changes. This guide shows you how to get
+started when porting an application for the web and explains limitations.
+
+## Public Preview
+
+Support for the web platform is currently in public preview. Not all features
+are available and some APIs may change in the final release.
+
+__Available APIs include:__
+
+- Querying and observing documents in the Ditto store
+- Sync with the Ditto cloud using sync subscriptions
+- Managing transport configuration, starting and stopping sync
+- Online with authentication and online playground
+  identities.
+- Configuring the Ditto Logger
+
+__Coming soon:__
+
+- Attachments
+- Connection handling using connection request handlers
+- Closing the Ditto instance
+- Presence
+- Small Peer info
+
+## Getting Started
+
+To use the public preview, add the `ditto_live` package to your `pubspec.yaml`
+file with the version `4.9.1-web-preview.0`:
+
+```yaml
+dependencies:
+  ditto_live: 4.9.1-web-preview.0
+```
+
+Ditto's [Flutter Quick Start app](/sdk/latest/quickstarts/flutter) is a good
+starting point for trying out Ditto on the web with an existing app.
+
+Follow the [Flutter Install Guide](/sdk/latest/install-guides/flutter/flutter)
+guide to get familiar with the basics of using Ditto in a Flutter app. 
+
+For adding web support to your existing Flutter app, refer to the instructions
+in the [official Flutter
+documentation](https://docs.flutter.dev/platform-integration/web/building).
+Ditto doesn't require any additional setup. However, some APIs have minor
+differences as described below.
+
+For production use it is strongly recommended to use compression for serving
+web assets.
+
+### Web Assets
+
+When Ditto is used on the web, it needs to download and initialize assets for
+its WebAssembly binary. This happens automatically when calling `await
+Ditto.init()`. By default, assets are bundled with the application and loaded
+from the same web server that serves the application. After running `flutter
+build web`, you can find those in the
+`build/web/assets/packages/ditto_live/lib/assets` directory.
+
+Alternatively, you can host the contents of that directory on a CDN or other web
+server and configure Ditto to load assets from there. All contents of the
+directory, excluding the `ditto.wasm` file itself, must be reachable at the URL
+given by the `wasmShimUrl` parameter. The `ditto.wasm` file can be served from a
+separate URL given by the `wasmUrl` parameter. 
+
+Configuration for loading all assets from a CDN:
+
+```dart
+await Ditto.init(
+  wasmUrl: 'https://your-cdn.com/ditto-assets/ditto.wasm',
+  wasmShimUrl: 'https://your-cdn.com/ditto-assets/',
+);
+```
+
+Please consider your application's loading UI while downloading the assets as it
+may take a few seconds to download and initialize the WebAssembly binary.
+
+**It is strongly recommended to serve assets using a web server or CDN that
+supports compression**. This will significantly reduce the download size of the
+assets and thereby the loading time of your application.
+
+### Permissions
+
+Make sure that your app does not attempt to request permissions that are not
+available on the web. Use Flutter's built-in `kIsWeb` constant to conditionally
+request permissions only on mobile platforms.
+
+```dart
+import 'package:flutter/foundation.dart';
+
+if (!kIsWeb) {
+  await [
+    Permission.bluetoothConnect,
+    Permission.bluetoothAdvertise,
+    Permission.nearbyWifiDevices,
+    Permission.bluetoothScan
+  ].request();
+}
+```
+
+### Peer-to-Peer Transports
+
+On the web, Ditto only supports syncing with the Ditto cloud and does not
+directly connect to other devices. Make sure that your app only sets up
+peer-to-peer transports on mobile platforms.
+
+## Considerations for Web
+
+- Flutter for Web is designed to work seamlessly with the Ditto cloud. Due to
+  browser restrictions, direct peer-to-peer synchronization with other devices
+  is not supported.
+- The web platform utilizes an in-memory Ditto store, meaning data is not
+  retained across page reloads.
+- Ditto’s Flutter SDK currently supports the [default build
+  mode](https://docs.flutter.dev/platform-integration/web/renderers#build-modes)
+  for the web.
+- When developing with Flutter's development server, it is required to quit and
+  restart the server after making changes to the source code of your app
+  (support for _hot restart_ is in development).

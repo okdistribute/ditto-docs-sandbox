@@ -15,10 +15,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "home/introduction",
-              "home/about-ditto"
-            ]
+            "pages": ["home/introduction", "home/about-ditto"]
           },
           {
             "group": "Key Concepts",
@@ -33,10 +30,7 @@
           },
           {
             "group": "Additional Resources",
-            "pages": [
-              "/home/glossary",
-              "/home/faq"
-            ]
+            "pages": ["/home/glossary", "/home/faq"]
           }
         ]
       },
@@ -88,15 +82,25 @@
                       "sdk/latest/install-guides/kotlin",
                       "sdk/latest/install-guides/js",
                       "sdk/latest/install-guides/nodejs",
-                      "sdk/latest/install-guides/flutter",
                       "sdk/latest/install-guides/react-native",
                       "sdk/latest/install-guides/java",
                       "sdk/latest/install-guides/c-sharp",
                       "sdk/latest/install-guides/cpp",
-                      "sdk/latest/install-guides/rust"
+                      "sdk/latest/install-guides/rust",
+                      {
+                        "group": "Flutter",
+                        "icon": {
+                          "name": "flutter",
+                          "style": "solid"
+                        },
+                        "pages": [
+                          "sdk/latest/install-guides/flutter/flutter",
+                          "sdk/latest/install-guides/flutter/flutter-for-web"
+                        ]
+                      }
                     ]
                   },
-                   "sdk/latest/quickstarts/mongodb-migrationguide"
+                  "sdk/latest/quickstarts/mongodb-migrationguide"
                 ]
               },
               {
@@ -644,9 +648,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "cloud/overview"
-            ]
+            "pages": ["cloud/overview"]
           },
           {
             "group": "Cloud Portal",
@@ -691,10 +693,7 @@
           },
           {
             "group": "Data Integration",
-            "pages": [
-              "cloud/cdc",
-              "cloud/mongodb-connector"
-            ]
+            "pages": ["cloud/cdc", "cloud/mongodb-connector"]
           },
           {
             "group": "Reference",
