@@ -32,7 +32,7 @@ Performs various operations on `string` scalar types:
 | ends\_with(str, substr)                  | Returns true if `str` ends with `substr`, otherwise returns false                                                   | `WHERE ends_with(field_name, 'world')`              |
 | byte\_length(str)                        | Returns the length of `str` in bytes. Strings in Ditto are encoded in UTF-8, so a character can take up to 4 bytes. | `WHERE byte_length(field_name) > 4`                 |
 | char\_length(str) character\_length(str) | Returns the number of characters in `str`.                                                                          | `WHERE char_length(field_name) > 4`                 |
-
+| str LIKE 'substr%' | Returns true if specific character string matches the specified pattern. <br />Available in SDK 4.10 onwards. | `WHERE field_name LIKE 'hel%'`                 |
 
 ## Scalar Type Operators
 
@@ -77,6 +77,8 @@ The following table provides an overview of interactions with `object`. Objects 
 | **Operator**           | **Purpose**                                                          | **Example**                           |
 | :--------------------- | :------------------------------------------------------------------- | :------------------------------------ |
 | object\_length(object) | Returns the number of key-value pairs in the top-level of the object | `WHERE object_length(field_name) > 0` |
+| object\_keys(object) | Returns the top-level keys (field names) of a given object as an array. <br />Available in SDK 4.10 onwards. | `WHERE 'field_i_want' IN object_keys(field_name)` |
+| object\_values(object) | Returns the top-level values of a given object as an array. <br />Available in SDK 4.10 onwards. | `WHERE 'value_i_want' IN object_values(field_name)` |
 
 ## Collection Operators
 
