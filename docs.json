@@ -1155,6 +1155,10 @@
     {
       "source": "/sdk/latest/quickstarts",
       "destination": "/sdk/latest/quickstarts/quickstarts-landingmongodb-migrationguide"
+    },
+    {
+      "source": "/big-peer/bigpeer/data-browser-and-editor/capturing-small-peer-info",
+      "destination": "/cloud/portal/capturing-small-peer-info"
     }
   ]
 }
