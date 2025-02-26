@@ -6,12 +6,18 @@ description: "The `EVICT` operation removes one or more documents from the local
 ```sql DQL
 EVICT FROM your_collection_name
 WHERE [condition]
+LIMIT [limit]
+OFFSET [offset]
+ORDER BY [order by]
 ```
 
 In this syntax:
 
 - `your_collection_name` is the name of the collection from which you want to retrieve the data.
 - `[condition]` represents the condition or criteria that determine which documents should be evicted from the local peer.
+- `[limit]` represents the maximum number of documents that should be evicted
+- `[offset]` represents the offset from 0 that should be used for the eviction query, in practice this should be rarely used
+- `[order by]` represents the path within a document to use to order the dataset and order (`ASC` or `DESC`) 
 
 ## Examples Deleting Documents
 
